@@ -1,0 +1,191 @@
+[
+  {
+    "type": "group",
+    "label": {
+      "en": "Connection"
+    },
+    "children": [
+      {
+        "id": "mqtt_topic",
+        "type": "text",
+        "label": {
+          "en": "Device MQTT topic"
+        },
+        "value": "",
+        "pattern": "^[^#+\\/]+$"
+      },
+      {
+        "id": "mqtt_path",
+        "type": "text",
+        "label": {
+          "en": "Device MQTT topic format"
+        },
+        "value": "%prefix%/%topic%/"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Device"
+    },
+    "children": [
+      {
+        "id": "screensaver_timeout",
+        "type": "number",
+        "label": {
+          "en": "Screensaver timeout"
+        },
+        "value": 45,
+        "min": 20,
+        "max": 300,
+        "units": {
+          "en": "s"
+        },
+        "hint": {
+          "en": "Time before screensaver is activated"
+        }
+      },
+      {
+        "id": "dim_timeout",
+        "type": "number",
+        "label": {
+          "en": "Display dim timeout"
+        },
+        "value": 45,
+        "min": 20,
+        "max": 300,
+        "units": {
+          "en": "s"
+        },
+        "hint": {
+          "en": "Time before screen is dimmed when screensaver is active"
+        }
+      },
+      {   
+        "id": "sleep_timeout",
+        "type": "number",
+        "label": {
+          "en": "Deep sleep timeout"
+        },
+        "value": 45,
+        "min": 0,
+        "max": 300,
+        "units": {
+          "en": "s"
+        },
+        "hint": {
+          "en": "Time before screen's backlight is turned off, or 0 to disable"
+        }
+      },
+      {
+        "id": "brightness",
+        "type": "number",
+        "label": {
+          "en": "Brightness"
+        },
+        "value": 100,
+        "min": 1,
+        "max": 100,
+        "units": {
+          "en": "%"
+        },
+        "hint": {
+          "en": "Screen brightness"
+        }
+      },
+      {
+        "id": "sleep_brightness",
+        "type": "number",
+        "label": {
+          "en": "Dim brightness"
+        },
+        "value": 20,
+        "min": 1,
+        "max": 100,
+        "units": {
+          "en": "%"
+        },
+        "hint": {
+          "en": "Brightness when screen is dimmed"
+        }
+      },
+      {
+        "id": "background_color",
+        "type": "dropdown",
+        "label": {
+          "en": "Background color"
+        },
+        "values": [
+          {
+            "id": "dark",
+            "label": {
+              "en": "Dark"
+            }
+          },
+          {
+            "id": "black",
+            "label": {
+              "en": "Black"
+            }
+          }
+        ],
+        "value": "dark",
+        "hint": {
+          "en": "Device background theme"
+        }
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Forecast"
+    },
+    "children": [
+      {
+        "id": "use_internal_temperature",
+        "type": "checkbox",
+        "label": {
+          "en": "Use internal temperature sensor with weather forecast"
+        },
+        "value": true
+      },
+      {
+        "id": "outdoor_temperature_from_forecast",
+        "type": "checkbox",
+        "label": {
+          "en": "Get outdoor temperature from forecast"
+        },
+        "hint": {
+          "en": "If disabled, you need to setup a flow to update outdoor temperature value"
+        },
+        "value": true
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Reporting"
+    },
+    "children": [
+      {
+        "id": "update_interval",
+        "type": "number",
+        "label": {
+          "en": "Update interval"
+        },
+        "value": 50,
+        "min": 25,
+        "max": 120,
+        "units": {
+          "en": "s"
+        },
+        "hint": {
+          "en": "Time interval between consecutive reports"
+        }
+      }
+    ]
+  }
+]

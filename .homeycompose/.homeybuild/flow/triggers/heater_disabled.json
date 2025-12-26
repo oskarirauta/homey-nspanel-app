@@ -1,0 +1,14 @@
+{
+    "id": "heater_disabled",
+    "title": {
+        "en": "Heater was disabled",
+        "fr": "Le chauffage est désactivé"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

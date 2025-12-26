@@ -1,0 +1,23 @@
+{
+  "id": "update_forecast_owm_action",
+  "title": {
+    "en": "Update weather forecast from OpenWeatherMap's OneCall 3.0 API result"
+  },
+  "titleFormatted": {
+    "en": "Update weather forecast from OpenWeatherMap's OneCall 3.0 [[json]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "json",
+      "type": "text",
+      "label": { "en": "json" },
+      "placeholder": { "en": "json" },
+      "title": { "en": "OpenWeatherMap OneCall 3.0 API JSON result" }
+    }
+  ]
+}

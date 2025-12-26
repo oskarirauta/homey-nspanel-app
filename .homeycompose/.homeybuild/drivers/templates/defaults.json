@@ -1,0 +1,32 @@
+{
+    "images": {
+        "small": "{{driverAssetsPath}}/images/small.jpg",
+        "large": "{{driverAssetsPath}}/images/large.jpg",
+        "xlarge": "{{driverAssetsPath}}/images/xlarge.jpg"
+    },
+    "capabilities": [],
+    "capabilitiesOptions": {
+    },
+    "icon": "{{driverAssetsPath}}/icon.svg",
+    "class": "other",
+    "pair": [
+        {
+            "id": "loading",
+            "template": "loading"
+        },
+        {
+            "id": "list_devices",
+            "template": "list_devices",
+            "navigation": {
+                "next": "create_devices"
+            },
+            "options": {
+                "singular": false
+            }
+        },
+        {
+            "id": "create_devices",
+            "$template": "create_devices"
+        }
+    ]
+}

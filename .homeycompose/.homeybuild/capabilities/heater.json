@@ -1,0 +1,21 @@
+{
+    "type": "boolean",
+    "title": {
+        "en": "Heater",
+        "fr": "Chauffage"
+    },
+    "getable": true,
+    "setable": true,
+    "insights": true,
+    "insightsTitleTrue": {
+        "en": "Heater enabled",
+        "fr": "Chauffage activé"
+    },
+    "insightsTitleFalse": {
+        "en": "Heater disabled",
+        "fr": "Chauffage désactivé"
+    },
+    "uiComponent": "button",
+    "uiQuickAction": false,
+    "icon": "assets/icons/capabilities/heater.svg"
+}

@@ -1,0 +1,13 @@
+{
+    "id": "power_enabled",
+    "title": {
+        "en": "Power was enabled"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

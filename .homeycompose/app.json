@@ -1,0 +1,42 @@
+{
+  "id": "rauta.oskari.nspanel",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "brandColor": "#2696A8",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "NSPanel"
+  },
+  "description": {
+    "en": "Sonoff NSPanel"
+  },
+  "category": [
+    "appliances"
+  ],
+  "tags": {
+    "en": [
+      "sonoff",
+      "nspanel",
+      "mqtt"
+    ]
+  },
+  "permissions": [
+    "homey:app:nl.scanno.mqtt"
+  ],
+  "images": {
+    "small": "/assets/images/small.jpg",
+    "large": "/assets/images/large.jpg",
+    "xlarge": "/assets/images/xlarge.jpg"
+  },
+  "source": "https://github.com/DayS/homey-intex-spa",
+  "bugs": {
+    "url": "https://github.com/DayS/homey-intex-spa/issues"
+  },
+  "author": {
+    "name": "Oskari Rauta",
+    "email": "oskari.rauta@gmail.com"
+  }
+}

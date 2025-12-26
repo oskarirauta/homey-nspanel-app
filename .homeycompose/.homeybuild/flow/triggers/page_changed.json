@@ -1,0 +1,26 @@
+{
+  "id": "page_changed",
+  "title": {
+      "en": "Page was changed"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "state",
+      "type": "dropdown",
+      "title": {
+        "en": "Page"
+      },
+      "values": [
+        { "id": "screensaver", "label": { "en": "screensaver" }},
+        { "id": "qrcode", "label": { "en": "qrcode" }}
+      ]
+    }
+  ]
+}

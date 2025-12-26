@@ -1,0 +1,51 @@
+{
+  "id": "nspanel",
+  "name": {
+    "en": "NSPanel"
+  },
+  "$extends": [
+    "defaults"
+  ],
+  "class": "other",
+  "capabilities": [
+    "switch.power1",
+    "switch.power2",
+    "target_temperature", "measure_temperature", "measure_temperature.current",
+    "region", "driver_version"
+  ],
+  "capabilitiesOptions": {
+    "measure_temperature.current": {
+      "title": {
+        "en": "Current temperature"
+      }
+    },
+    "switch.power1": {
+      "title": {
+        "en": "Switch 1"
+      },
+      "insightsTitleTrue": {
+        "en": "Switch 1 is on"
+      },
+      "insightsTitleFalse": {
+        "en": "Switch 1 is off"
+      },
+      "desc": {
+        "en": "Power switch 1"
+      }
+    },
+    "switch.power2": {
+      "title": {
+        "en": "Switch 2"
+      },
+      "insightsTitleTrue": {
+        "en": "Switch 2 is on"
+      },
+      "insightsTitleFalse": {
+        "en": "Switch 2 is off"
+      },
+      "desc": {
+        "en": "Power switch 2"
+      }
+    }
+  }
+}

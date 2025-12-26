@@ -1,0 +1,14 @@
+{
+    "id": "power_disabled",
+    "title": {
+        "en": "Power was disabled",
+        "fr": "L'alimentation est désactivée"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

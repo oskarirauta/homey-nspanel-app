@@ -1,0 +1,13 @@
+{
+  "id": "exit_screensaver",
+  "title": {
+      "en": "Screensaver is exiting"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ]
+}

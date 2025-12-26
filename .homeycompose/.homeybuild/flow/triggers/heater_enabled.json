@@ -1,0 +1,14 @@
+{
+    "id": "heater_enabled",
+    "title": {
+        "en": "Heater was enabled",
+        "fr": "Le chauffage est activé"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

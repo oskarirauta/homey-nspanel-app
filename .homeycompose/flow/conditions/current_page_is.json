@@ -1,0 +1,22 @@
+{
+    "id": "current_page_is",
+    "title": { "en": "Current page !{{is|isn't}}" },
+    "titleFormatted": { "en": "Current page !{{is|isn't}} [[page]]" },
+    "args": [{
+            "name": "page",
+            "type": "dropdown",
+            "values": [
+                { "id": "screensaver", "label": { "en": "screensaver" }},
+                { "id": "qrcode", "label": { "en": "qrcode" }},
+                { "id": "media", "label": { "en": "media" }},
+                { "id": "power", "label": { "en": "power" }},
+                { "id": "thermostat", "label": { "en": "thermostat" }}
+            ]
+        },
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+        }
+    ]
+}

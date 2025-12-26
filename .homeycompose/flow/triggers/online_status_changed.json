@@ -1,0 +1,22 @@
+{
+  "id": "online_status_changed",
+  "title": {
+      "en": "Online status changed"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "state",
+      "type": "boolean",
+      "title": {
+        "en": "Online"
+      }
+    }
+  ]
+}

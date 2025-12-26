@@ -1,0 +1,16 @@
+{
+    "id": "screensaver_is_active",
+    "title": {
+        "en": "Screensaver is !{{active|inactive}}"
+    },
+    "titleFormatted": {
+        "en": "Screensaver is !{{active|inactive}}"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "page_changed",
+  "title": {
+      "en": "Page was changed"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "page",
+      "type": "string",
+      "title": {
+        "en": "Page"
+      }
+    }
+  ]
+}

@@ -1,0 +1,759 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "rauta.oskari.nspanel",
+  "version": "1.0.0",
+  "compatibility": ">=12.4.0",
+  "sdk": 3,
+  "brandColor": "#2696A8",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "NSPanel"
+  },
+  "description": {
+    "en": "Sonoff NSPanel"
+  },
+  "category": [
+    "appliances"
+  ],
+  "tags": {
+    "en": [
+      "sonoff",
+      "nspanel",
+      "mqtt"
+    ]
+  },
+  "permissions": [
+    "homey:app:nl.scanno.mqtt"
+  ],
+  "images": {
+    "small": "/assets/images/small.jpg",
+    "large": "/assets/images/large.jpg",
+    "xlarge": "/assets/images/xlarge.jpg"
+  },
+  "source": "https://github.com/DayS/homey-intex-spa",
+  "bugs": {
+    "url": "https://github.com/DayS/homey-intex-spa/issues"
+  },
+  "author": {
+    "name": "Oskari Rauta",
+    "email": "oskari.rauta@gmail.com"
+  },
+  "flow": {
+    "triggers": [
+      {
+        "id": "enter_screensaver",
+        "title": {
+          "en": "Entering screensaver"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "exit_screensaver",
+        "title": {
+          "en": "Screensaver is exiting"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "online_status_changed",
+        "title": {
+          "en": "Online status changed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "state",
+            "type": "boolean",
+            "title": {
+              "en": "Online"
+            }
+          }
+        ]
+      },
+      {
+        "id": "page_changed",
+        "title": {
+          "en": "Page was changed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "page",
+            "type": "string",
+            "title": {
+              "en": "Page"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch_changed",
+        "title": {
+          "en": "Switch was toggled"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "state",
+            "type": "boolean",
+            "title": {
+              "en": "State"
+            }
+          },
+          {
+            "name": "button",
+            "type": "number",
+            "title": {
+              "en": "Button number"
+            }
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "current_page_is",
+        "title": {
+          "en": "Current page !{{is|isn't}}"
+        },
+        "titleFormatted": {
+          "en": "Current page !{{is|isn't}} [[page]]"
+        },
+        "args": [
+          {
+            "name": "page",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "screensaver",
+                "label": {
+                  "en": "screensaver"
+                }
+              },
+              {
+                "id": "qrcode",
+                "label": {
+                  "en": "qrcode"
+                }
+              },
+              {
+                "id": "media",
+                "label": {
+                  "en": "media"
+                }
+              },
+              {
+                "id": "power",
+                "label": {
+                  "en": "power"
+                }
+              },
+              {
+                "id": "thermostat",
+                "label": {
+                  "en": "thermostat"
+                }
+              }
+            ]
+          },
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "is_online",
+        "title": {
+          "en": "NSPanel is !{{online|offline}}"
+        },
+        "titleFormatted": {
+          "en": "NSPanel is !{{online|offline}}"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "screensaver_is_active",
+        "title": {
+          "en": "Screensaver is !{{active|inactive}}"
+        },
+        "titleFormatted": {
+          "en": "Screensaver is !{{active|inactive}}"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_page_action",
+        "title": {
+          "en": "Set page"
+        },
+        "titleFormatted": {
+          "en": "Set page to [[page]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "label": {
+              "en": "page"
+            },
+            "placeholder": {
+              "en": "page"
+            },
+            "title": {
+              "en": "Target page"
+            },
+            "hint": {
+              "en": "Available page types are qrcode, screensaver"
+            }
+          }
+        ]
+      },
+      {
+        "id": "start_screensaver_action",
+        "title": {
+          "en": "Start screensaver"
+        },
+        "titleFormatted": {
+          "en": "Start screensaver"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "update_forecast_action",
+        "title": {
+          "en": "Update weather forecast"
+        },
+        "titleFormatted": {
+          "en": "Update forecast from [[json]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "json",
+            "type": "text",
+            "label": {
+              "en": "json"
+            },
+            "placeholder": {
+              "en": "{'weather': [{'icon': 'sunny', 'temperature': 21.5},...]}"
+            },
+            "title": {
+              "en": "json weather array"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_forecast_owm_action",
+        "title": {
+          "en": "Update weather forecast from OpenWeatherMap's OneCall 3.0 API result"
+        },
+        "titleFormatted": {
+          "en": "Update weather forecast from OpenWeatherMap's OneCall 3.0 [[json]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "json",
+            "type": "text",
+            "label": {
+              "en": "json"
+            },
+            "placeholder": {
+              "en": "json"
+            },
+            "title": {
+              "en": "OpenWeatherMap OneCall 3.0 API JSON result"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_indoor_temperature_action",
+        "title": {
+          "en": "Set indoor temperature for weather forecast"
+        },
+        "titleFormatted": {
+          "en": "Set indoor temperature from [[temperature]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "temperature",
+            "type": "number",
+            "label": {
+              "en": "temperature"
+            },
+            "placeholder": {
+              "en": "temperature"
+            },
+            "title": {
+              "en": "indoor temperature"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_outdoor_temperature_action",
+        "title": {
+          "en": "Set outdoor temperature for weather forecast"
+        },
+        "titleFormatted": {
+          "en": "Set outdoor temperature from [[temperature]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "temperature",
+            "type": "number",
+            "label": {
+              "en": "temperature"
+            },
+            "placeholder": {
+              "en": "temperature"
+            },
+            "title": {
+              "en": "indoor temperature"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_page_config_action",
+        "title": {
+          "en": "Update page config"
+        },
+        "titleFormatted": {
+          "en": "Update page config to [[config]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "config",
+            "type": "text",
+            "label": {
+              "en": "config"
+            },
+            "placeholder": {
+              "en": "json"
+            },
+            "title": {
+              "en": "Page config"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "images": {
+        "small": "/drivers/nspanel/assets/images/small.jpg",
+        "large": "/drivers/nspanel/assets/images/large.jpg",
+        "xlarge": "/drivers/nspanel/assets/images/xlarge.jpg"
+      },
+      "capabilities": [
+        "switch.power1",
+        "switch.power2",
+        "target_temperature",
+        "measure_temperature",
+        "measure_temperature.current",
+        "region",
+        "driver_version"
+      ],
+      "capabilitiesOptions": {
+        "measure_temperature.current": {
+          "title": {
+            "en": "Current temperature"
+          }
+        },
+        "switch.power1": {
+          "title": {
+            "en": "Switch 1"
+          },
+          "insightsTitleTrue": {
+            "en": "Switch 1 is on"
+          },
+          "insightsTitleFalse": {
+            "en": "Switch 1 is off"
+          },
+          "desc": {
+            "en": "Power switch 1"
+          }
+        },
+        "switch.power2": {
+          "title": {
+            "en": "Switch 2"
+          },
+          "insightsTitleTrue": {
+            "en": "Switch 2 is on"
+          },
+          "insightsTitleFalse": {
+            "en": "Switch 2 is off"
+          },
+          "desc": {
+            "en": "Power switch 2"
+          }
+        }
+      },
+      "icon": "/drivers/nspanel/assets/icon.svg",
+      "class": "other",
+      "pair": [
+        {
+          "id": "loading",
+          "template": "loading"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "create_devices"
+          },
+          "options": {
+            "singular": false
+          }
+        },
+        {
+          "id": "create_devices"
+        }
+      ],
+      "id": "nspanel",
+      "name": {
+        "en": "NSPanel"
+      },
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection"
+          },
+          "children": [
+            {
+              "id": "mqtt_topic",
+              "type": "text",
+              "label": {
+                "en": "Device MQTT topic"
+              },
+              "value": "",
+              "pattern": "^[^#+\\/]+$"
+            },
+            {
+              "id": "mqtt_path",
+              "type": "text",
+              "label": {
+                "en": "Device MQTT topic format"
+              },
+              "value": "%prefix%/%topic%/"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Device"
+          },
+          "children": [
+            {
+              "id": "screensaver_timeout",
+              "type": "number",
+              "label": {
+                "en": "Screensaver timeout"
+              },
+              "value": 45,
+              "min": 20,
+              "max": 300,
+              "units": {
+                "en": "s"
+              },
+              "hint": {
+                "en": "Time before screensaver is activated"
+              }
+            },
+            {
+              "id": "dim_timeout",
+              "type": "number",
+              "label": {
+                "en": "Display dim timeout"
+              },
+              "value": 45,
+              "min": 20,
+              "max": 300,
+              "units": {
+                "en": "s"
+              },
+              "hint": {
+                "en": "Time before screen is dimmed when screensaver is active"
+              }
+            },
+            {
+              "id": "sleep_timeout",
+              "type": "number",
+              "label": {
+                "en": "Deep sleep timeout"
+              },
+              "value": 45,
+              "min": 0,
+              "max": 300,
+              "units": {
+                "en": "s"
+              },
+              "hint": {
+                "en": "Time before screen's backlight is turned off, or 0 to disable"
+              }
+            },
+            {
+              "id": "brightness",
+              "type": "number",
+              "label": {
+                "en": "Brightness"
+              },
+              "value": 100,
+              "min": 1,
+              "max": 100,
+              "units": {
+                "en": "%"
+              },
+              "hint": {
+                "en": "Screen brightness"
+              }
+            },
+            {
+              "id": "sleep_brightness",
+              "type": "number",
+              "label": {
+                "en": "Dim brightness"
+              },
+              "value": 20,
+              "min": 1,
+              "max": 100,
+              "units": {
+                "en": "%"
+              },
+              "hint": {
+                "en": "Brightness when screen is dimmed"
+              }
+            },
+            {
+              "id": "background_color",
+              "type": "dropdown",
+              "label": {
+                "en": "Background color"
+              },
+              "values": [
+                {
+                  "id": "dark",
+                  "label": {
+                    "en": "Dark"
+                  }
+                },
+                {
+                  "id": "black",
+                  "label": {
+                    "en": "Black"
+                  }
+                }
+              ],
+              "value": "dark",
+              "hint": {
+                "en": "Device background theme"
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Forecast"
+          },
+          "children": [
+            {
+              "id": "use_internal_temperature",
+              "type": "checkbox",
+              "label": {
+                "en": "Use internal temperature sensor with weather forecast"
+              },
+              "value": true
+            },
+            {
+              "id": "outdoor_temperature_from_forecast",
+              "type": "checkbox",
+              "label": {
+                "en": "Get outdoor temperature from forecast"
+              },
+              "hint": {
+                "en": "If disabled, you need to setup a flow to update outdoor temperature value"
+              },
+              "value": true
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Reporting"
+          },
+          "children": [
+            {
+              "id": "update_interval",
+              "type": "number",
+              "label": {
+                "en": "Update interval"
+              },
+              "value": 50,
+              "min": 25,
+              "max": 120,
+              "units": {
+                "en": "s"
+              },
+              "hint": {
+                "en": "Time interval between consecutive reports"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "capabilities": {
+    "driver_version": {
+      "type": "string",
+      "title": {
+        "en": "Driver version"
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/version.svg"
+    },
+    "power": {
+      "type": "boolean",
+      "title": {
+        "en": "Powered",
+        "fr": "Alimentation"
+      },
+      "getable": true,
+      "setable": true,
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Power enabled",
+        "fr": "Alimentation activée"
+      },
+      "insightsTitleFalse": {
+        "en": "Power disabled",
+        "fr": "Alimentation désactivée"
+      },
+      "uiComponent": "button",
+      "uiQuickAction": false,
+      "icon": "assets/icons/capabilities/power.svg"
+    },
+    "region": {
+      "type": "string",
+      "title": {
+        "en": "Region"
+      },
+      "insights": false,
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "/assets/icons/region.svg"
+    },
+    "switch": {
+      "type": "boolean",
+      "title": {
+        "en": "Power"
+      },
+      "getable": true,
+      "setable": true,
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Power on"
+      },
+      "insightsTitleFalse": {
+        "en": "Power off"
+      },
+      "uiComponent": "toggle",
+      "uiQuickAction": false,
+      "icon": "assets/icons/onoff.svg"
+    }
+  }
+}

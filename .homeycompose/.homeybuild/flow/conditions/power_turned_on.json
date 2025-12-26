@@ -1,0 +1,18 @@
+{
+    "id": "power_turned_on",
+    "title": {
+        "en": "Power state is !{{on|off}}",
+        "fr": "L'alimentation est !{{allumée|éteinte}}"
+    },
+    "titleFormatted": {
+        "en": "Power state is !{{on|off}}",
+        "fr": "L'alimentation est !{{allumée|éteinte}}"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

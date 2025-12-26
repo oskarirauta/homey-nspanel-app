@@ -1,0 +1,14 @@
+{
+    "id": "bubble_disabled",
+    "title": {
+        "en": "Bubble was disabled",
+        "fr": "Les bulles sont désactivées"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "update_page_config_action",
+  "title": {
+    "en": "Update page config"
+  },
+  "titleFormatted": {
+    "en": "Update page config to [[json]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "config",
+      "type": "text",
+      "label": { "en": "config" },
+      "placeholder": { "en": "json" },
+      "title": { "en": "Page config" }
+    }
+  ]
+}

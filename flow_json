@@ -1,0 +1,6 @@
+qrcard:
+{"title":"WIFI","navigation": {"leading": {"target": "screensaver","name": "Screensaver"},"trailing":{"target": "screensaver","name": "Screensaver"}},"qrcode":"WIFI:S:my_ssid;T:WPA2;P:my_password;;","entities": [{"type":"text","icon":"account-lock","color":"weather_home","title":"SSID","value":"my_ssid"},{"type":"text","icon":"account-lock","color":"not_found","title":"Password","value":"my_password"}]}
+
+
+media:
+{"title":"Media player","navigation": {"leading": {"target": "screensaver","name": "Screensaver"},"trailing":{"target": "screensaver","name": "Screensaver"}},"media":{"author":"The Prodigy","title":"Firestarter"},"volume":85,"paused":false,"shuffle":false,"entities": [{"type":"button","icon":"account-lock","color":"weather_home","name":"first"},{"type":"button","icon":"alarm-bell","color":"not_found","name":"second"},{"type":"button","icon":"alien","color":"46521","name":"alien"}]}

@@ -1,0 +1,23 @@
+{
+  "id": "update_forecast_action",
+  "title": {
+    "en": "Update weather forecast"
+  },
+  "titleFormatted": {
+    "en": "Update forecast from [[json]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "json",
+      "type": "text",
+      "label": { "en": "json" },
+      "placeholder": { "en": "{'weather': [{'icon': 'sunny', 'temperature': 21.5},...]}" },
+      "title": { "en": "json weather array" }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "start_screensaver_action",
+  "title": {
+    "en": "Start screensaver"
+  },
+  "titleFormatted": {
+    "en": "Start screensaver"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ]
+}

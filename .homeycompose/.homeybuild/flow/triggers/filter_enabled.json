@@ -1,0 +1,14 @@
+{
+    "id": "filter_enabled",
+    "title": {
+        "en": "Filter was enabled",
+        "fr": "La filtration est activée"
+    },
+    "args": [
+        {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=intex_spa"
+        }
+    ]
+}

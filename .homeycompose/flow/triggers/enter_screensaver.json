@@ -1,0 +1,13 @@
+{
+  "id": "enter_screensaver",
+  "title": {
+      "en": "Entering screensaver"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ]
+}
