@@ -2394,16 +2394,8 @@
     </div>
   </div>
 
-  <script src="studio-pages.js"></script>
-  <script src="studio-card-bindings.js"></script>
-  <script src="studio-slot-bindings.js"></script>
-  <script src="studio-energy.js"></script>
-  <script src="studio-card-forms.js"></script>
-  <script src="studio-preview.js"></script>
-  <script src="studio-presets.js"></script>
-  <script src="studio-mqtt.js"></script>
   <script>
-    // App State
+    // App State — declared BEFORE external scripts so they can reference these globals
     let devices = [];
     let selectedDeviceId = 'demo';
     let currentDevice = null;
@@ -2411,14 +2403,9 @@
     let selectedSlot = 1;
     let selectedPowerNode = 0; // 0 to 5 for outer nodes
 
-    const POWER_NODE_NAMES = [
-      Homey.__('common.power_node_1'),
-      Homey.__('common.power_node_2'),
-      Homey.__('common.power_node_3'),
-      Homey.__('common.power_node_4'),
-      Homey.__('common.power_node_5'),
-      Homey.__('common.power_node_6')
-    ];
+    function powerNodeNames() {
+      return Array.from({ length: 6 }, (_, i) => Homey.__('common.power_node_' + (i + 1)));
+    }
 
     // Ensure power page rawOptions is a clean parsed object with home and 6 nodes
     function ensurePowerOptions(p) {
@@ -2467,11 +2454,49 @@
         slots: {
           1: { title: 'Kytkin 1', icon: 'lightbulb', color: '#FFAA00', type: 'switch', binding: { source: 'relay', relay: 1 }, id: 'slot_1', val: '1' },
           2: { title: 'Kytkin 2', icon: 'power', color: '#2696A8', type: 'switch', binding: { source: 'relay', relay: 2 }, id: 'slot_2', val: '0' },
-          3: { title: Homey.__('common.temperature'), icon: 'thermometer', color: '#10B981', type: 'text', binding: { source: 'internal' }, id: 'slot_3', val: '21.5 °C' },
+          3: { title: 'Temperature', icon: 'thermometer', color: '#10B981', type: 'text', binding: { source: 'internal' }, id: 'slot_3', val: '21.5 °C' },
           4: { title: 'Kello', icon: 'clock-outline', color: '#94A3B8', type: 'button', id: 'screensaver', val: '' }
         }
       }
     };
+
+    // Screensaver & Device Settings State — declared before external scripts
+    let currentScreensaverConfig = {
+      screensaver_timeout: 45,
+      dim_timeout: 45,
+      sleep_timeout: 45,
+      brightness: 100,
+      sleep_brightness: 20,
+      background_color: 'dark',
+      use_internal_temperature: true,
+      outdoor_temperature_from_forecast: true,
+      update_interval: 50,
+      decouple_buttons: false,
+      button_navigation: false,
+      buzzer_pwm: false,
+      disable_nav_when_armed: false,
+      night_mode_enabled: false,
+      night_mode_start: '22:00',
+      night_mode_end: '07:00',
+      night_brightness: 20,
+      night_sleep_brightness: 0,
+      night_sleep_timeout: 15,
+      night_theme_black: true,
+      night_follow_alarm: true,
+      global_pin: '',
+      statusIcon1: { icon: '', color: '#FFB74D' },
+      statusIcon2: { icon: '', color: '#4FC3F7' }
+    };
+  </script>
+  <script src="studio-pages.js"></script>
+  <script src="studio-card-bindings.js"></script>
+  <script src="studio-slot-bindings.js"></script>
+  <script src="studio-energy.js"></script>
+  <script src="studio-card-forms.js"></script>
+  <script src="studio-preview.js"></script>
+  <script src="studio-presets.js"></script>
+  <script src="studio-mqtt.js"></script>
+  <script>
 
     // --- Device Management ---
     function loadDevices() {
@@ -2503,34 +2528,6 @@
         renderUI();
       }
     }
-
-    // Screensaver & Device Settings State
-    let currentScreensaverConfig = {
-      screensaver_timeout: 45,
-      dim_timeout: 45,
-      sleep_timeout: 45,
-      brightness: 100,
-      sleep_brightness: 20,
-      background_color: 'dark',
-      use_internal_temperature: true,
-      outdoor_temperature_from_forecast: true,
-      update_interval: 50,
-      decouple_buttons: false,
-      button_navigation: false,
-      buzzer_pwm: false,
-      disable_nav_when_armed: false,
-      night_mode_enabled: false,
-      night_mode_start: '22:00',
-      night_mode_end: '07:00',
-      night_brightness: 20,
-      night_sleep_brightness: 0,
-      night_sleep_timeout: 15,
-      night_theme_black: true,
-      night_follow_alarm: true,
-      global_pin: '',
-      statusIcon1: { icon: '', color: '#FFB74D' },
-      statusIcon2: { icon: '', color: '#4FC3F7' }
-    };
 
     function loadStudioDeviceData() {
       selectedDeviceId = document.getElementById('device-select').value;
@@ -3266,6 +3263,7 @@
 </div>
 <script src="studio-save.js"></script>
 <script>
+function initializeStudioLayout() {
 const targetField=document.getElementById('slot-id-input')?.closest('.form-group');
 if(targetField){const details=document.createElement('details');const label=document.createElement('summary');label.textContent=Homey.__('common.advanced_flow_nav');details.append(label);targetField.before(details);details.append(targetField);}
 
@@ -3284,6 +3282,7 @@ function syncSavebarSpace() {
 if(typeof ResizeObserver !== 'undefined')new ResizeObserver(syncSavebarSpace).observe(savebarElement);
 window.addEventListener('resize',syncSavebarSpace);
 syncSavebarSpace();
+}
 </script>
 <script src="studio-ux.js"></script>
 <script src="studio-status.js"></script>

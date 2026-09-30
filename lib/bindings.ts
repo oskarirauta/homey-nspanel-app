@@ -82,7 +82,9 @@ export class BindingService {
           const device = await api.devices.getDevice({ id: b.deviceId });
           if (!device.capabilitiesObj?.[b.capabilityId!]) throw new Error('Capability no longer exists');
           const e: Watched = { device, instance: undefined, value: device.capabilitiesObj[b.capabilityId!].value, listeners: new Set() };
-          e.instance = device.makeCapabilityInstance(b.capabilityId, (value: any) => { e.value = value; e.listeners.forEach(fn => fn()); });
+          let instance:any;
+          instance = device.makeCapabilityInstance(b.capabilityId, (value: any) => { if (e.instance !== instance) return; e.value = value; e.listeners.forEach(fn => fn()); });
+          e.instance = instance;
           const changed = () => e.listeners.forEach(fn => fn());
           const deleted = () => { e.value = undefined; changed(); };
           device.on?.('update', changed); device.on?.('delete', deleted);
@@ -99,7 +101,7 @@ export class BindingService {
     return () => {
       watched.listeners.delete(listener);
       if (!watched.listeners.size && this.entries.get(key) === watched) {
-        watched.cleanup?.(); watched.instance.destroy(); this.entries.delete(key);
+        watched.cleanup?.(); watched.instance?.destroy(); this.entries.delete(key);
       }
     };
   }
@@ -110,14 +112,21 @@ export class BindingService {
       for(const [key,entry] of this.entries){
         const [id,capabilityId]=JSON.parse(key);
         if(id!==deviceId || capabilityId!==failedCapability)continue;
-        // Clean up old device listeners and capability instance before replacing to prevent leaks
+        const cap=device.capabilitiesObj?.[capabilityId];
+        // Create the replacement first: failed refresh must keep the old subscription alive.
+        let instance:any;
+        instance=cap ? device.makeCapabilityInstance(capabilityId, (value:any) => {
+          if (entry.instance !== instance) return;
+          entry.value=value;
+          entry.listeners.forEach(listener=>listener());
+        }) : undefined;
         entry.cleanup?.();
         entry.instance?.destroy?.();
         const changed = () => entry.listeners.forEach(fn => fn());
         const deleted = () => { entry.value = undefined; changed(); };
         device.on?.('update', changed); device.on?.('delete', deleted);
         entry.cleanup = () => { device.removeListener?.('update', changed); device.removeListener?.('delete', deleted); };
-        const cap=device.capabilitiesObj?.[capabilityId];
+        entry.instance=instance;
         entry.value=device.available===false?undefined:cap?.value;
         entry.device=device;
         entry.listeners.forEach(listener=>listener());

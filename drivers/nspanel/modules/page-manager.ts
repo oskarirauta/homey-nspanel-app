@@ -253,32 +253,32 @@ export class PageManager {
       }
     }
 
+    const showTarget = async (id: string, page: StoredPage): Promise<void> => {
+      const previousId = dev.currentPageId;
+      dev.currentPageId = id;
+      try {
+        await this.renderAndDisplayPage(page, true);
+      } catch (error) {
+        if (dev.currentPageId === id) dev.currentPageId = previousId;
+        throw error;
+      }
+    };
     if (dev.pages[targetId]) {
-      await this.renderAndDisplayPage(dev.pages[targetId], true);
-      dev.currentPageId = targetId;
+      await showTarget(targetId, dev.pages[targetId]);
       return;
     }
-
     const foundKey = Object.keys(dev.pages).find(k => k.toLowerCase() === lowerTarget);
     if (foundKey && dev.pages[foundKey]) {
-      await this.renderAndDisplayPage(dev.pages[foundKey], true);
-      dev.currentPageId = foundKey;
+      await showTarget(foundKey, dev.pages[foundKey]);
       return;
     }
-
     const pType = Page.stringToPageType(targetId);
     if (pType !== undefined) {
-      const page = this.getOrCreatePage(targetId, pType);
-      await this.renderAndDisplayPage(page, true);
-      dev.currentPageId = targetId;
+      await showTarget(targetId, this.getOrCreatePage(targetId, pType));
       return;
     }
-
     dev.log(`Page "${targetId}" not found, falling back to active page.`);
-    const fallback = dev.pages['active'] || this.initDefaultPage();
-    await this.renderAndDisplayPage(fallback, true);
-    dev.currentPageId = 'active';
-    await this.renderAndDisplayPage(fallback, true);
+    await showTarget('active', dev.pages['active'] || this.initDefaultPage());
   }
 
   public async showUnlockScreen(title: string, destination: string, pin: string, returnPageId?: string): Promise<void> {
@@ -670,10 +670,14 @@ export class PageManager {
     dev.log(`[Popup Notification] Showing notification: heading="${heading}", text="${text}", timeout=${timeout}`);
 
     if (!dev.popupActive) {
-      dev.returnPageAfterPopup = dev.currentPageId;
+      dev.returnPageAfterPopup = dev.screensaverActive ? 'screensaver' : dev.currentPageId;
     }
 
     dev.clearPopupEntities();
+    if (dev.screensaverActive) {
+      dev.screensaverActive = false;
+      dev.updateBrightness();
+    }
     dev.popupActive = true;
     dev.commandNotification = true;
 
@@ -689,13 +693,15 @@ export class PageManager {
 
     const revision = this.viewRevision;
     dev.homey.setTimeout(() => {
-      if (revision !== this.viewRevision || dev.screensaverActive) return;
+      if (revision !== this.viewRevision || dev.screensaverActive || !dev.popupActive || dev.currentHmiScreen !== 'popupNotify') return;
       dev.sendCmnd('CustomSend', cmd);
       dev.updateSleepTimer();
     }, 120);
 
     if (timeout > 0) {
-      dev.notificationTimeoutTimer = dev.homey.setTimeout(async () => {
+      const timer = dev.homey.setTimeout(async () => {
+        if (dev.notificationTimeoutTimer !== timer || revision !== this.viewRevision || !dev.popupActive || dev.currentHmiScreen !== 'popupNotify') return;
+        dev.notificationTimeoutTimer = undefined;
         try {
           dev.log(`[Popup Notification] Timeout reached (${timeout}s), auto-dismissing`);
           await this.dismissNotification();
@@ -703,6 +709,7 @@ export class PageManager {
           dev.error('Notification auto-dismiss failed:', err);
         }
       }, timeout * 1000);
+      dev.notificationTimeoutTimer = timer;
     }
   }
 

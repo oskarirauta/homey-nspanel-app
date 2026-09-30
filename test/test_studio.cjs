@@ -109,7 +109,9 @@ async function tick(){await new Promise(resolve=>setImmediate(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
 
 const diagnosticSource=fs.readFileSync('settings/studio-ux.js','utf8').split('function bindingDiagnostic')[1].split('function updateLinkDiagnostics')[0];
-const diagnose=vm.runInNewContext('(function bindingDiagnostic'+diagnosticSource.trim()+')');
+const diagnosticLocale=JSON.parse(fs.readFileSync('locales/en.json','utf8'));
+const diagnosticContext={Homey:{__(key){return key.split('.').reduce((value,part)=>value[part],diagnosticLocale);}}};
+const diagnose=vm.runInNewContext('(function bindingDiagnostic'+diagnosticSource.trim()+')',diagnosticContext);
 const binding={deviceId:'d',capabilityId:'onoff'};
 assert.equal(diagnose(binding,[],'error').state,'error');
 assert.equal(diagnose(binding,[],'ready').state,'error');
@@ -118,10 +120,10 @@ assert.equal(diagnose(binding,[{id:'d',capabilities:[]}],'ready').state,'error')
 assert.equal(diagnose(binding,[{id:'d',capabilities:[{id:'onoff',value:false}]}],'ready').state,'ok');
 
 const policySource=fs.readFileSync('settings/studio-ux.js','utf8').split('function sourcePolicyText')[1].split('const sourceEditorBeforeDiagnostics')[0];
-const policy=vm.runInNewContext('(function sourcePolicyText'+policySource.trim()+')');
+const policy=vm.runInNewContext('(function sourcePolicyText'+policySource.trim()+')',diagnosticContext);
 assert(policy('homey','light').includes('Homey'));
 assert(policy('flow','light').includes('Flow'));
-assert(policy('fixed','power').includes('aloitusarvo'));
+assert(policy('fixed','power').includes('initial value'));
 
 // Source selection is transactional: opening/cancelling the picker is not an edit.
 const html=fs.readFileSync('settings/index.html','utf8');
@@ -149,7 +151,7 @@ assert(code.includes("if(target.matches('[data-source-control]'))return;"), 'Onl
 const pageModule=fs.readFileSync('settings/studio-pages.js','utf8');
 new vm.Script(pageModule);
 assert(html.includes('<script src="studio-pages.js"></script>'));
-assert(html.indexOf('src="studio-pages.js"')<html.indexOf('// App State'));
+assert(html.indexOf('// App State')<html.indexOf('src="studio-pages.js"'), 'App State globals must be declared before external studio scripts load');
 const duplicateCode=pageModule.split('function duplicateCurrentPage()')[1].split('// --- Inline Modal for Delete Page ---')[0];
 const copyDirty=[];
 const copyCtx={selectedPageId:'renamed',currentPages:{renamed:{title:'Room',_renameFrom:'old',slots:{1:{id:'lamp',binding:{source:'homey',deviceId:'lamp'}}}}},updatePageDropdown(){},loadSelectedPage(){},markStudioDirty(id){copyDirty.push(id);}};
@@ -205,7 +207,7 @@ vm.createContext(statusCtx);vm.runInContext(statusCode,statusCtx);
 // Card editors retain their source callbacks after being loaded from a separate file.
 const cardCode=fs.readFileSync('settings/studio-card-bindings.js','utf8');new vm.Script(cardCode);
 assert(html.includes('<script src="studio-card-bindings.js"></script>'));
-assert(html.indexOf('src="studio-card-bindings.js"')<html.indexOf('// App State'));
+assert(html.indexOf('// App State')<html.indexOf('src="studio-card-bindings.js"'), 'App State globals must be declared before studio-card-bindings.js loads');
 const cardElements=new Map();
 const cardEl=id=>{if(!cardElements.has(id))cardElements.set(id,{value:'',remove(){},prepend(){},append(){},closest(){return this;}});return cardElements.get(id);};
 let cardAccept,cardKind,cardDirty=0,cardRenders=0;
@@ -224,7 +226,7 @@ assert(cardRenders>=9);
 
 const slotBindingCode=fs.readFileSync('settings/studio-slot-bindings.js','utf8');new vm.Script(slotBindingCode);
 assert(html.includes('<script src="studio-slot-bindings.js"></script>'));
-assert(html.indexOf('src="studio-slot-bindings.js"')<html.indexOf('// App State'));
+assert(html.indexOf('// App State')<html.indexOf('src="studio-slot-bindings.js"'), 'App State globals must be declared before studio-slot-bindings.js loads');
 assert(slotBindingCode.includes('function renderSlotBinding()'));
 assert(slotBindingCode.includes('function renderPowerBinding(home=false)'));
 assert(!html.includes('onclick="refreshStudioDeviceStatus()"'),'Status is observed automatically, not a promise of an immediate panel probe');
@@ -239,10 +241,10 @@ assert(html.indexOf('src="studio-init.js"')>html.indexOf('src="studio-status.js"
 const initCalls=[];
 const initCtx={window:{Homey:{}},document:{getElementById:()=>null},console,renderUI:()=>initCalls.push('render'),updateStudioSaveState:()=>initCalls.push('save'),loadDevices:()=>initCalls.push('devices'),loadGlobalMqttSettings:()=>initCalls.push('mqtt'),loadGlobalWeatherSettings:()=>initCalls.push('weather'),startStudioStatusPolling:()=>initCalls.push('status')};
 vm.createContext(initCtx);vm.runInContext(initCode,initCtx);
-assert.deepEqual(initCalls,['render','save']);
-initCtx.window.Homey={ready(){initCalls.push('ready');},api(){}};
+assert.deepEqual(initCalls,[]);
+initCtx.window.Homey={ready(){initCalls.push('ready');},api(){},__(key){return key;}};
 initCtx.startStudio();initCtx.startStudio();
-assert.deepEqual(initCalls,['render','save','ready','devices','mqtt','weather','status']);
+assert.deepEqual(initCalls,['ready','render','save','devices','mqtt','weather','status']);
 
 // A missing page must not fall through a wrapper into binding editor rendering.
 const energyModule=fs.readFileSync('settings/studio-energy.js','utf8');new vm.Script(energyModule);
@@ -312,7 +314,7 @@ assert(!timeoutCtx.getPanelInputErrors().has('ss-night-mode-start'));
 // User labels must remain text in energy editor attributes and tab markup.
 const energyFields=new Map();
 const energyEl=id=>{if(!energyFields.has(id))energyFields.set(id,{innerHTML:''});return energyFields.get(id);};
-const energyCtx={currentPages:{active:{}},selectedPageId:'active',POWER_NODE_NAMES:['Node'],document:{getElementById:energyEl},ensurePowerOptions:()=>({nodes:[{title:'Kitchen "A" <meter>',consumption:0,icon:'a"b',color:'white'}]}),renderPowerBinding(){}};
+const energyCtx={currentPages:{active:{}},selectedPageId:'active',powerNodeNames:()=>['Node'],document:{getElementById:energyEl},ensurePowerOptions:()=>({nodes:[{title:'Kitchen "A" <meter>',consumption:0,icon:'a"b',color:'white'}]}),renderPowerBinding(){}};
 vm.createContext(energyCtx);vm.runInContext(editorLoadSource('escapeHtml'),energyCtx);vm.runInContext(editorLoadSource('loadPowerNodeDetail'),energyCtx);
 energyCtx.loadPowerNodeDetail(0);
 assert(energyEl('power-node-detail').innerHTML.includes('value="Kitchen &quot;A&quot; &lt;meter&gt;"'));
@@ -322,7 +324,7 @@ assert.equal(energyCtx.escapeHtml(0),'0');assert.equal(energyCtx.escapeHtml('&<>
 // Rendering failure must never leave Homey's spinner covering the error.
 const bootElements=new Map();const bootEl=id=>{if(!bootElements.has(id))bootElements.set(id,{hidden:true,textContent:''});return bootElements.get(id);};
 let readyCalls=0, failRender=true, bootLoads=0;
-const failedBoot={window:{Homey:{ready(){readyCalls++;},api(){}}},console:{error(){}},document:{getElementById:bootEl},renderUI(){assert.equal(readyCalls,1);if(failRender)throw new Error('editor error');},updateStudioSaveState(){},loadDevices(){bootLoads++;},loadGlobalMqttSettings(){},loadGlobalWeatherSettings(){},startStudioStatusPolling(){}};
+const failedBoot={window:{Homey:{ready(){readyCalls++;},api(){},__(key){return key;}}},console:{error(){}},document:{getElementById:bootEl},renderUI(){assert.equal(readyCalls,1);if(failRender)throw new Error('editor error');},updateStudioSaveState(){},loadDevices(){bootLoads++;},loadGlobalMqttSettings(){},loadGlobalWeatherSettings(){},startStudioStatusPolling(){}};
 vm.createContext(failedBoot);vm.runInContext(initCode,failedBoot);
 assert.equal(readyCalls,1);assert.equal(bootEl('studio-startup-error').hidden,false);assert(bootEl('studio-startup-error-text').textContent.includes('editor error'));assert.equal(bootLoads,0);
 failRender=false;failedBoot.startStudio();assert.equal(bootLoads,1);assert.equal(bootEl('studio-startup-error').hidden,true);
@@ -330,7 +332,7 @@ failedBoot.startStudio();assert.equal(readyCalls,1);assert.equal(bootLoads,1);
 
 const cardFormsCode=fs.readFileSync('settings/studio-card-forms.js','utf8');new vm.Script(cardFormsCode);
 assert(html.includes('<script src="studio-card-forms.js"></script>'));
-assert(html.indexOf('src="studio-card-forms.js"')<html.indexOf('// App State'));
+assert(html.indexOf('// App State')<html.indexOf('src="studio-card-forms.js"'), 'App State globals must be declared before studio-card-forms.js loads');
 const formFields=new Map();
 const formEl=id=>{if(!formFields.has(id))formFields.set(id,{value:'',checked:false});return formFields.get(id);};
 let formDirty=0,formRenders=0;

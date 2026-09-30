@@ -198,3 +198,12 @@ Testit tarkistavat kuuden popupin tunnisteet, termostaatin oletuskohteen, viisi 
 Korvaava Flow-ilmoitus säilyttää alkuperäisen paluukohteen, joten lepotilasta avattu ilmoitusketju palaa edelleen lepotilaan. Ilmoituksen sulkeminen käyttää olemassa olevan oletussivun tunnistetta, jos alkuperäinen paluusivu on poistettu. Viivästetty paluusivun piirto tarkistaa näkymäsukupolven, nykyisen sivun ja popup-/lepotilan: uuden näkymän avaus tai laitteen purku mitätöi vanhan piirron. Piirtovirhe käsitellään lokiin.
 
 Regressiotestit kattavat ilmoituksen korvaamisen ja lepotilapaluun, poistetun paluusivun, uuden popupin alle jäävän piirron estämisen sekä normaalin paluupiirron. Koko npm test ja Homey-build läpäisivät. Flow-ehtojen rekisteröinnin vertailu vastasi aiempaa toteutusta; siihen ei tehty muutoksia. Sisäisen showNotification-metodin erillinen viivästetty lähetys ja muiden sivunvaihtopolkujen katselmointi jäävät jatkoon.
+
+
+## Esipush-katselmoinnin korjaukset 30.9.2026
+
+Epäonnistuneen Homey-ohjauksen palautuminen luo capability-tilauksen uudelleen ennen vanhan tilauksen purkamista. Vanhat callbackit eivät enää muuta arvoa. Sisäinen ilmoitus herättää lepotilan ja säilyttää paluukohteen; viivästetty lähetys ja sulkeminen tarkistavat näkymän ja ajastimen voimassaolon. Navigointi asettaa kohdesivun ennen HMI-sivutyypin valintaa ja palauttaa aiemman tunnisteen piirron epäonnistuessa. Puuttuvan kohteen fallback piirretään kerran. Sääsivun Fahrenheit-muunnos koskee myös ennusteen min/max-lämpötiloja.
+
+Studion asetusten otsikot, lähdeohjeet ja linkitysdiagnostiikka käyttävät kielitiedostoja. `common`-avaimet siirrettiin käyttöliittymän odottamaan juureen, puuttuvat käytetyt avaimet lisättiin ja HTML:n `data-i18n`-tekstit käännetään käynnistyksessä. Tämä ei merkitse kaikkien kiinteiden käyttöliittymätekstien tai paneelitekstien kielikattavuutta auditoiduksi.
+
+Varmennus: koko `npm test` uusine regressiotesteineen sekä Homey-build ja debug-validointi läpäisivät. Koko Studion lähdesivun käynnistyminen ja uudelleenyritys tarkistettiin oikeilla en/fi-kielitiedostoilla välittömällä ja viivästetyllä SDK:lla. Fyysiset paneelikokeet jäävät käyttäjälle ja testaajalle. Käyttäjä vahvisti edellisen Studion käynnistyskorjauksen toimivaksi Homeyssa; tämän kierroksen muutoksia ei vielä ole vahvistettu siellä.

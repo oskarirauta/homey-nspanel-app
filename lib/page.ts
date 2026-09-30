@@ -1438,6 +1438,7 @@ export namespace Page {
       const entities: Entity[] = [];
       const metric = unit !== '°F';
       const displayUnit = unit ?? (metric ? '°C' : '°F');
+      const forecastTemperature = (value: number) => metric ? Number(value) : Number(value) * 1.8 + 32;
 
       // Slot 1: Indoor temperature
       if (indoorTemp !== undefined && indoorTemp !== null) {
@@ -1463,9 +1464,9 @@ export namespace Page {
         // Build detailed value string with min/max and wind if available
         let tempStr = '';
         if (day.tempMin !== undefined && day.tempMax !== undefined) {
-          tempStr = `${Number(day.tempMin).toFixed(0)}…${Number(day.tempMax).toFixed(0)}${displayUnit}`;
+          tempStr = `${forecastTemperature(day.tempMin).toFixed(0)}…${forecastTemperature(day.tempMax).toFixed(0)}${displayUnit}`;
         } else if (day.temperature !== undefined) {
-          tempStr = Number(day.temperature).toFixed(1) + displayUnit;
+          tempStr = forecastTemperature(day.temperature).toFixed(1) + displayUnit;
         }
         if (day.windSpeed !== undefined && day.windSpeed > 0) {
           const windVal = metric ? `${Math.round(day.windSpeed)} m/s` : `${Math.round(day.windSpeed * 2.237)} mph`;

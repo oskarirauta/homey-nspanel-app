@@ -5,12 +5,13 @@
   "scripts": {
     "build": "tsc",
     "run": "homeyConfig compose && athom project --run",
-    "test": "tsc && node .homeybuild/test/test_pages.js && node .homeybuild/test/test_bindings.js && node test/test_studio.cjs && node .homeybuild/test/test_met.js && node .homeybuild/test/test_stabilize.js && node .homeybuild/test/test_commands.js && node .homeybuild/test/test_controls.js && node .homeybuild/test/test_popup_lifecycle.js && node .homeybuild/test/test_timer.js && node .homeybuild/test/test_value_sources.js && node .homeybuild/test/test_flow_pages.js"
+    "test": "tsc && node .homeybuild/test/test_pages.js && node .homeybuild/test/test_bindings.js && node test/test_studio.cjs && node test/test_studio_startup.cjs && node .homeybuild/test/test_met.js && node .homeybuild/test/test_stabilize.js && node .homeybuild/test/test_commands.js && node .homeybuild/test/test_controls.js && node .homeybuild/test/test_popup_lifecycle.js && node .homeybuild/test/test_timer.js && node .homeybuild/test/test_value_sources.js && node .homeybuild/test/test_flow_pages.js && node .homeybuild/test/test_review_regressions.js"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.11",
     "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.12",
     "@types/node": "^18.19.16",
+    "jsdom": "^26.1.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {

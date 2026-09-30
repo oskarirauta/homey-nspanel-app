@@ -61,7 +61,7 @@
 
       container.innerHTML = `
         <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--accent); display: flex; justify-content: space-between; align-items: center;">
-          <span>${POWER_NODE_NAMES[i]}</span>
+          <span>${powerNodeNames()[i]}</span>
           <button class="btn btn-sm" onclick="clearPowerNode(${i})" style="font-size: 0.68rem; padding: 2px 7px; color: var(--danger); border-color: rgba(239,68,68,0.3);">Tyhjennä</button>
         </div>
         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
