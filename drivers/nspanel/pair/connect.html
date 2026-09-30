@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Sonoff NSPanel</title>
+  <style>
+    :root {
+      --primary: #0070f3;
+      --primary-hover: #0051bb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --focus-ring: rgba(0, 112, 243, 0.2);
+      --success: #10b981;
+      --error: #ef4444;
+      --radius: 10px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f19;
+        --card-bg: #151d2f;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --border: #222f46;
+        --focus-ring: rgba(0, 112, 243, 0.35);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      transition: border-color 0.2s ease;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .card-title svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      opacity: 0.85;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--text);
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding-left: 4px;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="password"]:focus {
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .col-8 { flex: 8; }
+    .col-4 { flex: 4; }
+    .col-6 { flex: 6; }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .radio-option:hover {
+      background: rgba(0, 112, 243, 0.04);
+      border-color: var(--primary);
+    }
+
+    .radio-option input[type="radio"] {
+      margin-top: 3px;
+      cursor: pointer;
+    }
+
+    .radio-option .radio-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .radio-option .radio-title {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .radio-option .radio-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 10px 16px;
+      font-size: 13px;
+      border: none;
+      transition: background-color 0.2s, opacity 0.2s, transform 0.1s;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      width: 100%;
+      padding: 13px;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: rgba(0, 0, 0, 0.05);
+      border-color: var(--text-muted);
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .status-badge {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: block;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .status-badge.success {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      font-weight: 500;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .status-badge.error {
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--error);
+      font-weight: 500;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .status-badge.info {
+      background: rgba(0, 112, 243, 0.1);
+      color: var(--primary);
+      border: 1px solid rgba(0, 112, 243, 0.2);
+    }
+
+    .helper-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    details {
+      margin-top: 14px;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+
+    summary {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .spinner-dark {
+      border: 2px solid rgba(0, 112, 243, 0.25);
+      border-top-color: var(--primary);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="txt_title">Connect Sonoff NSPanel</h2>
+    <p class="subtitle" id="txt_subtitle">Configure connection between NSPanel, MQTT broker, and Homey</p>
+
+    <!-- 1. Connection Mode -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <span id="txt_mode_title">1. Connection Mode</span>
+      </div>
+
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="mqtt_mode" value="standalone" checked onchange="toggleMqttMode()">
+          <div class="radio-text">
+            <span class="radio-title" id="txt_mode_standalone">Direct MQTT (Built-in connection - Recommended)</span>
+            <span class="radio-desc" id="txt_mode_help_standalone">Direct MQTT creates an independent, low-latency connection directly to your MQTT broker without additional Homey apps.</span>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="mqtt_mode" value="scanno" onchange="toggleMqttMode()">
+          <div class="radio-text">
+            <span class="radio-title" id="txt_mode_scanno">Scanno MQTT Client (nl.scanno.mqtt)</span>
+            <span class="radio-desc" id="txt_mode_help_scanno">Uses the nl.scanno.mqtt app installed on your Homey.</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. Broker settings (Visible if standalone) -->
+    <div class="card" id="broker_card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><path d="M4 1h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V3c0-1.1.9-2 2-2zm0 8h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2zm0 8h16c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-4c0-1.1.9-2 2-2zM6 5h2v-2H6v2zm0 8h2v-2H6v2zm0 8h2v-2H6v2z"/></svg>
+        <span id="txt_broker_title">2. MQTT Broker Settings</span>
+      </div>
+
+      <div class="row">
+        <div class="col-8 form-group">
+          <label for="mqtt_host" id="lbl_broker_host">Broker IP / Host *</label>
+          <input type="text" id="mqtt_host" placeholder="192.168.1.50">
+        </div>
+        <div class="col-4 form-group">
+          <label for="mqtt_port" id="lbl_broker_port">Port *</label>
+          <input type="number" id="mqtt_port" value="1883">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 form-group">
+          <label for="mqtt_user" id="lbl_broker_user">Username</label>
+          <input type="text" id="mqtt_user" placeholder="optional">
+        </div>
+        <div class="col-6 form-group">
+          <label for="mqtt_password" id="lbl_broker_password">Password</label>
+          <input type="password" id="mqtt_password" placeholder="optional">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="btn_test_broker" onclick="testBroker()">
+          <span id="txt_btn_test_broker">Test Broker Connection</span>
+        </button>
+      </div>
+      <div id="broker_status"></div>
+    </div>
+
+    <!-- 3. NSPanel Device Settings -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v10H4V6zm16-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h6v2H8v2h8v-2h-2v-2h6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z"/></svg>
+        <span id="txt_device_title">3. NSPanel Device Settings</span>
+      </div>
+
+      <div class="form-group">
+        <label for="device_name" id="lbl_device_name">Device Name in Homey</label>
+        <input type="text" id="device_name" value="NSPanel">
+      </div>
+
+      <div class="form-group">
+        <label for="mqtt_topic" id="lbl_tasmota_topic">NSPanel Tasmota Topic *</label>
+        <div class="row">
+          <div class="col-8">
+            <input type="text" id="mqtt_topic" placeholder="e.g. nspanel or tasmota_XXXXXX">
+          </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-secondary" style="width:100%" id="btn_scan" onclick="scanDevices()">
+              <span id="txt_btn_scan">Scan</span>
+            </button>
+          </div>
+        </div>
+        <div class="helper-text" id="txt_topic_hint">Same Topic configured in NSPanel Tasmota under Configuration -&gt; Configure MQTT.</div>
+      </div>
+
+      <div id="scan_status"></div>
+
+      <!-- Advanced settings -->
+      <details>
+        <summary id="txt_advanced">Advanced Settings</summary>
+        <div class="form-group">
+          <label for="mqtt_path" id="lbl_topic_format">Full Topic Format</label>
+          <input type="text" id="mqtt_path" value="%prefix%/%topic%/">
+          <div class="helper-text" id="txt_format_hint">Tasmota default: %prefix%/%topic%/</div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="button" class="btn btn-primary" id="btn_submit" onclick="submitPairing()">
+      <span id="txt_btn_submit">Connect and Add NSPanel</span>
+    </button>
+    <div id="submit_status" style="margin-top: 10px; text-align: center;"></div>
+  </div>
+
+  <script type="text/javascript">
+    function t(key, fallback) {
+      if (window.Homey && typeof Homey.__ === 'function') {
+        const res = Homey.__(key);
+        if (res && res !== key) return res;
+      }
+      return fallback;
+    }
+
+    function initTranslations() {
+      document.getElementById('txt_title').textContent = t('pair.connect_title', 'Connect Sonoff NSPanel');
+      document.getElementById('txt_subtitle').textContent = t('pair.connect_subtitle', 'Configure connection between NSPanel, MQTT broker, and Homey');
+      document.getElementById('txt_mode_title').textContent = t('pair.connection_mode', '1. Connection Mode');
+      document.getElementById('txt_mode_standalone').textContent = t('pair.mode_standalone', 'Direct MQTT (Built-in connection - Recommended)');
+      document.getElementById('txt_mode_help_standalone').textContent = t('pair.mode_help_standalone', 'Direct MQTT creates an independent, low-latency connection directly to your MQTT broker without additional Homey apps.');
+      document.getElementById('txt_mode_scanno').textContent = t('pair.mode_scanno', 'Scanno MQTT Client (nl.scanno.mqtt)');
+      document.getElementById('txt_mode_help_scanno').textContent = t('pair.mode_help_scanno', 'Uses the nl.scanno.mqtt app installed on your Homey.');
+      document.getElementById('txt_broker_title').textContent = t('pair.broker_settings', '2. MQTT Broker Settings');
+      document.getElementById('lbl_broker_host').textContent = t('pair.broker_host', 'Broker IP / Host *');
+      document.getElementById('lbl_broker_port').textContent = t('pair.broker_port', 'Port *');
+      document.getElementById('lbl_broker_user').textContent = t('pair.broker_user', 'Username');
+      document.getElementById('lbl_broker_password').textContent = t('pair.broker_password', 'Password');
+      document.getElementById('mqtt_user').placeholder = t('pair.optional', 'optional');
+      document.getElementById('mqtt_password').placeholder = t('pair.optional', 'optional');
+      document.getElementById('txt_btn_test_broker').textContent = t('pair.test_broker', 'Test Broker Connection');
+      document.getElementById('txt_device_title').textContent = t('pair.device_settings', '3. NSPanel Device Settings');
+      document.getElementById('lbl_device_name').textContent = t('pair.device_name', 'Device Name in Homey');
+      document.getElementById('lbl_tasmota_topic').textContent = t('pair.tasmota_topic', 'NSPanel Tasmota Topic *');
+      document.getElementById('txt_topic_hint').textContent = t('pair.tasmota_topic_hint', 'Same Topic configured in NSPanel Tasmota under Configuration -> Configure MQTT.');
+      document.getElementById('txt_btn_scan').textContent = t('pair.scan', 'Scan');
+      document.getElementById('txt_advanced').textContent = t('pair.advanced', 'Advanced Settings');
+      document.getElementById('lbl_topic_format').textContent = t('pair.topic_format', 'Full Topic Format');
+      document.getElementById('txt_format_hint').textContent = t('pair.topic_format_hint', 'Tasmota default: %prefix%/%topic%/');
+      document.getElementById('txt_btn_submit').textContent = t('pair.submit', 'Connect and Add NSPanel');
+
+      if (window.Homey && typeof Homey.setTitle === 'function') {
+        Homey.setTitle(t('pair.title', 'Add NSPanel'));
+      }
+    }
+
+    function getMode() {
+      const radios = document.getElementsByName('mqtt_mode');
+      for (const r of radios) {
+        if (r.checked) return r.value;
+      }
+      return 'standalone';
+    }
+
+    function toggleMqttMode() {
+      const mode = getMode();
+      const brokerCard = document.getElementById('broker_card');
+      if (mode === 'standalone') {
+        brokerCard.style.display = 'block';
+      } else {
+        brokerCard.style.display = 'none';
+      }
+    }
+
+    async function testBroker() {
+      const btn = document.getElementById('btn_test_broker');
+      const statusDiv = document.getElementById('broker_status');
+      const host = document.getElementById('mqtt_host').value.trim();
+      const port = parseInt(document.getElementById('mqtt_port').value, 10) || 1883;
+      const user = document.getElementById('mqtt_user').value.trim();
+      const password = document.getElementById('mqtt_password').value;
+
+      if (!host) {
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.enter_host_error', 'Please enter Broker IP or Host address!') + '</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner spinner-dark"></span> ' + t('pair.testing_broker', 'Testing...');
+      statusDiv.innerHTML = '<div class="status-badge info">' + t('pair.connecting_broker', 'Connecting to broker...') + '</div>';
+
+      try {
+        const result = await Homey.emit('test_broker', { host, port, user, password });
+        if (result && result.success) {
+          statusDiv.innerHTML = '<div class="status-badge success">' + t('pair.broker_success', '✓ Connection to MQTT broker successful!') + '</div>';
+        } else {
+          statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.broker_error', '✗ Connection error: ') + (result?.error || 'Unknown error') + '</div>';
+        }
+      } catch (err) {
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.broker_error', '✗ Connection error: ') + (err.message || err) + '</div>';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span id="txt_btn_test_broker">' + t('pair.test_broker', 'Test Broker Connection') + '</span>';
+      }
+    }
+
+    async function scanDevices() {
+      const btn = document.getElementById('btn_scan');
+      const statusDiv = document.getElementById('scan_status');
+      const mode = getMode();
+      const host = document.getElementById('mqtt_host').value.trim();
+      const port = parseInt(document.getElementById('mqtt_port').value, 10) || 1883;
+      const user = document.getElementById('mqtt_user').value.trim();
+      const password = document.getElementById('mqtt_password').value;
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner spinner-dark"></span> ' + t('pair.scanning', 'Scanning...');
+      statusDiv.innerHTML = '<div class="status-badge info">' + t('pair.scan_searching', 'Searching for Tasmota/NSPanel devices on network (3s)...') + '</div>';
+
+      try {
+        const found = await Homey.emit('discover', { mode, host, port, user, password });
+        if (Array.isArray(found) && found.length > 0) {
+          const countMsg = t('pair.scan_found', '✓ Found {0} device(s)!').replace('{0}', found.length);
+          statusDiv.innerHTML = '<div class="status-badge success">' + countMsg + '</div>';
+          document.getElementById('mqtt_topic').value = found[0].topic || found[0];
+          if (found[0].name) {
+            document.getElementById('device_name').value = found[0].name;
+          }
+        } else {
+          statusDiv.innerHTML = '<div class="status-badge info">' + t('pair.scan_none', 'Automatic scan did not find devices. You can enter the Tasmota topic manually above.') + '</div>';
+        }
+      } catch (err) {
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.scan_failed', '✗ Scan failed: ') + (err.message || err) + '</div>';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span id="txt_btn_scan">' + t('pair.scan', 'Scan') + '</span>';
+      }
+    }
+
+    async function submitPairing() {
+      const btn = document.getElementById('btn_submit');
+      const statusDiv = document.getElementById('submit_status');
+
+      const mode = getMode();
+      const name = document.getElementById('device_name').value.trim() || 'NSPanel';
+      const host = document.getElementById('mqtt_host').value.trim();
+      const port = parseInt(document.getElementById('mqtt_port').value, 10) || 1883;
+      const user = document.getElementById('mqtt_user').value.trim();
+      const password = document.getElementById('mqtt_password').value;
+      const topic = document.getElementById('mqtt_topic').value.trim();
+      const path = document.getElementById('mqtt_path').value.trim() || '%prefix%/%topic%/';
+
+      if (mode === 'standalone' && !host) {
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.enter_host_error', 'Please enter Broker IP or Host address!') + '</div>';
+        return;
+      }
+
+      if (!topic) {
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.enter_topic_error', 'Please enter the NSPanel Tasmota Topic!') + '</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> ' + t('pair.submitting', 'Adding NSPanel...');
+      statusDiv.innerHTML = '<div class="status-badge info">' + t('pair.preparing', 'Preparing device...') + '</div>';
+
+      try {
+        const deviceData = await Homey.emit('add_device', {
+          name,
+          mode,
+          host,
+          port,
+          user,
+          password,
+          topic,
+          path
+        });
+
+        if (deviceData) {
+          statusDiv.innerHTML = '<div class="status-badge success">' + t('pair.add_success', '✓ Device created successfully!') + '</div>';
+          await Homey.createDevice(deviceData);
+          setTimeout(() => {
+            Homey.done();
+          }, 600);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span id="txt_btn_submit">' + t('pair.submit', 'Connect and Add NSPanel') + '</span>';
+        statusDiv.innerHTML = '<div class="status-badge error">' + t('pair.add_failed', '✗ Pairing failed: ') + (err.message || err) + '</div>';
+      }
+    }
+
+    // Init translations & load settings on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      initTranslations();
+      if (window.Homey && Homey.emit) {
+        Homey.emit('get_default_settings', {}).then((defaults) => {
+          if (defaults) {
+            if (defaults.mode) {
+              const radios = document.getElementsByName('mqtt_mode');
+              for (const r of radios) {
+                if (r.value === defaults.mode) r.checked = true;
+              }
+              toggleMqttMode();
+            }
+            if (defaults.host) document.getElementById('mqtt_host').value = defaults.host;
+            if (defaults.port) document.getElementById('mqtt_port').value = defaults.port;
+            if (defaults.user) document.getElementById('mqtt_user').value = defaults.user;
+            if (defaults.password) document.getElementById('mqtt_password').value = defaults.password;
+          }
+        }).catch(() => {});
+      }
+    });
+  </script>
+</body>
+</html>

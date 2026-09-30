@@ -1,0 +1,137 @@
+{
+  "id": "show_power_page_action",
+  "title": {
+    "en": "Show power flow card",
+    "fi": "Näytä energiavirtaussivu"
+  },
+  "titleFormatted": {
+    "en": "Show power card [[title]] (home: [[home_title]], power: [[home_power]], icon: [[home_icon]], color: [[home_color]], prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Näytä energiasivu [[title]] (koti: [[home_title]], teho: [[home_power]], kuvake: [[home_icon]], väri: [[home_color]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      },
+      "placeholder": {
+        "en": "Power Flow",
+        "fi": "Energiavirta"
+      },
+      "title": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      }
+    },
+    {
+      "name": "home_power",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Home Power / Consumption",
+        "fi": "Kodin teho / kulutus"
+      },
+      "placeholder": {
+        "en": "2.4 kW",
+        "fi": "2.4 kW"
+      },
+      "title": {
+        "en": "Home Power / Consumption",
+        "fi": "Kodin teho / kulutus"
+      }
+    },
+    {
+      "name": "home_title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Home Title",
+        "fi": "Keskuksen otsikko"
+      },
+      "placeholder": {
+        "en": "Home",
+        "fi": "Koti"
+      },
+      "title": {
+        "en": "Home Title",
+        "fi": "Keskuksen otsikko"
+      }
+    },
+    {
+      "name": "home_icon",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Home Icon",
+        "fi": "Keskuksen kuvake"
+      },
+      "placeholder": {
+        "en": "home",
+        "fi": "home"
+      },
+      "title": {
+        "en": "Home Icon",
+        "fi": "Keskuksen kuvake"
+      }
+    },
+    {
+      "name": "home_color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Home Color",
+        "fi": "Keskuksen väri"
+      },
+      "placeholder": {
+        "en": "white",
+        "fi": "white"
+      },
+      "title": {
+        "en": "Home Color",
+        "fi": "Keskuksen väri"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "rauta.oskari.nspanel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "brandColor": "#2696A8",
@@ -9,10 +9,12 @@
     "local"
   ],
   "name": {
-    "en": "NSPanel"
+    "en": "NSPanel",
+    "fi": "NSPanel"
   },
   "description": {
-    "en": "Sonoff NSPanel"
+    "en": "Sonoff NSPanel with Lovelace UI",
+    "fi": "Sonoff NSPanel Lovelace UI -käyttöliittymällä"
   },
   "category": [
     "appliances"
@@ -22,26 +24,132 @@
       "sonoff",
       "nspanel",
       "mqtt"
+    ],
+    "fi": [
+      "sonoff",
+      "nspanel",
+      "mqtt"
     ]
   },
   "permissions": [
-    "homey:app:nl.scanno.mqtt"
+    "homey:app:nl.scanno.mqtt",
+    "homey:manager:api",
+    "homey:manager:geolocation"
   ],
   "images": {
     "small": "/assets/images/small.jpg",
     "large": "/assets/images/large.jpg",
     "xlarge": "/assets/images/xlarge.jpg"
   },
-  "source": "https://github.com/DayS/homey-intex-spa",
-  "bugs": {
-    "url": "https://github.com/DayS/homey-intex-spa/issues"
-  },
   "author": {
     "name": "Oskari Rauta",
     "email": "oskari.rauta@gmail.com"
   },
+  "support": "https://github.com/oskarirauta/homey-nspanel-app/issues",
+  "source": "https://github.com/oskarirauta/homey-nspanel-app",
+  "api": {
+    "getDevices": {
+      "method": "GET",
+      "path": "/devices"
+    },
+    "setDevicePage": {
+      "method": "POST",
+      "path": "/devices/:id/page"
+    },
+    "deleteDevicePage": {
+      "method": "DELETE",
+      "path": "/devices/:id/page/:pageId"
+    },
+    "getIcons": {
+      "method": "GET",
+      "path": "/icons"
+    },
+    "testMqtt": {
+      "method": "POST",
+      "path": "/test-mqtt"
+    },
+    "setDeviceSettings": {
+      "method": "POST",
+      "path": "/devices/:id/settings"
+    },
+    "getHomeyDevices": {
+      "method": "GET",
+      "path": "/homey-devices"
+    },
+    "controlHomeyDevice": {
+      "method": "POST",
+      "path": "/homey-devices/:id/toggle"
+    },
+    "getGlobalWeather": {
+      "method": "GET",
+      "path": "/weather-settings"
+    },
+    "setGlobalWeather": {
+      "method": "POST",
+      "path": "/weather-settings"
+    }
+  },
   "flow": {
     "triggers": [
+      {
+        "id": "alarm_action_triggered",
+        "title": {
+          "en": "Alarm action or PIN entered",
+          "fi": "Hälytystoiminto tai PIN syötetty"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "action",
+            "type": "string",
+            "title": {
+              "en": "Action (disarm, arm_home, arm_away, arm_night, unlock)",
+              "fi": "Toiminto (disarm, arm_home, arm_away, arm_night, unlock)"
+            },
+            "example": "disarm"
+          },
+          {
+            "name": "pin",
+            "type": "string",
+            "title": {
+              "en": "Entered PIN code",
+              "fi": "Syötetty PIN-koodi"
+            },
+            "example": "1234"
+          }
+        ]
+      },
+      {
+        "id": "alarm_pin_failed",
+        "title": {
+          "en": "Alarm PIN entry failed",
+          "fi": "Hälyttimen PIN-koodi syötetty väärin"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entered_pin",
+            "type": "string",
+            "title": {
+              "en": "Entered PIN code",
+              "fi": "Syötetty PIN-koodi"
+            },
+            "example": "0000"
+          }
+        ]
+      },
       {
         "id": "enter_screensaver",
         "title": {
@@ -65,6 +173,236 @@
             "name": "device",
             "type": "device",
             "filter": "driver_id=nspanel"
+          }
+        ]
+      },
+      {
+        "id": "fan_action_triggered",
+        "title": {
+          "en": "Ventilation or fan adjusted on panel",
+          "fi": "Ilmanvaihtoa tai puhallinta ohjattu paneelilta"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID",
+              "fi": "Laitteen / entiteetin tunniste"
+            },
+            "example": "ventilation"
+          },
+          {
+            "name": "action_type",
+            "type": "string",
+            "title": {
+              "en": "Action type (speed, mode, onoff)",
+              "fi": "Toimintotyyppi (speed, mode, onoff)"
+            },
+            "example": "speed"
+          },
+          {
+            "name": "speed",
+            "type": "number",
+            "title": {
+              "en": "Speed level",
+              "fi": "Nopeus- / tehotaso"
+            },
+            "example": 2
+          },
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Selected mode",
+              "fi": "Valittu profiili / tila"
+            },
+            "example": "Tehostus"
+          },
+          {
+            "name": "mode_index",
+            "type": "number",
+            "title": {
+              "en": "Mode index (0-based)",
+              "fi": "Tilan järjestysnumero (alkaa 0:sta)"
+            },
+            "example": 2
+          },
+          {
+            "name": "onoff",
+            "type": "boolean",
+            "title": {
+              "en": "Power state (on/off)",
+              "fi": "Virtatila (päällä/pois)"
+            },
+            "example": true
+          }
+        ]
+      },
+      {
+        "id": "light_action_triggered",
+        "title": {
+          "en": "Light adjusted on panel",
+          "fi": "Valoa säädetty paneelilta"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID",
+              "fi": "Valon tunniste"
+            },
+            "example": "livingroom_light"
+          },
+          {
+            "name": "action_type",
+            "type": "string",
+            "title": {
+              "en": "Action type (onoff, brightness, color_temp, color)",
+              "fi": "Toimintotyyppi (onoff, brightness, color_temp, color)"
+            },
+            "example": "brightness"
+          },
+          {
+            "name": "onoff",
+            "type": "boolean",
+            "title": {
+              "en": "Power state (on/off)",
+              "fi": "Virtatila (päällä/pois)"
+            },
+            "example": true
+          },
+          {
+            "name": "brightness",
+            "type": "number",
+            "title": {
+              "en": "Brightness (0-100 %)",
+              "fi": "Kirkkaus (0-100 %)"
+            },
+            "example": 80
+          },
+          {
+            "name": "color_temp",
+            "type": "number",
+            "title": {
+              "en": "Color temperature (0-100 %)",
+              "fi": "Värilämpötila (0-100 %)"
+            },
+            "example": 50
+          },
+          {
+            "name": "hue",
+            "type": "number",
+            "title": {
+              "en": "Hue (0-1)",
+              "fi": "Värisävy (0-1)"
+            },
+            "example": 0.55
+          },
+          {
+            "name": "saturation",
+            "type": "number",
+            "title": {
+              "en": "Saturation (0-1)",
+              "fi": "Värikylläisyys (0-1)"
+            },
+            "example": 0.9
+          }
+        ]
+      },
+      {
+        "id": "media_action_pressed",
+        "title": {
+          "en": "Media player action pressed",
+          "fi": "Mediasoittimen toimintoa painettu"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "action",
+            "type": "string",
+            "title": {
+              "en": "Action (play, pause, next, prev, volume, shuffle)",
+              "fi": "Toiminto (play, pause, next, prev, volume, shuffle)"
+            },
+            "example": "play"
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "title": {
+              "en": "Value (e.g. volume level)",
+              "fi": "Arvo (esim. äänenvoimakkuus)"
+            },
+            "example": 50
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Night mode changed",
+          "fi": "Yötila muuttui"
+        },
+        "hint": {
+          "en": "Triggered when panel night mode is enabled or disabled.",
+          "fi": "Laukeaa kun paneelin yötila kytkeytyy päälle tai pois."
+        },
+        "tokens": [
+          {
+            "name": "active",
+            "type": "boolean",
+            "title": {
+              "en": "Active",
+              "fi": "Päällä"
+            },
+            "example": true
+          }
+        ],
+        "id": "night_mode_changed"
+      },
+      {
+        "id": "notification_button_clicked",
+        "title": {
+          "en": "Notification button clicked",
+          "fi": "Ilmoituksen painiketta painettu"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "button",
+            "type": "string",
+            "title": {
+              "en": "Clicked button (button1, button2, exit)",
+              "fi": "Painettu painike (button1, button2, exit)"
+            },
+            "example": "button1"
           }
         ]
       },
@@ -113,6 +451,321 @@
         ]
       },
       {
+        "id": "physical_button_pressed",
+        "title": {
+          "en": "Physical button was pressed",
+          "fi": "Fyysistä painiketta painettiin"
+        },
+        "titleFormatted": {
+          "en": "Physical [[button]] was pressed ([[action]])",
+          "fi": "Fyysistä painiketta [[button]] painettiin ([[action]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "button",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "any",
+                "label": {
+                  "en": "Any button",
+                  "fi": "Mikä tahansa painike"
+                }
+              },
+              {
+                "id": "1",
+                "label": {
+                  "en": "Button 1 (Left)",
+                  "fi": "Painike 1 (Vasen)"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Button 2 (Right)",
+                  "fi": "Painike 2 (Oikea)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Physical button",
+              "fi": "Fyysinen painike"
+            }
+          },
+          {
+            "name": "action",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "any",
+                "label": {
+                  "en": "Any action",
+                  "fi": "Mikä tahansa toiminto"
+                }
+              },
+              {
+                "id": "single",
+                "label": {
+                  "en": "Single press",
+                  "fi": "Kertapainallus"
+                }
+              },
+              {
+                "id": "double",
+                "label": {
+                  "en": "Double press",
+                  "fi": "Kaksoispainallus"
+                }
+              },
+              {
+                "id": "hold",
+                "label": {
+                  "en": "Long press (Hold)",
+                  "fi": "Pitkä painallus"
+                }
+              }
+            ],
+            "title": {
+              "en": "Action",
+              "fi": "Toiminto"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "name": "button",
+            "type": "number",
+            "title": {
+              "en": "Button number",
+              "fi": "Painikkeen numero"
+            },
+            "example": 1
+          },
+          {
+            "name": "action",
+            "type": "string",
+            "title": {
+              "en": "Action",
+              "fi": "Toiminto"
+            },
+            "example": "SINGLE"
+          }
+        ]
+      },
+      {
+        "id": "screen_button_pressed",
+        "title": {
+          "en": "Screen button pressed",
+          "fi": "Näytön painiketta painettu"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "page",
+            "type": "string",
+            "title": {
+              "en": "Page",
+              "fi": "Sivu"
+            },
+            "example": "grid"
+          },
+          {
+            "name": "slot",
+            "type": "number",
+            "title": {
+              "en": "Slot number",
+              "fi": "Paikkanumero"
+            },
+            "example": 1
+          },
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID / Name",
+              "fi": "Tunniste / Nimi"
+            },
+            "example": "living_light"
+          },
+          {
+            "name": "button_type",
+            "type": "string",
+            "title": {
+              "en": "Button Type",
+              "fi": "Painiketyyppi"
+            },
+            "example": "button"
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "title": {
+              "en": "Value",
+              "fi": "Arvo"
+            },
+            "example": "1"
+          }
+        ]
+      },
+      {
+        "id": "screen_switch_toggled",
+        "title": {
+          "en": "Screen switch toggled",
+          "fi": "Näytön kytkintä käännetty"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "page",
+            "type": "string",
+            "title": {
+              "en": "Page",
+              "fi": "Sivu"
+            },
+            "example": "grid"
+          },
+          {
+            "name": "slot",
+            "type": "number",
+            "title": {
+              "en": "Slot number",
+              "fi": "Paikkanumero"
+            },
+            "example": 1
+          },
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID / Name",
+              "fi": "Tunniste / Nimi"
+            },
+            "example": "floor_heating"
+          },
+          {
+            "name": "state",
+            "type": "boolean",
+            "title": {
+              "en": "State (true = ON, false = OFF)",
+              "fi": "Tila (tosi = PÄÄLLÄ, epätosi = POIS)"
+            },
+            "example": true
+          }
+        ]
+      },
+      {
+        "id": "select_action_triggered",
+        "title": {
+          "en": "Option selected from list on panel",
+          "fi": "Valinta tehty valintalistasta paneelilla"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID",
+              "fi": "Kohteen ID"
+            },
+            "example": "home_state"
+          },
+          {
+            "name": "option",
+            "type": "string",
+            "title": {
+              "en": "Selected option",
+              "fi": "Valittu vaihtoehto"
+            },
+            "example": "Kotona"
+          },
+          {
+            "name": "index",
+            "type": "number",
+            "title": {
+              "en": "Option index (0-based)",
+              "fi": "Valinnan järjestysnumero (0-pohjainen)"
+            },
+            "example": 0
+          }
+        ]
+      },
+      {
+        "id": "shutter_action_triggered",
+        "title": {
+          "en": "Shutter action triggered on panel",
+          "fi": "Verhoa tai sälekaihdinta ohjattu paneelilta"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID",
+              "fi": "Verhon tunniste"
+            },
+            "example": "shutter"
+          },
+          {
+            "name": "action_type",
+            "type": "string",
+            "title": {
+              "en": "Action type (up/down/stop/position/tilt_open/tilt_close/tilt_stop/tilt)",
+              "fi": "Toimintotyyppi (up/down/stop/position/tilt_open/tilt_close/tilt_stop/tilt)"
+            },
+            "example": "position"
+          },
+          {
+            "name": "position",
+            "type": "number",
+            "title": {
+              "en": "Position (0-100 %)",
+              "fi": "Asento (0-100 %)"
+            },
+            "example": 75
+          },
+          {
+            "name": "tilt",
+            "type": "number",
+            "title": {
+              "en": "Tilt angle (0-100 %)",
+              "fi": "Säleasento (0-100 %)"
+            },
+            "example": 50
+          }
+        ]
+      },
+      {
         "id": "switch_changed",
         "title": {
           "en": "Switch was toggled"
@@ -140,18 +793,197 @@
             }
           }
         ]
+      },
+      {
+        "id": "thermostat_mode_changed",
+        "title": {
+          "en": "Thermostat mode or preset changed on panel",
+          "fi": "Termostaatin tilaa tai esiasetusta muutettu näytöltä"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Entity ID",
+              "fi": "Entiteetin tunniste"
+            },
+            "example": "thermo"
+          },
+          {
+            "name": "mode_type",
+            "type": "string",
+            "title": {
+              "en": "Mode type (operation_mode, preset_mode, fan_mode)",
+              "fi": "Tilatyyppi (operation_mode, preset_mode, fan_mode)"
+            },
+            "example": "operation_mode"
+          },
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Selected mode",
+              "fi": "Valittu tila"
+            },
+            "example": "Lämmitys"
+          },
+          {
+            "name": "mode_index",
+            "type": "number",
+            "title": {
+              "en": "Mode index (0-based)",
+              "fi": "Tilan järjestysnumero (alkaa 0:sta)"
+            },
+            "example": 1
+          },
+          {
+            "name": "row",
+            "type": "number",
+            "title": {
+              "en": "Row (1, 2 or 3)",
+              "fi": "Rivi (1, 2 tai 3)"
+            },
+            "example": 1
+          }
+        ]
+      },
+      {
+        "id": "thermostat_setpoint_changed",
+        "title": {
+          "en": "Thermostat temperature adjusted",
+          "fi": "Termostaatin lämpötilaa muutettu näytöltä"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "temperature",
+            "type": "number",
+            "title": {
+              "en": "New target temperature (°C)",
+              "fi": "Uusi tavoitelämpötila (°C)"
+            },
+            "example": 21.5
+          }
+        ]
+      },
+      {
+        "id": "timer_action_triggered",
+        "title": {
+          "en": "Timer state changed on panel",
+          "fi": "Ajastintoiminto suoritettu paneelilla"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Timer ID",
+              "fi": "Ajastimen tunniste"
+            },
+            "example": "kitchen_timer"
+          },
+          {
+            "name": "action",
+            "type": "string",
+            "title": {
+              "en": "Action (start, pause, cancel, finish)",
+              "fi": "Toiminto (start, pause, cancel, finish)"
+            },
+            "example": "start"
+          },
+          {
+            "name": "minutes",
+            "type": "number",
+            "title": {
+              "en": "Minutes remaining",
+              "fi": "Jäljellä olevat minuutit"
+            },
+            "example": 5
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "title": {
+              "en": "Seconds remaining",
+              "fi": "Jäljellä olevat sekunnit"
+            },
+            "example": 0
+          }
+        ]
+      },
+      {
+        "id": "timer_finished_triggered",
+        "title": {
+          "en": "Timer finished (reached zero)",
+          "fi": "Ajastin saavutti nollan (aika loppui)"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "entity",
+            "type": "string",
+            "title": {
+              "en": "Timer ID",
+              "fi": "Ajastimen tunniste"
+            },
+            "example": "kitchen_timer"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "title": {
+              "en": "Timer name / label",
+              "fi": "Ajastimen nimi"
+            },
+            "example": "Keittiöajastin"
+          }
+        ]
       }
     ],
     "conditions": [
       {
         "id": "current_page_is",
         "title": {
-          "en": "Current page !{{is|isn't}}"
+          "en": "Current page !{{is|isn't}}",
+          "fi": "Nykyinen sivu !{{on|ei ole}}"
         },
         "titleFormatted": {
-          "en": "Current page !{{is|isn't}} [[page]]"
+          "en": "Current page !{{is|isn't}} [[page]]",
+          "fi": "Nykyinen sivu !{{on|ei ole}} [[page]]"
         },
         "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
           {
             "name": "page",
             "type": "dropdown",
@@ -159,49 +991,97 @@
               {
                 "id": "screensaver",
                 "label": {
-                  "en": "screensaver"
+                  "en": "Screensaver",
+                  "fi": "Näytönsäästäjä"
                 }
               },
               {
-                "id": "qrcode",
+                "id": "grid",
                 "label": {
-                  "en": "qrcode"
+                  "en": "Grid (6 items)",
+                  "fi": "Ruudukko (6)"
                 }
               },
               {
-                "id": "media",
+                "id": "grid2",
                 "label": {
-                  "en": "media"
+                  "en": "Grid 2 (8 items)",
+                  "fi": "Ruudukko 2 (8)"
                 }
               },
               {
-                "id": "power",
+                "id": "entities",
                 "label": {
-                  "en": "power"
+                  "en": "Entities list (4 items)",
+                  "fi": "Laitelista (4)"
                 }
               },
               {
                 "id": "thermostat",
                 "label": {
-                  "en": "thermostat"
+                  "en": "Thermostat",
+                  "fi": "Termostaatti"
+                }
+              },
+              {
+                "id": "media",
+                "label": {
+                  "en": "Media player",
+                  "fi": "Mediasoitin"
+                }
+              },
+              {
+                "id": "qrcode",
+                "label": {
+                  "en": "QR Code",
+                  "fi": "QR-koodi"
+                }
+              },
+              {
+                "id": "power",
+                "label": {
+                  "en": "Power flow",
+                  "fi": "Tehonäkymä"
+                }
+              },
+              {
+                "id": "alarm",
+                "label": {
+                  "en": "Alarm keypad",
+                  "fi": "Hälytyskeskus"
+                }
+              },
+              {
+                "id": "notification",
+                "label": {
+                  "en": "Notification popup",
+                  "fi": "Ponnahdusilmoitus"
                 }
               }
-            ]
-          },
-          {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=nspanel"
+            ],
+            "title": {
+              "en": "Page",
+              "fi": "Sivu"
+            }
           }
         ]
       },
       {
+        "title": {
+          "en": "!{{Night mode is active|Night mode is not active}}",
+          "fi": "!{{Yötila on päällä|Yötila ei ole päällä}}"
+        },
+        "id": "is_night_mode"
+      },
+      {
         "id": "is_online",
         "title": {
-          "en": "NSPanel is !{{online|offline}}"
+          "en": "NSPanel is !{{online|offline}}",
+          "fi": "NSPanel !{{on|ei ole}} linjoilla"
         },
         "titleFormatted": {
-          "en": "NSPanel is !{{online|offline}}"
+          "en": "NSPanel is !{{online|offline}}",
+          "fi": "NSPanel !{{on|ei ole}} linjoilla"
         },
         "args": [
           {
@@ -214,10 +1094,12 @@
       {
         "id": "screensaver_is_active",
         "title": {
-          "en": "Screensaver is !{{active|inactive}}"
+          "en": "Screensaver is !{{active|inactive}}",
+          "fi": "Näytönsäästäjä !{{on|ei ole}} päällä"
         },
         "titleFormatted": {
-          "en": "Screensaver is !{{active|inactive}}"
+          "en": "Screensaver is !{{active|inactive}}",
+          "fi": "Näytönsäästäjä !{{on|ei ole}} päällä"
         },
         "args": [
           {
@@ -230,12 +1112,85 @@
     ],
     "actions": [
       {
-        "id": "set_page_action",
+        "id": "play_buzzer_action",
         "title": {
-          "en": "Set page"
+          "en": "Play buzzer sound (beep)",
+          "fi": "Soita äänimerkki (piip)"
         },
         "titleFormatted": {
-          "en": "Set page to [[page]]"
+          "en": "Play buzzer [[sound_type]]",
+          "fi": "Soita äänimerkki [[sound_type]]"
+        },
+        "hint": {
+          "en": "Plays an audible buzzer beep pattern using NSPanel's onboard piezo buzzer.",
+          "fi": "Toistaa äänimerkin käyttäen NSPanelin sisäänrakennettua piezo-summeria."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "sound_type",
+            "type": "dropdown",
+            "label": {
+              "en": "Sound type",
+              "fi": "Äänimerkin tyyppi"
+            },
+            "values": [
+              {
+                "id": "beep",
+                "label": {
+                  "en": "🔔 Single beep (1x)",
+                  "fi": "🔔 Lyhyt piippaus (1x)"
+                }
+              },
+              {
+                "id": "double_beep",
+                "label": {
+                  "en": "🔔🔔 Double beep (2x)",
+                  "fi": "🔔🔔 Kaksoispiippaus (2x)"
+                }
+              },
+              {
+                "id": "triple_beep",
+                "label": {
+                  "en": "🔔🔔🔔 Triple beep (3x)",
+                  "fi": "🔔🔔🔔 Kolmoispiippaus (3x)"
+                }
+              },
+              {
+                "id": "warning",
+                "label": {
+                  "en": "⚠️ Warning beeps (5x fast)",
+                  "fi": "⚠️ Varoituspiippaus (5x nopea)"
+                }
+              },
+              {
+                "id": "alarm",
+                "label": {
+                  "en": "🚨 Alarm burst (10x)",
+                  "fi": "🚨 Hälytyspiippaus (10x)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Sound type",
+              "fi": "Äänimerkin tyyppi"
+            }
+          }
+        ]
+      },
+      {
+        "id": "push_chart_value_action",
+        "title": {
+          "en": "Push value to chart (FIFO shift)",
+          "fi": "Lisää arvo kaavioon (siirrä ja poista vanhin)"
+        },
+        "titleFormatted": {
+          "en": "Push value [[value]] to chart on page [[page]] (label: [[label]], x: [[x]], scale: [[scale]])",
+          "fi": "Lisää arvo [[value]] sivun [[page]] kaavioon (nimike: [[label]], x: [[x]], kerroin: [[scale]])"
         },
         "args": [
           {
@@ -246,20 +1201,3669 @@
           {
             "name": "page",
             "type": "text",
+            "required": false,
             "label": {
-              "en": "page"
+              "en": "Page ID (default: active / chart)",
+              "fi": "Sivun ID (oletus: active / chart)"
             },
             "placeholder": {
-              "en": "page"
+              "en": "active",
+              "fi": "active"
             },
             "title": {
-              "en": "Target page"
+              "en": "Page ID (default: active / chart)",
+              "fi": "Sivun ID (oletus: active / chart)"
+            }
+          },
+          {
+            "name": "value",
+            "type": "number",
+            "required": true,
+            "label": {
+              "en": "New Value",
+              "fi": "Uusi arvo"
             },
-            "hint": {
-              "en": "Available page types are qrcode, screensaver"
+            "placeholder": {
+              "en": "10",
+              "fi": "10"
+            },
+            "title": {
+              "en": "New Value",
+              "fi": "Uusi arvo"
+            }
+          },
+          {
+            "name": "label",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Label / Timestamp (optional)",
+              "fi": "Nimike / aikaleima (valinnainen)"
+            },
+            "placeholder": {
+              "en": "12:00",
+              "fi": "12:00"
+            },
+            "title": {
+              "en": "Label / Timestamp (optional)",
+              "fi": "Nimike / aikaleima (valinnainen)"
+            }
+          },
+          {
+            "name": "x",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "X Coordinate (optional, default: last point's X)",
+              "fi": "X-piste (valinnainen, oletus: edellinen suurin X)"
+            },
+            "placeholder": {
+              "en": "100",
+              "fi": "100"
+            },
+            "title": {
+              "en": "X Coordinate (optional, default: last point's X)",
+              "fi": "X-piste (valinnainen, oletus: edellinen suurin X)"
+            }
+          },
+          {
+            "name": "scale",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Multiplier / Scale (optional, e.g. 10 for °C or c/kWh)",
+              "fi": "Kerroin / skaalaus (valinnainen, esim. 10 lämpötilalle/hinnalle)"
+            },
+            "placeholder": {
+              "en": "1",
+              "fi": "1"
+            },
+            "title": {
+              "en": "Multiplier / Scale (optional, e.g. 10 for °C or c/kWh)",
+              "fi": "Kerroin / skaalaus (valinnainen, esim. 10 lämpötilalle/hinnalle)"
             }
           }
         ]
+      },
+      {
+        "id": "set_alarm_state_action",
+        "title": {
+          "en": "Set alarm state",
+          "fi": "Aseta hälyttimen tila"
+        },
+        "titleFormatted": {
+          "en": "Set panel alarm state to [[state]]",
+          "fi": "Aseta paneelin hälyttimen tilaksi [[state]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "disarmed",
+                "label": {
+                  "en": "Disarmed",
+                  "fi": "Pois päältä"
+                }
+              },
+              {
+                "id": "armed_home",
+                "label": {
+                  "en": "Armed Home (Partially)",
+                  "fi": "Kotona (Osittain)"
+                }
+              },
+              {
+                "id": "armed_away",
+                "label": {
+                  "en": "Armed Away",
+                  "fi": "Poissa"
+                }
+              },
+              {
+                "id": "armed_night",
+                "label": {
+                  "en": "Armed Night",
+                  "fi": "Yötila"
+                }
+              },
+              {
+                "id": "arming",
+                "label": {
+                  "en": "Arming (pending)",
+                  "fi": "Kytkeytyy (odottaa)"
+                }
+              },
+              {
+                "id": "triggered",
+                "label": {
+                  "en": "Triggered (Alarm!)",
+                  "fi": "Hälyttää!"
+                }
+              }
+            ],
+            "title": {
+              "en": "Alarm state",
+              "fi": "Hälytystila"
+            }
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Set screen brightness",
+          "fi": "Aseta näytön kirkkaus"
+        },
+        "titleFormatted": {
+          "en": "Set brightness to [[brightness]]% (standby: [[sleep_brightness]]%)",
+          "fi": "Aseta kirkkaudeksi [[brightness]]% (lepotila: [[sleep_brightness]]%)"
+        },
+        "hint": {
+          "en": "Adjust panel active and standby brightness.",
+          "fi": "Säädä paneelin aktiivista ja lepotilan kirkkautta."
+        },
+        "args": [
+          {
+            "name": "brightness",
+            "type": "number",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "placeholder": "1-100",
+            "title": {
+              "en": "Active brightness (%)",
+              "fi": "Aktiivinen kirkkaus (%)"
+            }
+          },
+          {
+            "name": "sleep_brightness",
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "placeholder": "0-100",
+            "title": {
+              "en": "Standby brightness (%)",
+              "fi": "Lepotilan kirkkaus (%)"
+            }
+          }
+        ],
+        "id": "set_brightness"
+      },
+      {
+        "id": "set_entity_slot_action",
+        "title": {
+          "en": "Configure entity list row",
+          "fi": "Aseta laitelistan rivi"
+        },
+        "titleFormatted": {
+          "en": "Set entity slot [[slot]]: [[title]] ([[entity_type]], icon: [[icon]], color: [[color]], value: [[value]], id: [[entity_id]])",
+          "fi": "Aseta listarivi [[slot]]: [[title]] ([[entity_type]], kuvake: [[icon]], väri: [[color]], arvo: [[value]], tunniste: [[entity_id]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "slot",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Row 1 (Top)",
+                  "fi": "Rivi 1 (Ylin)"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Row 2",
+                  "fi": "Rivi 2"
+                }
+              },
+              {
+                "id": "3",
+                "label": {
+                  "en": "Row 3",
+                  "fi": "Rivi 3"
+                }
+              },
+              {
+                "id": "4",
+                "label": {
+                  "en": "Row 4 (Bottom)",
+                  "fi": "Rivi 4 (Alin)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Slot number",
+              "fi": "Paikan numero"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Row Label",
+              "fi": "Rivin nimi"
+            },
+            "placeholder": {
+              "en": "Floor Heating",
+              "fi": "Lattialämmitys"
+            },
+            "title": {
+              "en": "Row Label",
+              "fi": "Rivin nimi"
+            }
+          },
+          {
+            "name": "entity_type",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "switch",
+                "label": {
+                  "en": "Switch (toggle on/off)",
+                  "fi": "Kytkin (päälle/pois)"
+                }
+              },
+              {
+                "id": "button",
+                "label": {
+                  "en": "Button (tap to trigger)",
+                  "fi": "Painike (laukaisee flow'n)"
+                }
+              },
+              {
+                "id": "text",
+                "label": {
+                  "en": "Text / Sensor display",
+                  "fi": "Teksti / Anturilukema"
+                }
+              },
+              {
+                "id": "number",
+                "label": {
+                  "en": "Number input",
+                  "fi": "Lukuasetus"
+                }
+              },
+              {
+                "id": "delete",
+                "label": {
+                  "en": "Empty / Hide row",
+                  "fi": "Tyhjä / Piilota rivi"
+                }
+              }
+            ],
+            "title": {
+              "en": "Entity type",
+              "fi": "Kohteen tyyppi"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "label": {
+              "en": "Icon",
+              "fi": "Kuvake"
+            },
+            "placeholder": {
+              "en": "radiator",
+              "fi": "radiator"
+            },
+            "title": {
+              "en": "Icon",
+              "fi": "Kuvake"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Color",
+              "fi": "Väri"
+            },
+            "placeholder": {
+              "en": "white or #FFAA00",
+              "fi": "white tai #FFAA00"
+            },
+            "title": {
+              "en": "Color",
+              "fi": "Väri"
+            }
+          },
+          {
+            "name": "value",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Value / State",
+              "fi": "Arvo / Tila"
+            },
+            "placeholder": {
+              "en": "ON, OFF, 1, 0 or 21.5 °C",
+              "fi": "ON, OFF, 1, 0 tai 21.5 °C"
+            },
+            "title": {
+              "en": "Value / State",
+              "fi": "Arvo / Tila"
+            }
+          },
+          {
+            "name": "entity_id",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID",
+              "fi": "Tunniste"
+            },
+            "placeholder": {
+              "en": "floor_heating",
+              "fi": "floor_heating"
+            },
+            "title": {
+              "en": "Entity ID",
+              "fi": "Tunniste"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_fan_state_action",
+        "title": {
+          "en": "Set ventilation / fan state",
+          "fi": "Aseta ilmanvaihdon / puhaltimen tila"
+        },
+        "titleFormatted": {
+          "en": "Set fan/ventilation [[entity]] state: on=[[onoff]], speed=[[speed]], mode=[[mode]] (modes: [[modes]])",
+          "fi": "Aseta ilmanvaihdolle [[entity]] tila: päällä=[[onoff]], teho=[[speed]], profiili=[[mode]] (tilat: [[modes]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (optional)",
+              "fi": "Laitteen / entiteetin tunniste (valinnainen)"
+            },
+            "placeholder": {
+              "en": "fan",
+              "fi": "fan"
+            },
+            "title": {
+              "en": "Entity ID (optional)",
+              "fi": "Laitteen / entiteetin tunniste (valinnainen)"
+            }
+          },
+          {
+            "name": "onoff",
+            "type": "checkbox",
+            "required": false,
+            "label": {
+              "en": "Power state (on/off)",
+              "fi": "Virtatila (päällä/pois)"
+            },
+            "title": {
+              "en": "Power state (on/off)",
+              "fi": "Virtatila (päällä/pois)"
+            }
+          },
+          {
+            "name": "speed",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Speed level (e.g. 1-4)",
+              "fi": "Nopeus- / tehotaso (esim. 1-4)"
+            },
+            "placeholder": {
+              "en": "2",
+              "fi": "2"
+            },
+            "title": {
+              "en": "Speed level (e.g. 1-4)",
+              "fi": "Nopeus- / tehotaso (esim. 1-4)"
+            }
+          },
+          {
+            "name": "mode",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Current mode name",
+              "fi": "Nykyisen tilan nimi"
+            },
+            "placeholder": {
+              "en": "Kotona",
+              "fi": "Kotona"
+            },
+            "title": {
+              "en": "Current mode name",
+              "fi": "Nykyisen tilan nimi"
+            }
+          },
+          {
+            "name": "modes",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Modes list (? separated, optional)",
+              "fi": "Tilalista (?-eroteltuna, valinnainen)"
+            },
+            "placeholder": {
+              "en": "Poissa?Kotona?Tehostus?Takkatila",
+              "fi": "Poissa?Kotona?Tehostus?Takkatila"
+            },
+            "title": {
+              "en": "Modes list (? separated, optional)",
+              "fi": "Tilalista (?-eroteltuna, valinnainen)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "id": "set_grid_slot_action",
+        "title": {
+          "en": "Configure grid button slot",
+          "fi": "Aseta ruudukon painikepaikka"
+        },
+        "titleFormatted": {
+          "en": "Set grid slot [[slot]]: [[title]] ([[action_type]], icon: [[icon]], color: [[color]], value: [[value]], id: [[entity_id]])",
+          "fi": "Aseta ruudukon paikka [[slot]]: [[title]] ([[action_type]], kuvake: [[icon]], väri: [[color]], arvo: [[value]], tunniste: [[entity_id]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "slot",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Slot 1 (Top left)",
+                  "fi": "Paikka 1 (Ylä vasen)"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Slot 2 (Top middle/right)",
+                  "fi": "Paikka 2 (Ylä keski/oikea)"
+                }
+              },
+              {
+                "id": "3",
+                "label": {
+                  "en": "Slot 3 (Top right / Mid left)",
+                  "fi": "Paikka 3 (Ylä oikea / Keski vasen)"
+                }
+              },
+              {
+                "id": "4",
+                "label": {
+                  "en": "Slot 4 (Bottom left / Mid right)",
+                  "fi": "Paikka 4 (Ala vasen / Keski oikea)"
+                }
+              },
+              {
+                "id": "5",
+                "label": {
+                  "en": "Slot 5 (Bottom middle)",
+                  "fi": "Paikka 5 (Ala keski)"
+                }
+              },
+              {
+                "id": "6",
+                "label": {
+                  "en": "Slot 6 (Bottom right)",
+                  "fi": "Paikka 6 (Ala oikea)"
+                }
+              },
+              {
+                "id": "7",
+                "label": {
+                  "en": "Slot 7 (Grid2 only)",
+                  "fi": "Paikka 7 (Vain Grid2)"
+                }
+              },
+              {
+                "id": "8",
+                "label": {
+                  "en": "Slot 8 (Grid2 only)",
+                  "fi": "Paikka 8 (Vain Grid2)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Slot number",
+              "fi": "Paikan numero"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Button Label",
+              "fi": "Painikkeen teksti"
+            },
+            "placeholder": {
+              "en": "Ceiling Light",
+              "fi": "Kattovalo"
+            },
+            "title": {
+              "en": "Button Label",
+              "fi": "Painikkeen teksti"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "label": {
+              "en": "Icon",
+              "fi": "Kuvake"
+            },
+            "placeholder": {
+              "en": "lightbulb",
+              "fi": "lightbulb"
+            },
+            "title": {
+              "en": "Icon",
+              "fi": "Kuvake"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Color",
+              "fi": "Väri"
+            },
+            "placeholder": {
+              "en": "white or #FFAA00",
+              "fi": "white tai #FFAA00"
+            },
+            "title": {
+              "en": "Color",
+              "fi": "Väri"
+            }
+          },
+          {
+            "name": "action_type",
+            "type": "dropdown",
+            "required": false,
+            "values": [
+              {
+                "id": "button",
+                "label": {
+                  "en": "Button (tap to trigger)",
+                  "fi": "Painike (laukaisee flow'n)"
+                }
+              },
+              {
+                "id": "switch",
+                "label": {
+                  "en": "Toggle Switch (on/off)",
+                  "fi": "Kytkin (päälle/pois)"
+                }
+              },
+              {
+                "id": "navigate",
+                "label": {
+                  "en": "Navigation (open another page)",
+                  "fi": "Navigointi (avaa toinen sivu)"
+                }
+              },
+              {
+                "id": "delete",
+                "label": {
+                  "en": "Empty / Hide",
+                  "fi": "Tyhjä / Piilota"
+                }
+              }
+            ],
+            "title": {
+              "en": "Action type",
+              "fi": "Toimintotyyppi"
+            }
+          },
+          {
+            "name": "entity_id",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID / Target page",
+              "fi": "Tunniste / Kohdesivu"
+            },
+            "placeholder": {
+              "en": "living_light",
+              "fi": "living_light"
+            },
+            "title": {
+              "en": "Entity ID / Target page",
+              "fi": "Tunniste / Kohdesivu"
+            }
+          },
+          {
+            "name": "value",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Initial Value / State",
+              "fi": "Alkuarvo / Tila"
+            },
+            "placeholder": {
+              "en": "1, 0, ON, OFF or text",
+              "fi": "1, 0, ON, OFF tai teksti"
+            },
+            "title": {
+              "en": "Initial Value / State",
+              "fi": "Alkuarvo / Tila"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_light_state_action",
+        "title": {
+          "en": "Set light state on panel",
+          "fi": "Aseta valon tila paneelilla"
+        },
+        "titleFormatted": {
+          "en": "Set light [[entity]] state (on/off: [[onoff]], brightness: [[brightness]], temp: [[color_temp]])",
+          "fi": "Aseta valon [[entity]] tila (virta: [[onoff]], kirkkaus: [[brightness]], lämpötila: [[color_temp]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Entity ID",
+              "fi": "Valon tunniste"
+            },
+            "placeholder": {
+              "en": "light",
+              "fi": "light"
+            },
+            "title": {
+              "en": "Entity ID",
+              "fi": "Valon tunniste"
+            }
+          },
+          {
+            "name": "onoff",
+            "type": "dropdown",
+            "label": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            },
+            "values": [
+              {
+                "id": "keep",
+                "label": {
+                  "en": "Keep current state",
+                  "fi": "Säilytä nykyinen tila"
+                }
+              },
+              {
+                "id": "on",
+                "label": {
+                  "en": "On",
+                  "fi": "Päällä"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "fi": "Pois"
+                }
+              }
+            ],
+            "title": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            }
+          },
+          {
+            "name": "brightness",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Brightness (optional, 0-100 %)",
+              "fi": "Kirkkaus (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "80",
+              "fi": "80"
+            },
+            "title": {
+              "en": "Brightness (optional, 0-100 %)",
+              "fi": "Kirkkaus (valinnainen, 0-100 %)"
+            }
+          },
+          {
+            "name": "color_temp",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Color temperature (optional, 0-100 %)",
+              "fi": "Värilämpötila (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Color temperature (optional, 0-100 %)",
+              "fi": "Värilämpötila (valinnainen, 0-100 %)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "title": {
+          "en": "Set night mode",
+          "fi": "Aseta yötila"
+        },
+        "titleFormatted": {
+          "en": "Set night mode to [[mode]]",
+          "fi": "Aseta yötilaksi [[mode]]"
+        },
+        "hint": {
+          "en": "Manually enable, disable, or return to scheduled automatic night mode.",
+          "fi": "Kytke yötila päälle, pois tai palauta automaattinen aikataulutila."
+        },
+        "args": [
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "on",
+                "label": {
+                  "en": "On",
+                  "fi": "Päällä"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "fi": "Pois päältä"
+                }
+              },
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Automatic (Follow schedule & alarm)",
+                  "fi": "Automaattinen (Seuraa aikataulua ja hälytintä)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Night mode",
+              "fi": "Yötila"
+            }
+          }
+        ],
+        "id": "set_night_mode"
+      },
+      {
+        "id": "set_page_action",
+        "title": {
+          "en": "Set page",
+          "fi": "Vaihda sivua"
+        },
+        "titleFormatted": {
+          "en": "Set page to [[page]]",
+          "fi": "Vaihda sivuksi [[page]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "screensaver",
+                "label": {
+                  "en": "Screensaver",
+                  "fi": "Näytönsäästäjä"
+                }
+              },
+              {
+                "id": "grid",
+                "label": {
+                  "en": "Grid (6 items)",
+                  "fi": "Ruudukko (6 elementtiä)"
+                }
+              },
+              {
+                "id": "grid2",
+                "label": {
+                  "en": "Grid 2 (8 items)",
+                  "fi": "Ruudukko 2 (8 elementtiä)"
+                }
+              },
+              {
+                "id": "entities",
+                "label": {
+                  "en": "Entities list (4 items)",
+                  "fi": "Laitelista (4 riviä)"
+                }
+              },
+              {
+                "id": "thermostat",
+                "label": {
+                  "en": "Thermostat",
+                  "fi": "Termostaatti"
+                }
+              },
+              {
+                "id": "media",
+                "label": {
+                  "en": "Media player",
+                  "fi": "Mediasoitin"
+                }
+              },
+              {
+                "id": "qrcode",
+                "label": {
+                  "en": "QR Code",
+                  "fi": "QR-koodi"
+                }
+              },
+              {
+                "id": "power",
+                "label": {
+                  "en": "Power flow",
+                  "fi": "Tehonäkymä"
+                }
+              },
+              {
+                "id": "alarm",
+                "label": {
+                  "en": "Alarm keypad",
+                  "fi": "Hälytyskeskus"
+                }
+              }
+            ],
+            "title": {
+              "en": "Target page",
+              "fi": "Kohdesivu"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_relay_action",
+        "title": {
+          "en": "Set physical relay",
+          "fi": "Aseta fyysisen releen tila"
+        },
+        "titleFormatted": {
+          "en": "Set [[relay]] to [[state]]",
+          "fi": "Aseta [[relay]] tilaan [[state]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "relay",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Relay 1",
+                  "fi": "Rele 1"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Relay 2",
+                  "fi": "Rele 2"
+                }
+              }
+            ],
+            "title": {
+              "en": "Relay",
+              "fi": "Rele"
+            }
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "on",
+                "label": {
+                  "en": "On",
+                  "fi": "Päällä (ON)"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "fi": "Pois (OFF)"
+                }
+              },
+              {
+                "id": "toggle",
+                "label": {
+                  "en": "Toggle",
+                  "fi": "Vaihda tilaa (Toggle)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Relay state",
+              "fi": "Releen tila"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_screensaver_forecast_day_action",
+        "title": {
+          "en": "Set screensaver forecast day",
+          "fi": "Aseta lepotilan ennustepäivä"
+        },
+        "titleFormatted": {
+          "en": "Set forecast for [[day_index]] ([[day_name]]): temp [[temperature]] °C, condition [[weather_type]]",
+          "fi": "Aseta ennuste kohteelle [[day_index]] ([[day_name]]): lämpötila [[temperature]] °C, sää [[weather_type]]"
+        },
+        "hint": {
+          "en": "Sets forecast days 1–5 for the five-day page. The screensaver displays days 1–3. Choose the Flow weather source in Studio.",
+          "fi": "Asettaa viiden päivän näkymän ennustepäivät 1–5. Lepotila näyttää päivät 1–3. Valitse Studiossa sääennusteen lähteeksi Flow."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "day_index",
+            "type": "dropdown",
+            "label": {
+              "en": "Forecast day slot",
+              "fi": "Ennustepäivä"
+            },
+            "values": [
+              {
+                "id": "day1",
+                "label": {
+                  "en": "Day 1 (Tomorrow)",
+                  "fi": "Päivä 1 (Huomenna)"
+                }
+              },
+              {
+                "id": "day2",
+                "label": {
+                  "en": "Day 2 (Day after tomorrow)",
+                  "fi": "Päivä 2 (Ylihuomenna)"
+                }
+              },
+              {
+                "id": "day3",
+                "label": {
+                  "en": "Day 3 (3 days ahead)",
+                  "fi": "Päivä 3 (3 päivän päästä)"
+                }
+              },
+              {
+                "id": "day4",
+                "label": {
+                  "en": "Day 4 (five-day forecast page)",
+                  "fi": "Päivä 4 (viiden päivän sääsivu)"
+                }
+              },
+              {
+                "id": "day5",
+                "label": {
+                  "en": "Day 5 (five-day forecast page)",
+                  "fi": "Päivä 5 (viiden päivän sääsivu)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Forecast day slot",
+              "fi": "Ennustepäivä"
+            }
+          },
+          {
+            "name": "temperature",
+            "type": "number",
+            "label": {
+              "en": "Forecast temperature (°C)",
+              "fi": "Ennustelämpötila (°C)"
+            },
+            "placeholder": {
+              "en": "e.g. 15.0",
+              "fi": "esim. 15.0"
+            },
+            "title": {
+              "en": "Forecast temperature (°C)",
+              "fi": "Ennustelämpötila (°C)"
+            }
+          },
+          {
+            "name": "weather_type",
+            "type": "dropdown",
+            "label": {
+              "en": "Weather condition",
+              "fi": "Säätyyppi / Kuvake"
+            },
+            "values": [
+              {
+                "id": "sunny",
+                "label": {
+                  "en": "☀️ Sunny",
+                  "fi": "☀️ Aurinkoista"
+                }
+              },
+              {
+                "id": "partly_cloudy",
+                "label": {
+                  "en": "⛅ Partly cloudy",
+                  "fi": "⛅ Puolipilvistä"
+                }
+              },
+              {
+                "id": "cloudy",
+                "label": {
+                  "en": "☁️ Cloudy",
+                  "fi": "☁️ Pilvistä"
+                }
+              },
+              {
+                "id": "rainy",
+                "label": {
+                  "en": "🌧️ Rainy",
+                  "fi": "🌧️ Sadetta"
+                }
+              },
+              {
+                "id": "pouring",
+                "label": {
+                  "en": "🌧️ Heavy rain",
+                  "fi": "🌧️ Kaatosadetta"
+                }
+              },
+              {
+                "id": "lightning_rainy",
+                "label": {
+                  "en": "⛈️ Thunderstorm",
+                  "fi": "⛈️ Ukkosta"
+                }
+              },
+              {
+                "id": "snowy",
+                "label": {
+                  "en": "❄️ Snow",
+                  "fi": "❄️ Lumisadetta"
+                }
+              },
+              {
+                "id": "snowy_rainy",
+                "label": {
+                  "en": "🌨️ Sleet",
+                  "fi": "🌨️ Räntäsadetta"
+                }
+              },
+              {
+                "id": "fog",
+                "label": {
+                  "en": "🌫️ Fog",
+                  "fi": "🌫️ Sumua"
+                }
+              },
+              {
+                "id": "windy",
+                "label": {
+                  "en": "💨 Windy",
+                  "fi": "💨 Tuulista"
+                }
+              },
+              {
+                "id": "clear_night",
+                "label": {
+                  "en": "🌙 Clear night",
+                  "fi": "🌙 Selkeä yö"
+                }
+              }
+            ],
+            "title": {
+              "en": "Weather condition",
+              "fi": "Säätyyppi / Kuvake"
+            }
+          },
+          {
+            "name": "day_name",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Day name override (optional)",
+              "fi": "Viikonpäivän nimi (valinnainen)"
+            },
+            "placeholder": {
+              "en": "e.g. Mon, Tue, Wed (or empty for auto)",
+              "fi": "esim. Ma, Ti, Ke (tai tyhjä = auto)"
+            },
+            "title": {
+              "en": "Day name override (optional)",
+              "fi": "Viikonpäivän nimi (valinnainen)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_screensaver_status_icon_action",
+        "title": {
+          "en": "Set screensaver status icon",
+          "fi": "Aseta näytönsäästäjän tilakuvake"
+        },
+        "titleFormatted": {
+          "en": "Set screensaver icon [[slot]] to [[icon]] ([[color]])",
+          "fi": "Aseta näytönsäästäjän kuvake [[slot]] kuvakkeeksi [[icon]] ([[color]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "slot",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Top-Left (Icon 1)",
+                  "fi": "Vasen yläkulma (Kuvake 1)"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Top-Right (Icon 2)",
+                  "fi": "Oikea yläkulma (Kuvake 2)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Status icon slot",
+              "fi": "Tilakuvakkeen paikka"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "placeholder": {
+              "en": "e.g. shield-check, lock, battery, car-electric (empty to clear)",
+              "fi": "esim. shield-check, lock, battery, car-electric (tyhjä poistaa)"
+            },
+            "title": {
+              "en": "Icon name",
+              "fi": "Kuvakkeen nimi"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "placeholder": {
+              "en": "white, green, red, orange, #FFAA00",
+              "fi": "white, green, red, orange, #FFAA00"
+            },
+            "title": {
+              "en": "Icon color",
+              "fi": "Kuvakkeen väri"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_screensaver_weather_action",
+        "title": {
+          "en": "Set screensaver weather & temperature",
+          "fi": "Aseta lepotilan säätiedot ja lämpötila"
+        },
+        "titleFormatted": {
+          "en": "Set weather: outdoor [[temperature]] °C, condition [[weather_type]], indoor [[indoor_temperature]] °C",
+          "fi": "Aseta sää: ulkona [[temperature]] °C, sää [[weather_type]], sisällä [[indoor_temperature]] °C"
+        },
+        "hint": {
+          "en": "Updates the outdoor temperature, weather icon, and optionally indoor temperature displayed on the screensaver.",
+          "fi": "Päivittää lepotilassa (screensaver) näkyvän ulkolämpötilan, sääkuvakkeen ja valinnaisesti sisälämpötilan."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "temperature",
+            "type": "number",
+            "label": {
+              "en": "Outdoor temperature (°C)",
+              "fi": "Ulkolämpötila (°C)"
+            },
+            "placeholder": {
+              "en": "e.g. 18.5",
+              "fi": "esim. 18.5"
+            },
+            "title": {
+              "en": "Outdoor temperature (°C)",
+              "fi": "Ulkolämpötila (°C)"
+            }
+          },
+          {
+            "name": "weather_type",
+            "type": "dropdown",
+            "label": {
+              "en": "Weather condition",
+              "fi": "Säätyyppi / Kuvake"
+            },
+            "values": [
+              {
+                "id": "sunny",
+                "label": {
+                  "en": "☀️ Sunny",
+                  "fi": "☀️ Aurinkoista"
+                }
+              },
+              {
+                "id": "partly_cloudy",
+                "label": {
+                  "en": "⛅ Partly cloudy",
+                  "fi": "⛅ Puolipilvistä"
+                }
+              },
+              {
+                "id": "cloudy",
+                "label": {
+                  "en": "☁️ Cloudy",
+                  "fi": "☁️ Pilvistä"
+                }
+              },
+              {
+                "id": "rainy",
+                "label": {
+                  "en": "🌧️ Rainy",
+                  "fi": "🌧️ Sadetta"
+                }
+              },
+              {
+                "id": "pouring",
+                "label": {
+                  "en": "🌧️ Heavy rain",
+                  "fi": "🌧️ Kaatosadetta"
+                }
+              },
+              {
+                "id": "lightning_rainy",
+                "label": {
+                  "en": "⛈️ Thunderstorm",
+                  "fi": "⛈️ Ukkosta"
+                }
+              },
+              {
+                "id": "snowy",
+                "label": {
+                  "en": "❄️ Snow",
+                  "fi": "❄️ Lumisadetta"
+                }
+              },
+              {
+                "id": "snowy_rainy",
+                "label": {
+                  "en": "🌨️ Sleet",
+                  "fi": "🌨️ Räntäsadetta"
+                }
+              },
+              {
+                "id": "fog",
+                "label": {
+                  "en": "🌫️ Fog",
+                  "fi": "🌫️ Sumua"
+                }
+              },
+              {
+                "id": "windy",
+                "label": {
+                  "en": "💨 Windy",
+                  "fi": "💨 Tuulista"
+                }
+              },
+              {
+                "id": "clear_night",
+                "label": {
+                  "en": "🌙 Clear night",
+                  "fi": "🌙 Selkeä yö"
+                }
+              }
+            ],
+            "title": {
+              "en": "Weather condition",
+              "fi": "Säätyyppi / Kuvake"
+            }
+          },
+          {
+            "name": "indoor_temperature",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Indoor temperature (°C, optional)",
+              "fi": "Sisälämpötila (°C, valinnainen)"
+            },
+            "placeholder": {
+              "en": "e.g. 21.0 (empty = keep current)",
+              "fi": "esim. 21.0 (tyhjä = pidä nykyinen)"
+            },
+            "title": {
+              "en": "Indoor temperature (°C, optional)",
+              "fi": "Sisälämpötila (°C, valinnainen)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_select_state_action",
+        "title": {
+          "en": "Set select state",
+          "fi": "Aseta valintalistan tila"
+        },
+        "titleFormatted": {
+          "en": "Set state of [[entity]] to [[current]] (options: [[options]])",
+          "fi": "Aseta kohteen [[entity]] tilaksi [[current]] (vaihtoehdot: [[options]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Entity ID",
+              "fi": "Kohteen ID"
+            },
+            "placeholder": {
+              "en": "home_state",
+              "fi": "home_state"
+            },
+            "title": {
+              "en": "Entity ID",
+              "fi": "Kohteen ID"
+            }
+          },
+          {
+            "name": "current",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Current option",
+              "fi": "Valittu tila"
+            },
+            "placeholder": {
+              "en": "Kotona",
+              "fi": "Kotona"
+            },
+            "title": {
+              "en": "Current option",
+              "fi": "Valittu tila"
+            }
+          },
+          {
+            "name": "options",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "New options list (optional, ? or comma separated)",
+              "fi": "Uusi vaihtoehtolista (valinnainen, ? tai pilkku)"
+            },
+            "placeholder": {
+              "en": "Kotona?Poissa?Nukkumassa?Loma",
+              "fi": "Kotona?Poissa?Nukkumassa?Loma"
+            },
+            "title": {
+              "en": "New options list (optional, ? or comma separated)",
+              "fi": "Uusi vaihtoehtolista (valinnainen, ? tai pilkku)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "id": "set_shutter_state_action",
+        "title": {
+          "en": "Set shutter state on panel",
+          "fi": "Aseta verhon tila paneelilla"
+        },
+        "titleFormatted": {
+          "en": "Set shutter [[entity]] state (position: [[position]], tilt: [[tilt]])",
+          "fi": "Aseta verhon [[entity]] tila (asento: [[position]], säleasento: [[tilt]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Entity ID",
+              "fi": "Verhon tunniste"
+            },
+            "placeholder": {
+              "en": "shutter",
+              "fi": "shutter"
+            },
+            "title": {
+              "en": "Entity ID",
+              "fi": "Verhon tunniste"
+            }
+          },
+          {
+            "name": "position",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Position (optional, 0-100 %)",
+              "fi": "Asento (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Position (optional, 0-100 %)",
+              "fi": "Asento (valinnainen, 0-100 %)"
+            }
+          },
+          {
+            "name": "tilt",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Tilt angle (optional, 0-100 %)",
+              "fi": "Säleasento (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Tilt angle (optional, 0-100 %)",
+              "fi": "Säleasento (valinnainen, 0-100 %)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "id": "set_thermo_mode_action",
+        "title": {
+          "en": "Set thermostat popup mode",
+          "fi": "Aseta termostaatin lisäsäädön tila"
+        },
+        "titleFormatted": {
+          "en": "Set thermostat [[entity]] [[mode_row]]: [[mode]]",
+          "fi": "Aseta termostaatin [[entity]] [[mode_row]]: [[mode]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (default: thermo)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+            },
+            "placeholder": {
+              "en": "thermo",
+              "fi": "thermo"
+            },
+            "title": {
+              "en": "Entity ID (default: thermo)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+            }
+          },
+          {
+            "name": "mode_row",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "mode1",
+                "label": {
+                  "en": "Row 1 (Operation mode)",
+                  "fi": "Rivi 1 (Toimintatila)"
+                }
+              },
+              {
+                "id": "mode2",
+                "label": {
+                  "en": "Row 2 (Preset mode)",
+                  "fi": "Rivi 2 (Esiasetus)"
+                }
+              },
+              {
+                "id": "mode3",
+                "label": {
+                  "en": "Row 3 (Fan mode)",
+                  "fi": "Rivi 3 (Puhallin)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Thermostat mode row",
+              "fi": "Termostaattitilan rivi"
+            }
+          },
+          {
+            "name": "mode",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Selected mode",
+              "fi": "Valittu tila"
+            },
+            "placeholder": {
+              "en": "Lämmitys",
+              "fi": "Lämmitys"
+            },
+            "title": {
+              "en": "Selected mode",
+              "fi": "Valittu tila"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set_timer_action",
+        "title": {
+          "en": "Control timer (start, pause, cancel, set)",
+          "fi": "Ohjaa ajastinta (käynnistä, tauko, nollaa, aseta)"
+        },
+        "titleFormatted": {
+          "en": "Set timer [[entity]] to [[action]] (minutes: [[minutes]], seconds: [[seconds]])",
+          "fi": "Aseta ajastin [[entity]] tilaan [[action]] (minuutit: [[minutes]], sekunnit: [[seconds]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Timer ID (optional)",
+              "fi": "Ajastimen tunniste (valinnainen)"
+            },
+            "placeholder": {
+              "en": "timer",
+              "fi": "timer"
+            },
+            "title": {
+              "en": "Timer ID (optional)",
+              "fi": "Ajastimen tunniste (valinnainen)"
+            }
+          },
+          {
+            "name": "action",
+            "type": "dropdown",
+            "label": {
+              "en": "Action",
+              "fi": "Toiminto"
+            },
+            "values": [
+              {
+                "id": "start",
+                "label": {
+                  "en": "▶️ Start",
+                  "fi": "▶️ Käynnistä"
+                }
+              },
+              {
+                "id": "pause",
+                "label": {
+                  "en": "⏸️ Pause",
+                  "fi": "⏸️ Tauko"
+                }
+              },
+              {
+                "id": "cancel",
+                "label": {
+                  "en": "⏹️ Cancel / Reset",
+                  "fi": "⏹️ Nollaa / Peruuta"
+                }
+              },
+              {
+                "id": "set",
+                "label": {
+                  "en": "⏱️ Set time without starting",
+                  "fi": "⏱️ Aseta aika käynnistämättä"
+                }
+              }
+            ],
+            "title": {
+              "en": "Action",
+              "fi": "Toiminto"
+            }
+          },
+          {
+            "name": "minutes",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 59,
+            "label": {
+              "en": "Minutes (optional, 0-59)",
+              "fi": "Minuutit (valinnainen, 0-59)"
+            },
+            "placeholder": {
+              "en": "5",
+              "fi": "5"
+            },
+            "title": {
+              "en": "Minutes (optional, 0-59)",
+              "fi": "Minuutit (valinnainen, 0-59)"
+            }
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 59,
+            "label": {
+              "en": "Seconds (optional, 0-59)",
+              "fi": "Sekunnit (valinnainen, 0-59)"
+            },
+            "placeholder": {
+              "en": "0",
+              "fi": "0"
+            },
+            "title": {
+              "en": "Seconds (optional, 0-59)",
+              "fi": "Sekunnit (valinnainen, 0-59)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_alarm_page_action",
+        "title": {
+          "en": "Show alarm card",
+          "fi": "Näytä hälytyssivu"
+        },
+        "titleFormatted": {
+          "en": "Set alarm [[title]]: state [[state]] (pin: [[pin_required]], prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Aseta hälytys [[title]]: tila [[state]] (pin: [[pin_required]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "disarmed",
+                "label": {
+                  "en": "Disarmed",
+                  "fi": "Pois päältä"
+                }
+              },
+              {
+                "id": "armed_home",
+                "label": {
+                  "en": "Armed Home",
+                  "fi": "Koti-tila (Yö/Kotona)"
+                }
+              },
+              {
+                "id": "armed_away",
+                "label": {
+                  "en": "Armed Away",
+                  "fi": "Poissa-tila"
+                }
+              },
+              {
+                "id": "armed_night",
+                "label": {
+                  "en": "Armed Night",
+                  "fi": "Yötila"
+                }
+              },
+              {
+                "id": "arming",
+                "label": {
+                  "en": "Arming (pending)",
+                  "fi": "Kytkeytyy (odottaa)"
+                }
+              },
+              {
+                "id": "triggered",
+                "label": {
+                  "en": "Triggered (Alarm!)",
+                  "fi": "Hälytys lauennut!"
+                }
+              }
+            ],
+            "title": {
+              "en": "Alarm state",
+              "fi": "Hälytystila"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Home Alarm",
+              "fi": "Kotihälytin"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "pin_required",
+            "type": "dropdown",
+            "required": false,
+            "values": [
+              {
+                "id": "yes",
+                "label": {
+                  "en": "PIN required (show keypad)",
+                  "fi": "PIN vaaditaan (näytä näppäimistö)"
+                }
+              },
+              {
+                "id": "no",
+                "label": {
+                  "en": "No PIN required",
+                  "fi": "Ei PIN-koodia"
+                }
+              }
+            ],
+            "title": {
+              "en": "Require PIN",
+              "fi": "Vaadi PIN-koodi"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_chart_page_action",
+        "title": {
+          "en": "Show chart page",
+          "fi": "Näytä kaaviosivu"
+        },
+        "titleFormatted": {
+          "en": "Show [[chart_type]] chart [[title]] (unit: [[unit]], data: [[data]], color: [[color]], ticks: [[ticks]], prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Näytä [[chart_type]] [[title]] (yksikkö: [[unit]], data: [[data]], väri: [[color]], asteikko: [[ticks]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            },
+            "placeholder": {
+              "en": "Spot Prices",
+              "fi": "Pörssisähkö"
+            },
+            "title": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            }
+          },
+          {
+            "name": "chart_type",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "bar",
+                "label": {
+                  "en": "Bar chart (cardChart)",
+                  "fi": "Pylväskaavio (cardChart)"
+                }
+              },
+              {
+                "id": "line",
+                "label": {
+                  "en": "Line chart (cardLChart)",
+                  "fi": "Viivakaavio (cardLChart)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Chart layout",
+              "fi": "Kaavionäkymä"
+            }
+          },
+          {
+            "name": "unit",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Y-axis Unit",
+              "fi": "Y-akselin yksikkö"
+            },
+            "placeholder": {
+              "en": "c/kWh",
+              "fi": "c/kWh"
+            },
+            "title": {
+              "en": "Y-axis Unit",
+              "fi": "Y-akselin yksikkö"
+            }
+          },
+          {
+            "name": "data",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Datapoints (numbers separated by comma / tilde or JSON)",
+              "fi": "Arvot (pilkulla/aaltoviivalla eroteltuna tai JSON)"
+            },
+            "placeholder": {
+              "en": "5.2, 4.8, 7.5, 12.0...",
+              "fi": "5.2, 4.8, 7.5, 12.0..."
+            },
+            "title": {
+              "en": "Datapoints (numbers separated by comma / tilde or JSON)",
+              "fi": "Arvot (pilkulla/aaltoviivalla eroteltuna tai JSON)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Color (name, hex or dec565)",
+              "fi": "Väri (nimi, hex tai dec565)"
+            },
+            "placeholder": {
+              "en": "yellow",
+              "fi": "yellow"
+            },
+            "title": {
+              "en": "Color (name, hex or dec565)",
+              "fi": "Väri (nimi, hex tai dec565)"
+            }
+          },
+          {
+            "name": "ticks",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Y-axis Ticks (optional, e.g. 50:100:150:200)",
+              "fi": "Y-akselin asteikko (valinnainen, esim. 50:100:150:200)"
+            },
+            "placeholder": {
+              "en": "50:100:150:200",
+              "fi": "50:100:150:200"
+            },
+            "title": {
+              "en": "Y-axis Ticks (optional, e.g. 50:100:150:200)",
+              "fi": "Y-akselin asteikko (valinnainen, esim. 50:100:150:200)"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_entities_page_action",
+        "title": {
+          "en": "Show entities list card",
+          "fi": "Näytä laitelistasivu"
+        },
+        "titleFormatted": {
+          "en": "Show entities list with title [[title]] (prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Näytä laitelista otsikolla [[title]] (edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Living Room Devices",
+              "fi": "Olohuoneen laitteet"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_fan_popup_action",
+        "title": {
+          "en": "Show ventilation / fan popup",
+          "fi": "Avaa ilmanvaihdon / puhaltimen säätöikkuna"
+        },
+        "titleFormatted": {
+          "en": "Open fan/ventilation [[entity]] popup (on: [[onoff]], speed: [[speed]], mode: [[mode]], modes: [[modes]])",
+          "fi": "Avaa ilmanvaihdon [[entity]] säätöikkuna (päällä: [[onoff]], teho: [[speed]], tila: [[mode]], tilat: [[modes]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (default: fan)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: fan)"
+            },
+            "placeholder": {
+              "en": "fan",
+              "fi": "fan"
+            },
+            "title": {
+              "en": "Entity ID (default: fan)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: fan)"
+            }
+          },
+          {
+            "name": "onoff",
+            "type": "checkbox",
+            "required": false,
+            "label": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            },
+            "title": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            }
+          },
+          {
+            "name": "speed",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Speed level",
+              "fi": "Nopeus- / tehotaso"
+            },
+            "placeholder": {
+              "en": "2",
+              "fi": "2"
+            },
+            "title": {
+              "en": "Speed level",
+              "fi": "Nopeus- / tehotaso"
+            }
+          },
+          {
+            "name": "mode",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Selected mode",
+              "fi": "Valittu tila"
+            },
+            "placeholder": {
+              "en": "Kotona",
+              "fi": "Kotona"
+            },
+            "title": {
+              "en": "Selected mode",
+              "fi": "Valittu tila"
+            }
+          },
+          {
+            "name": "modes",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Modes list (? separated)",
+              "fi": "Tilalista (?-eroteltuna)"
+            },
+            "placeholder": {
+              "en": "Poissa?Kotona?Tehostus?Takkatila",
+              "fi": "Poissa?Kotona?Tehostus?Takkatila"
+            },
+            "title": {
+              "en": "Modes list (? separated)",
+              "fi": "Tilalista (?-eroteltuna)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_grid_page_action",
+        "title": {
+          "en": "Show grid card",
+          "fi": "Näytä ruudukkosivu"
+        },
+        "titleFormatted": {
+          "en": "Show [[grid_type]] with title [[title]] (prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Näytä [[grid_type]] otsikolla [[title]] (edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Living Room",
+              "fi": "Olohuone"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "grid_type",
+            "type": "dropdown",
+            "required": false,
+            "values": [
+              {
+                "id": "grid",
+                "label": {
+                  "en": "6 buttons (standard)",
+                  "fi": "6 painiketta (vakio)"
+                }
+              },
+              {
+                "id": "grid2",
+                "label": {
+                  "en": "8 buttons (dense)",
+                  "fi": "8 painiketta (tiheä)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Grid layout",
+              "fi": "Ruudukkonäkymä"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_light_popup_action",
+        "title": {
+          "en": "Show light popup (popupLight)",
+          "fi": "Avaa valon säätöikkuna (popupLight)"
+        },
+        "titleFormatted": {
+          "en": "Open light popup [[entity]] (power: [[onoff]], brightness: [[brightness]], color temp: [[color_temp]], color: [[color]])",
+          "fi": "Avaa valon [[entity]] säätöikkuna (virta: [[onoff]], kirkkaus: [[brightness]], värilämpötila: [[color_temp]], väri: [[color]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (optional)",
+              "fi": "Valon tunniste (valinnainen)"
+            },
+            "placeholder": {
+              "en": "light",
+              "fi": "light"
+            },
+            "title": {
+              "en": "Entity ID (optional)",
+              "fi": "Valon tunniste (valinnainen)"
+            }
+          },
+          {
+            "name": "onoff",
+            "type": "dropdown",
+            "label": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            },
+            "values": [
+              {
+                "id": "keep",
+                "label": {
+                  "en": "Keep current state",
+                  "fi": "Säilytä nykyinen tila"
+                }
+              },
+              {
+                "id": "on",
+                "label": {
+                  "en": "On",
+                  "fi": "Päällä"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "fi": "Pois"
+                }
+              }
+            ],
+            "title": {
+              "en": "Power state",
+              "fi": "Virtatila"
+            }
+          },
+          {
+            "name": "brightness",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Brightness (optional, 0-100 %)",
+              "fi": "Kirkkaus (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "80",
+              "fi": "80"
+            },
+            "title": {
+              "en": "Brightness (optional, 0-100 %)",
+              "fi": "Kirkkaus (valinnainen, 0-100 %)"
+            }
+          },
+          {
+            "name": "color_temp",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Color temperature (optional, 0-100 %)",
+              "fi": "Värilämpötila (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Color temperature (optional, 0-100 %)",
+              "fi": "Värilämpötila (valinnainen, 0-100 %)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            },
+            "placeholder": {
+              "en": "yellow",
+              "fi": "yellow"
+            },
+            "title": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_media_page_action",
+        "title": {
+          "en": "Show media player card",
+          "fi": "Näytä mediasoitin"
+        },
+        "titleFormatted": {
+          "en": "Set media [[card_title]]: [[title]] by [[artist]] (vol: [[volume]]%, state: [[state]], shuffle: [[shuffle]], prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Aseta media [[card_title]]: [[title]] - [[artist]] (ääni: [[volume]]%, tila: [[state]], sekoitus: [[shuffle]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "artist",
+            "type": "text",
+            "label": {
+              "en": "Artist / Author",
+              "fi": "Artisti / Esittäjä"
+            },
+            "placeholder": {
+              "en": "The Beatles",
+              "fi": "The Beatles"
+            },
+            "title": {
+              "en": "Artist / Author",
+              "fi": "Artisti / Esittäjä"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Song / Track Title",
+              "fi": "Kappaleen nimi"
+            },
+            "placeholder": {
+              "en": "Come Together",
+              "fi": "Come Together"
+            },
+            "title": {
+              "en": "Song / Track Title",
+              "fi": "Kappaleen nimi"
+            }
+          },
+          {
+            "name": "volume",
+            "type": "number",
+            "label": {
+              "en": "Volume (0 - 100)",
+              "fi": "Äänenvoimakkuus (0 - 100)"
+            },
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "title": {
+              "en": "Volume (0 - 100)",
+              "fi": "Äänenvoimakkuus (0 - 100)"
+            }
+          },
+          {
+            "name": "card_title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            },
+            "placeholder": {
+              "en": "Media Player",
+              "fi": "Mediasoitin"
+            },
+            "title": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            }
+          },
+          {
+            "name": "state",
+            "type": "dropdown",
+            "required": false,
+            "values": [
+              {
+                "id": "playing",
+                "label": {
+                  "en": "Playing (shows pause button)",
+                  "fi": "Toistaa (näyttää taukopainikkeen)"
+                }
+              },
+              {
+                "id": "paused",
+                "label": {
+                  "en": "Paused (shows play button)",
+                  "fi": "Tauolla (näyttää toistopainikkeen)"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Off",
+                  "fi": "Pois päältä"
+                }
+              }
+            ],
+            "title": {
+              "en": "Playback state",
+              "fi": "Toistotila"
+            }
+          },
+          {
+            "name": "shuffle",
+            "type": "dropdown",
+            "required": false,
+            "values": [
+              {
+                "id": "off",
+                "label": {
+                  "en": "Shuffle Off",
+                  "fi": "Sekoitus pois"
+                }
+              },
+              {
+                "id": "on",
+                "label": {
+                  "en": "Shuffle On",
+                  "fi": "Sekoitus päällä"
+                }
+              },
+              {
+                "id": "disabled",
+                "label": {
+                  "en": "Hide shuffle icon",
+                  "fi": "Piilota sekoituskuvake"
+                }
+              }
+            ],
+            "title": {
+              "en": "Shuffle mode",
+              "fi": "Sekoitustila"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_notification_action",
+        "title": {
+          "en": "Show popup notification",
+          "fi": "Näytä ponnahdusilmoitus"
+        },
+        "titleFormatted": {
+          "en": "Show popup [[heading]]: [[message]] (button 1: [[button1]], color: [[color1]], button 2: [[button2]], color: [[color2]], timeout: [[timeout]], beep: [[beep]])",
+          "fi": "Näytä ilmoitus [[heading]]: [[message]] (painike 1: [[button1]], väri: [[color1]], painike 2: [[button2]], väri: [[color2]], aikakatkaisu: [[timeout]], ääni: [[beep]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "heading",
+            "type": "text",
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "message",
+            "type": "text",
+            "label": {
+              "en": "Message",
+              "fi": "Viesti"
+            },
+            "placeholder": {
+              "en": "Message",
+              "fi": "Viesti"
+            },
+            "title": {
+              "en": "Message",
+              "fi": "Viesti"
+            }
+          },
+          {
+            "name": "button1",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Button 1 Label",
+              "fi": "Painike 1"
+            },
+            "placeholder": {
+              "en": "OK",
+              "fi": "OK"
+            },
+            "title": {
+              "en": "Button 1 Label",
+              "fi": "Painike 1"
+            }
+          },
+          {
+            "name": "button2",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Optional: Button 2 Label",
+              "fi": "Valinnainen: Painike 2"
+            },
+            "placeholder": {
+              "en": "Cancel",
+              "fi": "Peruuta"
+            },
+            "title": {
+              "en": "Optional: Button 2 Label",
+              "fi": "Valinnainen: Painike 2"
+            }
+          },
+          {
+            "name": "color1",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Button 1 Color",
+              "fi": "Painikkeen 1 väri"
+            },
+            "placeholder": {
+              "en": "white",
+              "fi": "white"
+            },
+            "title": {
+              "en": "Button 1 Color",
+              "fi": "Painikkeen 1 väri"
+            }
+          },
+          {
+            "name": "color2",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Button 2 Color",
+              "fi": "Painikkeen 2 väri"
+            },
+            "placeholder": {
+              "en": "white",
+              "fi": "white"
+            },
+            "title": {
+              "en": "Button 2 Color",
+              "fi": "Painikkeen 2 väri"
+            }
+          },
+          {
+            "name": "timeout",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Timeout in seconds (0 = manual click)",
+              "fi": "Aikakatkaisu sekunneissa (0 = vaatii painalluksen)"
+            },
+            "placeholder": {
+              "en": "e.g. 10 (0 = wait for button)",
+              "fi": "esim. 10 (0 = odota painallusta)"
+            },
+            "title": {
+              "en": "Timeout in seconds (0 = manual click)",
+              "fi": "Aikakatkaisu sekunneissa (0 = vaatii painalluksen)"
+            }
+          },
+          {
+            "name": "beep",
+            "type": "checkbox",
+            "required": false,
+            "label": {
+              "en": "Play buzzer beep sound",
+              "fi": "Soita äänimerkki (piip)"
+            },
+            "title": {
+              "en": "Play buzzer beep sound",
+              "fi": "Soita äänimerkki (piip)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_power_page_action",
+        "title": {
+          "en": "Show power flow card",
+          "fi": "Näytä energiavirtaussivu"
+        },
+        "titleFormatted": {
+          "en": "Show power card [[title]] (home: [[home_title]], power: [[home_power]], icon: [[home_icon]], color: [[home_color]], prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Näytä energiasivu [[title]] (koti: [[home_title]], teho: [[home_power]], kuvake: [[home_icon]], väri: [[home_color]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            },
+            "placeholder": {
+              "en": "Power Flow",
+              "fi": "Energiavirta"
+            },
+            "title": {
+              "en": "Page Title",
+              "fi": "Sivun otsikko"
+            }
+          },
+          {
+            "name": "home_power",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Home Power / Consumption",
+              "fi": "Kodin teho / kulutus"
+            },
+            "placeholder": {
+              "en": "2.4 kW",
+              "fi": "2.4 kW"
+            },
+            "title": {
+              "en": "Home Power / Consumption",
+              "fi": "Kodin teho / kulutus"
+            }
+          },
+          {
+            "name": "home_title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Home Title",
+              "fi": "Keskuksen otsikko"
+            },
+            "placeholder": {
+              "en": "Home",
+              "fi": "Koti"
+            },
+            "title": {
+              "en": "Home Title",
+              "fi": "Keskuksen otsikko"
+            }
+          },
+          {
+            "name": "home_icon",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Home Icon",
+              "fi": "Keskuksen kuvake"
+            },
+            "placeholder": {
+              "en": "home",
+              "fi": "home"
+            },
+            "title": {
+              "en": "Home Icon",
+              "fi": "Keskuksen kuvake"
+            }
+          },
+          {
+            "name": "home_color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Home Color",
+              "fi": "Keskuksen väri"
+            },
+            "placeholder": {
+              "en": "white",
+              "fi": "white"
+            },
+            "title": {
+              "en": "Home Color",
+              "fi": "Keskuksen väri"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_qr_page_action",
+        "title": {
+          "en": "Show QR code card",
+          "fi": "Näytä QR-koodisivu"
+        },
+        "titleFormatted": {
+          "en": "Show QR code [[title]]: [[qrcode]] ([[line1_title]]: [[line1_val]], [[line2_title]]: [[line2_val]], prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Näytä QR-koodi [[title]]: [[qrcode]] ([[line1_title]]: [[line1_val]], [[line2_title]]: [[line2_val]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Guest Wi-Fi",
+              "fi": "Vierasverkko"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "qrcode",
+            "type": "text",
+            "label": {
+              "en": "QR Content",
+              "fi": "QR-koodin sisältö"
+            },
+            "placeholder": {
+              "en": "WIFI:S:MySSID;T:WPA2;P:MyPassword;;",
+              "fi": "WIFI:S:Verkko;T:WPA2;P:Salasana;;"
+            },
+            "title": {
+              "en": "QR Content",
+              "fi": "QR-koodin sisältö"
+            }
+          },
+          {
+            "name": "line1_title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Line 1 Label",
+              "fi": "Rivin 1 otsikko"
+            },
+            "placeholder": {
+              "en": "Network Name",
+              "fi": "Verkon nimi"
+            },
+            "title": {
+              "en": "Line 1 Label",
+              "fi": "Rivin 1 otsikko"
+            }
+          },
+          {
+            "name": "line1_val",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Line 1 Value",
+              "fi": "Rivin 1 arvo"
+            },
+            "placeholder": {
+              "en": "MySSID",
+              "fi": "MySSID"
+            },
+            "title": {
+              "en": "Line 1 Value",
+              "fi": "Rivin 1 arvo"
+            }
+          },
+          {
+            "name": "line2_title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Line 2 Label",
+              "fi": "Rivin 2 otsikko"
+            },
+            "placeholder": {
+              "en": "Password",
+              "fi": "Salasana"
+            },
+            "title": {
+              "en": "Line 2 Label",
+              "fi": "Rivin 2 otsikko"
+            }
+          },
+          {
+            "name": "line2_val",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Line 2 Value",
+              "fi": "Rivin 2 arvo"
+            },
+            "placeholder": {
+              "en": "MyPassword",
+              "fi": "MyPassword"
+            },
+            "title": {
+              "en": "Line 2 Value",
+              "fi": "Rivin 2 arvo"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_select_popup_action",
+        "title": {
+          "en": "Show select popup (popupInSel)",
+          "fi": "Avaa valintalista (popupInSel)"
+        },
+        "titleFormatted": {
+          "en": "Open select popup [[entity]] (title: [[title]], current: [[current]], options: [[options]], color: [[color]])",
+          "fi": "Avaa kohteen [[entity]] valintalista (otsikko: [[title]], tila: [[current]], vaihtoehdot: [[options]], väri: [[color]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Entity ID",
+              "fi": "Kohteen ID"
+            },
+            "placeholder": {
+              "en": "home_state",
+              "fi": "home_state"
+            },
+            "title": {
+              "en": "Entity ID",
+              "fi": "Kohteen ID"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Title (optional)",
+              "fi": "Otsikko (valinnainen)"
+            },
+            "placeholder": {
+              "en": "Kodin tila",
+              "fi": "Kodin tila"
+            },
+            "title": {
+              "en": "Title (optional)",
+              "fi": "Otsikko (valinnainen)"
+            }
+          },
+          {
+            "name": "current",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Current option",
+              "fi": "Nykyinen valinta"
+            },
+            "placeholder": {
+              "en": "Kotona",
+              "fi": "Kotona"
+            },
+            "title": {
+              "en": "Current option",
+              "fi": "Nykyinen valinta"
+            }
+          },
+          {
+            "name": "options",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "Options list (? or comma separated)",
+              "fi": "Vaihtoehdot (? tai pilkulla eroteltuna)"
+            },
+            "placeholder": {
+              "en": "Kotona?Poissa?Nukkumassa?Loma",
+              "fi": "Kotona?Poissa?Nukkumassa?Loma"
+            },
+            "title": {
+              "en": "Options list (? or comma separated)",
+              "fi": "Vaihtoehdot (? tai pilkulla eroteltuna)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            },
+            "placeholder": {
+              "en": "white",
+              "fi": "white"
+            },
+            "title": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_shutter_popup_action",
+        "title": {
+          "en": "Show shutter popup (popupShutter)",
+          "fi": "Avaa verhojen säätöikkuna (popupShutter)"
+        },
+        "titleFormatted": {
+          "en": "Open shutter popup [[entity]] (position: [[position]], tilt: [[tilt]])",
+          "fi": "Avaa verhojen [[entity]] säätöikkuna (asento: [[position]], säleasento: [[tilt]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (optional)",
+              "fi": "Verhon tunniste (valinnainen)"
+            },
+            "placeholder": {
+              "en": "shutter",
+              "fi": "shutter"
+            },
+            "title": {
+              "en": "Entity ID (optional)",
+              "fi": "Verhon tunniste (valinnainen)"
+            }
+          },
+          {
+            "name": "position",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Position (optional, 0-100 %)",
+              "fi": "Asento (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Position (optional, 0-100 %)",
+              "fi": "Asento (valinnainen, 0-100 %)"
+            }
+          },
+          {
+            "name": "tilt",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 100,
+            "label": {
+              "en": "Tilt angle (optional, 0-100 %)",
+              "fi": "Säleasento (valinnainen, 0-100 %)"
+            },
+            "placeholder": {
+              "en": "50",
+              "fi": "50"
+            },
+            "title": {
+              "en": "Tilt angle (optional, 0-100 %)",
+              "fi": "Säleasento (valinnainen, 0-100 %)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_thermo_popup_action",
+        "title": {
+          "en": "Show thermostat popup",
+          "fi": "Avaa termostaatin lisäsäätöikkuna"
+        },
+        "titleFormatted": {
+          "en": "Open thermostat [[entity]] popup (mode 1: [[mode1]], options 1: [[modes1]], mode 2: [[mode2]], options 2: [[modes2]], mode 3: [[mode3]], options 3: [[modes3]])",
+          "fi": "Avaa termostaatin [[entity]] lisäsäätöikkuna (tila 1: [[mode1]], valinnat 1: [[modes1]], tila 2: [[mode2]], valinnat 2: [[modes2]], tila 3: [[mode3]], valinnat 3: [[modes3]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Entity ID (default: thermo)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+            },
+            "placeholder": {
+              "en": "thermo",
+              "fi": "thermo"
+            },
+            "title": {
+              "en": "Entity ID (default: thermo)",
+              "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+            }
+          },
+          {
+            "name": "mode1",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Mode 1 / Operation mode (e.g. Lämmitys)",
+              "fi": "Tila 1 / Toimintatila (esim. Lämmitys)"
+            },
+            "placeholder": {
+              "en": "Lämmitys",
+              "fi": "Lämmitys"
+            },
+            "title": {
+              "en": "Mode 1 / Operation mode (e.g. Lämmitys)",
+              "fi": "Tila 1 / Toimintatila (esim. Lämmitys)"
+            }
+          },
+          {
+            "name": "modes1",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Modes 1 list (? separated)",
+              "fi": "Tilat 1 lista (?-eroteltuna)"
+            },
+            "placeholder": {
+              "en": "Auto?Lämmitys?Viilennys?Pois",
+              "fi": "Auto?Lämmitys?Viilennys?Pois"
+            },
+            "title": {
+              "en": "Modes 1 list (? separated)",
+              "fi": "Tilat 1 lista (?-eroteltuna)"
+            }
+          },
+          {
+            "name": "mode2",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Mode 2 / Preset (e.g. Koti)",
+              "fi": "Tila 2 / Esiasetus (esim. Koti)"
+            },
+            "placeholder": {
+              "en": "Koti",
+              "fi": "Koti"
+            },
+            "title": {
+              "en": "Mode 2 / Preset (e.g. Koti)",
+              "fi": "Tila 2 / Esiasetus (esim. Koti)"
+            }
+          },
+          {
+            "name": "modes2",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Modes 2 list (? separated)",
+              "fi": "Tilat 2 lista (?-eroteltuna)"
+            },
+            "placeholder": {
+              "en": "Koti?Säästö?Mukavuus?Tehostus",
+              "fi": "Koti?Säästö?Mukavuus?Tehostus"
+            },
+            "title": {
+              "en": "Modes 2 list (? separated)",
+              "fi": "Tilat 2 lista (?-eroteltuna)"
+            }
+          },
+          {
+            "name": "mode3",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Mode 3 / Fan (e.g. Auto)",
+              "fi": "Tila 3 / Puhallin (esim. Auto)"
+            },
+            "placeholder": {
+              "en": "Auto",
+              "fi": "Auto"
+            },
+            "title": {
+              "en": "Mode 3 / Fan (e.g. Auto)",
+              "fi": "Tila 3 / Puhallin (esim. Auto)"
+            }
+          },
+          {
+            "name": "modes3",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Modes 3 list (? separated)",
+              "fi": "Tilat 3 lista (?-eroteltuna)"
+            },
+            "placeholder": {
+              "en": "Auto?Matala?Keski?Korkea",
+              "fi": "Auto?Matala?Keski?Korkea"
+            },
+            "title": {
+              "en": "Modes 3 list (? separated)",
+              "fi": "Tilat 3 lista (?-eroteltuna)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_thermostat_page_action",
+        "title": {
+          "en": "Show thermostat card",
+          "fi": "Näytä termostaattisivu"
+        },
+        "titleFormatted": {
+          "en": "Set thermostat [[title]]: target [[target_temp]]° (current [[current_temp]]°, min [[min_temp]]°, max [[max_temp]]°, step [[temp_step]]°, prev: [[prev_target]], next: [[next_target]])",
+          "fi": "Aseta termostaatti [[title]]: pyynti [[target_temp]]° (nykyinen [[current_temp]]°, min [[min_temp]]°, max [[max_temp]]°, askel [[temp_step]]°, edellinen: [[prev_target]], seuraava: [[next_target]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "current_temp",
+            "type": "number",
+            "label": {
+              "en": "Current temperature (°C)",
+              "fi": "Nykyinen lämpötila (°C)"
+            },
+            "min": -20,
+            "max": 50,
+            "step": 0.1,
+            "title": {
+              "en": "Current temperature (°C)",
+              "fi": "Nykyinen lämpötila (°C)"
+            }
+          },
+          {
+            "name": "target_temp",
+            "type": "number",
+            "label": {
+              "en": "Target temperature (°C)",
+              "fi": "Tavoitelämpötila (°C)"
+            },
+            "min": 5,
+            "max": 40,
+            "step": 0.5,
+            "title": {
+              "en": "Target temperature (°C)",
+              "fi": "Tavoitelämpötila (°C)"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Title",
+              "fi": "Otsikko"
+            },
+            "placeholder": {
+              "en": "Thermostat",
+              "fi": "Termostaatti"
+            },
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "min_temp",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Min limit (°C)",
+              "fi": "Minimiraja (°C)"
+            },
+            "min": 0,
+            "max": 30,
+            "step": 1,
+            "placeholder": 15,
+            "title": {
+              "en": "Min limit (°C)",
+              "fi": "Minimiraja (°C)"
+            }
+          },
+          {
+            "name": "max_temp",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Max limit (°C)",
+              "fi": "Maksimiraja (°C)"
+            },
+            "min": 15,
+            "max": 45,
+            "step": 1,
+            "placeholder": 32,
+            "title": {
+              "en": "Max limit (°C)",
+              "fi": "Maksimiraja (°C)"
+            }
+          },
+          {
+            "name": "temp_step",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Step size (°C)",
+              "fi": "Askelväli (°C)"
+            },
+            "min": 0.1,
+            "max": 2,
+            "step": 0.1,
+            "placeholder": 0.5,
+            "title": {
+              "en": "Step size (°C)",
+              "fi": "Askelväli (°C)"
+            }
+          },
+          {
+            "name": "prev_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Previous page target",
+              "fi": "Edellisen sivun kohde"
+            }
+          },
+          {
+            "name": "next_target",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            },
+            "placeholder": {
+              "en": "screensaver",
+              "fi": "screensaver"
+            },
+            "title": {
+              "en": "Next page target",
+              "fi": "Seuraavan sivun kohde"
+            }
+          }
+        ]
+      },
+      {
+        "id": "show_timer_popup_action",
+        "title": {
+          "en": "Show timer popup (popupTimer)",
+          "fi": "Avaa ajastin / munakello (popupTimer)"
+        },
+        "titleFormatted": {
+          "en": "Open timer [[entity]] (minutes: [[minutes]], seconds: [[seconds]], color: [[color]])",
+          "fi": "Avaa ajastin [[entity]] (minuutit: [[minutes]], sekunnit: [[seconds]], väri: [[color]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "entity",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Timer ID (optional)",
+              "fi": "Ajastimen tunniste (valinnainen)"
+            },
+            "placeholder": {
+              "en": "timer",
+              "fi": "timer"
+            },
+            "title": {
+              "en": "Timer ID (optional)",
+              "fi": "Ajastimen tunniste (valinnainen)"
+            }
+          },
+          {
+            "name": "minutes",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 59,
+            "label": {
+              "en": "Minutes (0-59)",
+              "fi": "Minuutit (0-59)"
+            },
+            "placeholder": {
+              "en": "5",
+              "fi": "5"
+            },
+            "title": {
+              "en": "Minutes (0-59)",
+              "fi": "Minuutit (0-59)"
+            }
+          },
+          {
+            "name": "seconds",
+            "type": "number",
+            "required": false,
+            "min": 0,
+            "max": 59,
+            "label": {
+              "en": "Seconds (0-59)",
+              "fi": "Sekunnit (0-59)"
+            },
+            "placeholder": {
+              "en": "0",
+              "fi": "0"
+            },
+            "title": {
+              "en": "Seconds (0-59)",
+              "fi": "Sekunnit (0-59)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            },
+            "placeholder": {
+              "en": "yellow",
+              "fi": "yellow"
+            },
+            "title": {
+              "en": "Icon color (optional)",
+              "fi": "Kuvakkeen väri (valinnainen)"
+            }
+          }
+        ]
+      },
+      {
+        "title": {
+          "en": "Show PIN unlock page",
+          "fi": "Näytä PIN-koodin syöttö (cardUnlock)"
+        },
+        "titleFormatted": {
+          "en": "Show PIN unlock page [[title]] (destination: [[destination]])",
+          "fi": "Näytä PIN-koodin syöttö [[title]] (kohde: [[destination]])"
+        },
+        "hint": {
+          "en": "Opens cardUnlock keypad on panel requiring PIN code.",
+          "fi": "Avaa numeerisen PIN-koodinäppäimistön paneelille."
+        },
+        "args": [
+          {
+            "name": "title",
+            "type": "text",
+            "placeholder": "esim. Avaa ovi / PIN-koodi",
+            "title": {
+              "en": "Title",
+              "fi": "Otsikko"
+            }
+          },
+          {
+            "name": "destination",
+            "type": "text",
+            "placeholder": "esim. front_door",
+            "title": {
+              "en": "Target identifier (destination)",
+              "fi": "Kohteen tunniste"
+            }
+          }
+        ],
+        "id": "show_unlock_page"
       },
       {
         "id": "start_screensaver_action",
@@ -276,6 +4880,96 @@
             "filter": "driver_id=nspanel"
           }
         ]
+      },
+      {
+        "id": "update_chart_data_action",
+        "title": {
+          "en": "Update chart data",
+          "fi": "Päivitä kaavion tiedot"
+        },
+        "titleFormatted": {
+          "en": "Update chart data on page [[page]] (data: [[data]], unit: [[unit]], ticks: [[ticks]])",
+          "fi": "Päivitä kaavion tiedot sivulla [[page]] (data: [[data]], yksikkö: [[unit]], asteikko: [[ticks]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page ID (default: active / chart)",
+              "fi": "Sivun ID (oletus: active / chart)"
+            },
+            "placeholder": {
+              "en": "active",
+              "fi": "active"
+            },
+            "title": {
+              "en": "Page ID (default: active / chart)",
+              "fi": "Sivun ID (oletus: active / chart)"
+            }
+          },
+          {
+            "name": "data",
+            "type": "text",
+            "required": true,
+            "label": {
+              "en": "New Datapoints",
+              "fi": "Uudet arvot"
+            },
+            "placeholder": {
+              "en": "5.2, 4.8, 7.5, 12.0...",
+              "fi": "5.2, 4.8, 7.5, 12.0..."
+            },
+            "title": {
+              "en": "New Datapoints",
+              "fi": "Uudet arvot"
+            }
+          },
+          {
+            "name": "unit",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Y-axis Unit (optional)",
+              "fi": "Y-akselin yksikkö (valinnainen)"
+            },
+            "placeholder": {
+              "en": "c/kWh",
+              "fi": "c/kWh"
+            },
+            "title": {
+              "en": "Y-axis Unit (optional)",
+              "fi": "Y-akselin yksikkö (valinnainen)"
+            }
+          },
+          {
+            "name": "ticks",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Y-axis Ticks (optional)",
+              "fi": "Y-akselin asteikko (valinnainen)"
+            },
+            "placeholder": {
+              "en": "50:100:150:200",
+              "fi": "50:100:150:200"
+            },
+            "title": {
+              "en": "Y-axis Ticks (optional)",
+              "fi": "Y-akselin asteikko (valinnainen)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
       },
       {
         "id": "update_forecast_action",
@@ -362,7 +5056,11 @@
               "en": "indoor temperature"
             }
           }
-        ]
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
       },
       {
         "id": "update_outdoor_temperature_action",
@@ -391,7 +5089,11 @@
               "en": "indoor temperature"
             }
           }
-        ]
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
       },
       {
         "id": "update_page_config_action",
@@ -418,6 +5120,440 @@
             },
             "title": {
               "en": "Page config"
+            }
+          }
+        ]
+      },
+      {
+        "id": "update_power_node_action",
+        "title": {
+          "en": "Update power card node",
+          "fi": "Päivitä energiasolmun tiedot"
+        },
+        "titleFormatted": {
+          "en": "Update power node [[node]] on [[page]]: [[title]] [[power_text]], dir [[flow_direction]], speed [[speed]], icon [[icon]], color [[color]]",
+          "fi": "Päivitä energiasolmu [[node]] sivulla [[page]]: [[title]] [[power_text]], suunta [[flow_direction]], nopeus [[speed]], kuvake [[icon]], väri [[color]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "node",
+            "type": "dropdown",
+            "label": {
+              "en": "Energy Node",
+              "fi": "Energiasolmu"
+            },
+            "values": [
+              {
+                "id": "home",
+                "label": {
+                  "en": "Center: Home",
+                  "fi": "Keskus: Koti"
+                }
+              },
+              {
+                "id": "node1",
+                "label": {
+                  "en": "Node 1: Top-Left",
+                  "fi": "Solmu 1: Ylävasen"
+                }
+              },
+              {
+                "id": "node2",
+                "label": {
+                  "en": "Node 2: Middle-Left",
+                  "fi": "Solmu 2: Keskivasen"
+                }
+              },
+              {
+                "id": "node3",
+                "label": {
+                  "en": "Node 3: Bottom-Left",
+                  "fi": "Solmu 3: Alavasen"
+                }
+              },
+              {
+                "id": "node4",
+                "label": {
+                  "en": "Node 4: Top-Right",
+                  "fi": "Solmu 4: Yläoikea"
+                }
+              },
+              {
+                "id": "node5",
+                "label": {
+                  "en": "Node 5: Middle-Right",
+                  "fi": "Solmu 5: Keskioikea"
+                }
+              },
+              {
+                "id": "node6",
+                "label": {
+                  "en": "Node 6: Bottom-Right",
+                  "fi": "Solmu 6: Alaoikea"
+                }
+              }
+            ],
+            "title": {
+              "en": "Energy Node",
+              "fi": "Energiasolmu"
+            }
+          },
+          {
+            "name": "power_text",
+            "type": "text",
+            "label": {
+              "en": "Power / Reading",
+              "fi": "Teho / Lukema"
+            },
+            "placeholder": {
+              "en": "3.5 kW",
+              "fi": "3.5 kW"
+            },
+            "title": {
+              "en": "Power / Reading",
+              "fi": "Teho / Lukema"
+            }
+          },
+          {
+            "name": "flow_direction",
+            "type": "dropdown",
+            "required": false,
+            "label": {
+              "en": "Flow Direction",
+              "fi": "Virtaussuunta"
+            },
+            "values": [
+              {
+                "id": "auto",
+                "label": {
+                  "en": "Automatic from sign (+ inflow, - outflow)",
+                  "fi": "Automaattinen (+ tuotto kotiin, - kulutus ulos)"
+                }
+              },
+              {
+                "id": "inflow",
+                "label": {
+                  "en": "Inflow (Moving toward home - Generation / Import)",
+                  "fi": "Kotiin päin (Tuotto / Osto verkosta)"
+                }
+              },
+              {
+                "id": "outflow",
+                "label": {
+                  "en": "Outflow (Moving from home - Consumption / Export)",
+                  "fi": "Kodista ulos (Kulutus / Lataus / Myynti)"
+                }
+              },
+              {
+                "id": "none",
+                "label": {
+                  "en": "No flow animation (Standby / Off)",
+                  "fi": "Ei virtausanimaatiota (Pois päältä)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Flow Direction",
+              "fi": "Virtaussuunta"
+            }
+          },
+          {
+            "name": "speed",
+            "type": "number",
+            "required": false,
+            "label": {
+              "en": "Speed (0 = automatic, 1–100 = manual)",
+              "fi": "Nopeus (0 = automaattinen, 1–100 = oma)"
+            },
+            "min": 0,
+            "max": 100,
+            "title": {
+              "en": "Speed (0 = automatic, 1–100 = manual)",
+              "fi": "Nopeus (0 = automaattinen, 1–100 = oma)"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Node Title",
+              "fi": "Solmun otsikko"
+            },
+            "placeholder": {
+              "en": "Solar",
+              "fi": "Aurinko"
+            },
+            "title": {
+              "en": "Node Title",
+              "fi": "Solmun otsikko"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Icon (MDI name)",
+              "fi": "Kuvake (MDI-nimi)"
+            },
+            "placeholder": {
+              "en": "solar-power",
+              "fi": "solar-power"
+            },
+            "title": {
+              "en": "Icon (MDI name)",
+              "fi": "Kuvake (MDI-nimi)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Color (name or hex)",
+              "fi": "Väri (nimi tai hex)"
+            },
+            "placeholder": {
+              "en": "yellow",
+              "fi": "yellow"
+            },
+            "title": {
+              "en": "Color (name or hex)",
+              "fi": "Väri (nimi tai hex)"
+            }
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page ID (optional, default active)",
+              "fi": "Sivun tunniste (valinnainen, oletus aktiivinen)"
+            },
+            "placeholder": {
+              "en": "active",
+              "fi": "active"
+            },
+            "title": {
+              "en": "Page ID (optional, default active)",
+              "fi": "Sivun tunniste (valinnainen, oletus aktiivinen)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "id": "update_slot_value_action",
+        "title": {
+          "en": "Update slot value",
+          "fi": "Päivitä paikan arvo"
+        },
+        "titleFormatted": {
+          "en": "Update slot [[slot]] value to [[value]] (title: [[title]], icon: [[icon]], color: [[color]]) (page: [[page]])",
+          "fi": "Päivitä paikan [[slot]] arvoksi [[value]] (otsikko: [[title]], kuvake: [[icon]], väri: [[color]]) (sivu: [[page]])"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "slot",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "1",
+                "label": {
+                  "en": "Slot 1",
+                  "fi": "Paikka 1"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Slot 2",
+                  "fi": "Paikka 2"
+                }
+              },
+              {
+                "id": "3",
+                "label": {
+                  "en": "Slot 3",
+                  "fi": "Paikka 3"
+                }
+              },
+              {
+                "id": "4",
+                "label": {
+                  "en": "Slot 4",
+                  "fi": "Paikka 4"
+                }
+              },
+              {
+                "id": "5",
+                "label": {
+                  "en": "Slot 5 (Grid only)",
+                  "fi": "Paikka 5 (Vain ruudukko)"
+                }
+              },
+              {
+                "id": "6",
+                "label": {
+                  "en": "Slot 6 (Grid only)",
+                  "fi": "Paikka 6 (Vain ruudukko)"
+                }
+              },
+              {
+                "id": "7",
+                "label": {
+                  "en": "Slot 7 (Grid2 only)",
+                  "fi": "Paikka 7 (Vain Grid2)"
+                }
+              },
+              {
+                "id": "8",
+                "label": {
+                  "en": "Slot 8 (Grid2 only)",
+                  "fi": "Paikka 8 (Vain Grid2)"
+                }
+              }
+            ],
+            "title": {
+              "en": "Slot number",
+              "fi": "Paikan numero"
+            }
+          },
+          {
+            "name": "value",
+            "type": "text",
+            "label": {
+              "en": "New Value / State",
+              "fi": "Uusi arvo / tila"
+            },
+            "placeholder": {
+              "en": "ON, OFF, 22.1 °C, 50% etc.",
+              "fi": "ON, OFF, 22.1 °C, 50% jne."
+            },
+            "title": {
+              "en": "New Value / State",
+              "fi": "Uusi arvo / tila"
+            }
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Optional: New Title (leave empty to keep)",
+              "fi": "Valinnainen: Uusi otsikko (tyhjä = säilytä)"
+            },
+            "placeholder": {
+              "en": "Leave empty to keep existing",
+              "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+            },
+            "title": {
+              "en": "Optional: New Title (leave empty to keep)",
+              "fi": "Valinnainen: Uusi otsikko (tyhjä = säilytä)"
+            }
+          },
+          {
+            "name": "icon",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Optional: New Icon (leave empty to keep)",
+              "fi": "Valinnainen: Uusi kuvake (tyhjä = säilytä)"
+            },
+            "placeholder": {
+              "en": "Leave empty to keep existing",
+              "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+            },
+            "title": {
+              "en": "Optional: New Icon (leave empty to keep)",
+              "fi": "Valinnainen: Uusi kuvake (tyhjä = säilytä)"
+            }
+          },
+          {
+            "name": "color",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Optional: New Color (leave empty to keep)",
+              "fi": "Valinnainen: Uusi väri (tyhjä = säilytä)"
+            },
+            "placeholder": {
+              "en": "Leave empty to keep existing",
+              "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+            },
+            "title": {
+              "en": "Optional: New Color (leave empty to keep)",
+              "fi": "Valinnainen: Uusi väri (tyhjä = säilytä)"
+            }
+          },
+          {
+            "name": "page",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Page ID (default: active)",
+              "fi": "Sivun tunniste (oletus: active)"
+            },
+            "title": {
+              "en": "Page ID (default: active)",
+              "fi": "Sivun tunniste (oletus: active)"
+            }
+          }
+        ],
+        "hint": {
+          "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+          "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+        }
+      },
+      {
+        "id": "wake_screen_action",
+        "title": {
+          "en": "Wake up screen",
+          "fi": "Herätä näyttö lepotilasta"
+        },
+        "titleFormatted": {
+          "en": "Wake up screen (open page: [[target_page]])",
+          "fi": "Herätä näyttö lepotilasta (avaa sivu: [[target_page]])"
+        },
+        "hint": {
+          "en": "Wakes the screen from screensaver or standby, restores active brightness, and optionally navigates to a specific page.",
+          "fi": "Herättää näytön lepotilasta tai himmennyksestä, nostaa normaalin kirkkauden ja valinnaisesti avaa tietyn sivun."
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=nspanel"
+          },
+          {
+            "name": "target_page",
+            "type": "text",
+            "required": false,
+            "label": {
+              "en": "Target page (optional)",
+              "fi": "Avattava sivu (valinnainen)"
+            },
+            "placeholder": {
+              "en": "e.g. active, alarm (empty = current)",
+              "fi": "esim. active, alarm (tyhjä = nykyinen)"
+            },
+            "title": {
+              "en": "Target page (optional)",
+              "fi": "Avattava sivu (valinnainen)"
             }
           }
         ]
@@ -479,39 +5615,101 @@
       "class": "other",
       "pair": [
         {
-          "id": "loading",
-          "template": "loading"
-        },
-        {
-          "id": "list_devices",
-          "template": "list_devices",
-          "navigation": {
-            "next": "create_devices"
-          },
-          "options": {
-            "singular": false
-          }
-        },
-        {
-          "id": "create_devices"
+          "id": "connect"
         }
       ],
       "id": "nspanel",
       "name": {
-        "en": "NSPanel"
+        "en": "NSPanel",
+        "fi": "NSPanel"
       },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
       "settings": [
         {
           "type": "group",
           "label": {
-            "en": "Connection"
+            "en": "Connection",
+            "fi": "Yhteys"
           },
           "children": [
+            {
+              "id": "mqtt_mode",
+              "type": "dropdown",
+              "label": {
+                "en": "MQTT Connection Mode",
+                "fi": "MQTT-yhteystapa"
+              },
+              "value": "standalone",
+              "values": [
+                {
+                  "id": "standalone",
+                  "label": {
+                    "en": "Built-in Direct MQTT Client (Recommended)",
+                    "fi": "Sisäänrakennettu suora MQTT-asiakas (Suositeltu)"
+                  }
+                },
+                {
+                  "id": "scanno",
+                  "label": {
+                    "en": "Scanno MQTT Client (nl.scanno.mqtt)",
+                    "fi": "Scanno MQTT Client -sovellus (nl.scanno.mqtt)"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "mqtt_host",
+              "type": "text",
+              "label": {
+                "en": "Broker Host / IP (Direct mode)",
+                "fi": "Brokerin osoite / IP (Suora tila)"
+              },
+              "value": "",
+              "hint": {
+                "en": "e.g. 192.168.1.50 or mybroker.local",
+                "fi": "esim. 192.168.1.50 tai broker.local"
+              }
+            },
+            {
+              "id": "mqtt_port",
+              "type": "number",
+              "label": {
+                "en": "Broker Port (Direct mode)",
+                "fi": "Brokerin portti (Suora tila)"
+              },
+              "value": 1883,
+              "min": 1,
+              "max": 65535
+            },
+            {
+              "id": "mqtt_user",
+              "type": "text",
+              "label": {
+                "en": "Username (Direct mode, optional)",
+                "fi": "Käyttäjätunnus (Suora tila, valinnainen)"
+              },
+              "value": ""
+            },
+            {
+              "id": "mqtt_password",
+              "type": "password",
+              "label": {
+                "en": "Password (Direct mode, optional)",
+                "fi": "Salasana (Suora tila, valinnainen)"
+              },
+              "value": ""
+            },
             {
               "id": "mqtt_topic",
               "type": "text",
               "label": {
-                "en": "Device MQTT topic"
+                "en": "Device MQTT topic",
+                "fi": "Laitteen MQTT-aihe (topic)"
               },
               "value": "",
               "pattern": "^[^#+\\/]+$"
@@ -520,7 +5718,8 @@
               "id": "mqtt_path",
               "type": "text",
               "label": {
-                "en": "Device MQTT topic format"
+                "en": "Device MQTT topic format",
+                "fi": "Laitteen MQTT-aiheen muoto"
               },
               "value": "%prefix%/%topic%/"
             }
@@ -687,6 +5886,230 @@
               "hint": {
                 "en": "Time interval between consecutive reports"
               }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Security & Alarm",
+            "fi": "Turvallisuus ja hälytin"
+          },
+          "children": [
+            {
+              "id": "disable_nav_when_armed",
+              "type": "checkbox",
+              "label": {
+                "en": "Disable Next & Prev navigation when alarm is armed",
+                "fi": "Poista Next ja Prev -navigointi käytöstä hälyttimen ollessa päällä"
+              },
+              "hint": {
+                "en": "Locks the panel onto the alarm card when armed; prevents navigating away until disarmed.",
+                "fi": "Lukitsee paneelin hälytysnäkymään kun hälytin on viritetty; estää siirtymisen muille sivuille ennen hälytyksen poiskytkentää."
+              },
+              "value": false
+            },
+            {
+              "id": "wake_to_alarm",
+              "type": "checkbox",
+              "label": {
+                "en": "Wake from screensaver to Alarm page",
+                "fi": "Herää lepotilasta aina hälytinsivulle"
+              },
+              "hint": {
+                "en": "When enabled and an alarm page exists, the panel returns to the alarm page whenever the screen wakes from screensaver.",
+                "fi": "Kun käytössä ja paneelilla on hälytinsivu, näyttö herää lepotilasta aina hälytinsivulle."
+              },
+              "value": true
+            },
+            {
+              "id": "global_pin",
+              "type": "text",
+              "label": {
+                "en": "Default PIN Code",
+                "fi": "Yleinen PIN-koodi"
+              },
+              "value": "",
+              "hint": {
+                "en": "Default PIN code for protected slots, pages, and alarm disarm (4-8 digits).",
+                "fi": "Oletus-PIN-koodi suojatuille toiminnoille, sivuille ja hälytyksen kuittaukseen (4-8 numeroa)."
+              }
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Night Mode & Schedule",
+            "fi": "Yötila ja aikataulutus"
+          },
+          "children": [
+            {
+              "id": "night_mode_enabled",
+              "type": "checkbox",
+              "label": {
+                "en": "Enable scheduled night mode",
+                "fi": "Ota käyttöön aikataulutettu yötila"
+              },
+              "hint": {
+                "en": "Automatically dims the panel during specified night hours.",
+                "fi": "Himmeltää näytön automaattisesti määritettynä yöaikana."
+              },
+              "value": false
+            },
+            {
+              "id": "night_mode_start",
+              "type": "text",
+              "label": {
+                "en": "Night mode start time",
+                "fi": "Yötilan alkamisaika"
+              },
+              "value": "22:00",
+              "hint": {
+                "en": "HH:MM (24h format, e.g. 22:00)",
+                "fi": "TT:MM (24h muoto, esim. 22:00)"
+              }
+            },
+            {
+              "id": "night_mode_end",
+              "type": "text",
+              "label": {
+                "en": "Night mode end time",
+                "fi": "Yötilan päättymisaika"
+              },
+              "value": "07:00",
+              "hint": {
+                "en": "HH:MM (24h format, e.g. 07:00)",
+                "fi": "TT:MM (24h muoto, esim. 07:00)"
+              }
+            },
+            {
+              "id": "night_brightness",
+              "type": "number",
+              "label": {
+                "en": "Night active brightness",
+                "fi": "Yökirkkaus aktiivisena"
+              },
+              "value": 30,
+              "min": 1,
+              "max": 100,
+              "units": {
+                "en": "%"
+              },
+              "hint": {
+                "en": "Screen brightness when active during night mode",
+                "fi": "Näytön kirkkaus kun paneelia käytetään yötilassa"
+              }
+            },
+            {
+              "id": "night_sleep_brightness",
+              "type": "number",
+              "label": {
+                "en": "Night standby brightness",
+                "fi": "Yökirkkaus lepotilassa"
+              },
+              "value": 2,
+              "min": 0,
+              "max": 100,
+              "units": {
+                "en": "%"
+              },
+              "hint": {
+                "en": "Standby brightness in night mode (0 = turn backlight completely off)",
+                "fi": "Näytön kirkkaus lepotilassa yötilan aikana (0 = sammuta taustavalo kokonaan)"
+              }
+            },
+            {
+              "id": "night_sleep_timeout",
+              "type": "number",
+              "label": {
+                "en": "Night deep sleep timeout",
+                "fi": "Yön syvän unen aikakatkaisu"
+              },
+              "value": 15,
+              "min": 0,
+              "max": 300,
+              "units": {
+                "en": "s"
+              },
+              "hint": {
+                "en": "Time before screen backlight is turned off at night (0 = keep at standby brightness)",
+                "fi": "Aika ennen taustavalon sammumista yöllä (0 = pysyy lepotilan kirkkaudessa)"
+              }
+            },
+            {
+              "id": "night_theme_black",
+              "type": "checkbox",
+              "label": {
+                "en": "Use black background at night",
+                "fi": "Käytä yöllä mustaa taustaa (Black)"
+              },
+              "hint": {
+                "en": "Reduces stray light emission by forcing pitch black background.",
+                "fi": "Minimoi hajavalon vaihtamalla taustan täysin mustaksi yöllä."
+              },
+              "value": true
+            },
+            {
+              "id": "night_follow_alarm",
+              "type": "checkbox",
+              "label": {
+                "en": "Follow alarm night mode automatically",
+                "fi": "Seuraa automaattisesti hälyttimen yötilaa"
+              },
+              "hint": {
+                "en": "Activates night mode whenever Heimdall or panel alarm is armed to Night mode.",
+                "fi": "Aktivoi yötilan aina kun Heimdall tai paneeli viritetään yötilaan (Armed Night)."
+              },
+              "value": true
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Physical Buttons, Relays & Buzzer",
+            "fi": "Fyysiset painikkeet, releet ja summeri"
+          },
+          "children": [
+            {
+              "id": "decouple_buttons",
+              "type": "checkbox",
+              "label": {
+                "en": "Decouple physical buttons from relays",
+                "fi": "Erota fyysiset painikkeet releistä (Decouple)"
+              },
+              "hint": {
+                "en": "When enabled, pressing physical buttons will not toggle relays directly, but triggers Homey flow events (e.g. for smart lights).",
+                "fi": "Kun käytössä, fyysiset painikkeet eivät ohjaa releitä suoraan, vaan laukaisevat Homey-floweja (esim. älyvalojen ohjaukseen)."
+              },
+              "value": false
+            },
+            {
+              "id": "button_navigation",
+              "type": "checkbox",
+              "label": {
+                "en": "Use buttons for page navigation (Prev / Next)",
+                "fi": "Käytä painikkeita sivujen vaihtoon (Edellinen / Seuraava)"
+              },
+              "hint": {
+                "en": "Button 1 navigates to previous page, Button 2 navigates to next page.",
+                "fi": "Painike 1 siirtyy edelliselle sivulle, Painike 2 seuraavalle sivulle."
+              },
+              "value": false
+            },
+            {
+              "id": "buzzer_pwm",
+              "type": "checkbox",
+              "label": {
+                "en": "Enable buzzer PWM frequency mode (SetOption111)",
+                "fi": "Käytä summerin PWM-äänitilaa (SetOption111)"
+              },
+              "hint": {
+                "en": "Enables buzzer PWM frequency/pitch control on NSPanel for variable beeps and tones.",
+                "fi": "Ottaa käyttöön summerin PWM-taajuussäädön NSPanelissa (vaihtelevat merkkiäänet ja sävelet)."
+              },
+              "value": false
             }
           ]
         }

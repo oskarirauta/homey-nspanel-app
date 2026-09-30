@@ -1,0 +1,93 @@
+{
+  "id": "show_grid_page_action",
+  "title": {
+    "en": "Show grid card",
+    "fi": "Näytä ruudukkosivu"
+  },
+  "titleFormatted": {
+    "en": "Show [[grid_type]] with title [[title]] (prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Näytä [[grid_type]] otsikolla [[title]] (edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "label": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "placeholder": {
+        "en": "Living Room",
+        "fi": "Olohuone"
+      },
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "grid_type",
+      "type": "dropdown",
+      "required": false,
+      "values": [
+        {
+          "id": "grid",
+          "label": {
+            "en": "6 buttons (standard)",
+            "fi": "6 painiketta (vakio)"
+          }
+        },
+        {
+          "id": "grid2",
+          "label": {
+            "en": "8 buttons (dense)",
+            "fi": "8 painiketta (tiheä)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Grid layout",
+        "fi": "Ruudukkonäkymä"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

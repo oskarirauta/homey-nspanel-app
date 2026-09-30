@@ -1,0 +1,40 @@
+{
+  "id": "timer_action_triggered",
+  "title": {
+    "en": "Timer state changed on panel",
+    "fi": "Ajastintoiminto suoritettu paneelilla"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Timer ID", "fi": "Ajastimen tunniste" },
+      "example": "kitchen_timer"
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "title": { "en": "Action (start, pause, cancel, finish)", "fi": "Toiminto (start, pause, cancel, finish)" },
+      "example": "start"
+    },
+    {
+      "name": "minutes",
+      "type": "number",
+      "title": { "en": "Minutes remaining", "fi": "Jäljellä olevat minuutit" },
+      "example": 5
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "title": { "en": "Seconds remaining", "fi": "Jäljellä olevat sekunnit" },
+      "example": 0
+    }
+  ]
+}

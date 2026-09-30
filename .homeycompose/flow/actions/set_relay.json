@@ -1,0 +1,73 @@
+{
+  "id": "set_relay_action",
+  "title": {
+    "en": "Set physical relay",
+    "fi": "Aseta fyysisen releen tila"
+  },
+  "titleFormatted": {
+    "en": "Set [[relay]] to [[state]]",
+    "fi": "Aseta [[relay]] tilaan [[state]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "relay",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "1",
+          "label": {
+            "en": "Relay 1",
+            "fi": "Rele 1"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Relay 2",
+            "fi": "Rele 2"
+          }
+        }
+      ],
+      "title": {
+        "en": "Relay",
+        "fi": "Rele"
+      }
+    },
+    {
+      "name": "state",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "fi": "Päällä (ON)"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "fi": "Pois (OFF)"
+          }
+        },
+        {
+          "id": "toggle",
+          "label": {
+            "en": "Toggle",
+            "fi": "Vaihda tilaa (Toggle)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Relay state",
+        "fi": "Releen tila"
+      }
+    }
+  ]
+}

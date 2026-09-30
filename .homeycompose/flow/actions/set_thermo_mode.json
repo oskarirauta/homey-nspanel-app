@@ -1,0 +1,83 @@
+{
+  "id": "set_thermo_mode_action",
+  "title": {
+    "en": "Set thermostat popup mode",
+    "fi": "Aseta termostaatin lisäsäädön tila"
+  },
+  "titleFormatted": {
+    "en": "Set thermostat [[entity]] [[mode_row]]: [[mode]]",
+    "fi": "Aseta termostaatin [[entity]] [[mode_row]]: [[mode]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (default: thermo)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+      },
+      "placeholder": {
+        "en": "thermo",
+        "fi": "thermo"
+      },
+      "title": {
+        "en": "Entity ID (default: thermo)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+      }
+    },
+    {
+      "name": "mode_row",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "mode1",
+          "label": {
+            "en": "Row 1 (Operation mode)",
+            "fi": "Rivi 1 (Toimintatila)"
+          }
+        },
+        {
+          "id": "mode2",
+          "label": {
+            "en": "Row 2 (Preset mode)",
+            "fi": "Rivi 2 (Esiasetus)"
+          }
+        },
+        {
+          "id": "mode3",
+          "label": {
+            "en": "Row 3 (Fan mode)",
+            "fi": "Rivi 3 (Puhallin)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Thermostat mode row",
+        "fi": "Termostaattitilan rivi"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Selected mode",
+        "fi": "Valittu tila"
+      },
+      "placeholder": {
+        "en": "Lämmitys",
+        "fi": "Lämmitys"
+      },
+      "title": {
+        "en": "Selected mode",
+        "fi": "Valittu tila"
+      }
+    }
+  ]
+}

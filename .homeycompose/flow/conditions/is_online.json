@@ -1,10 +1,12 @@
 {
     "id": "is_online",
     "title": {
-        "en": "NSPanel is !{{online|offline}}"
+        "en": "NSPanel is !{{online|offline}}",
+        "fi": "NSPanel !{{on|ei ole}} linjoilla"
     },
     "titleFormatted": {
-        "en": "NSPanel is !{{online|offline}}"
+        "en": "NSPanel is !{{online|offline}}",
+        "fi": "NSPanel !{{on|ei ole}} linjoilla"
     },
     "args": [
         {

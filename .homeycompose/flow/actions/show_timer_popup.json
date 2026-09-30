@@ -1,0 +1,90 @@
+{
+  "id": "show_timer_popup_action",
+  "title": {
+    "en": "Show timer popup (popupTimer)",
+    "fi": "Avaa ajastin / munakello (popupTimer)"
+  },
+  "titleFormatted": {
+    "en": "Open timer [[entity]] (minutes: [[minutes]], seconds: [[seconds]], color: [[color]])",
+    "fi": "Avaa ajastin [[entity]] (minuutit: [[minutes]], sekunnit: [[seconds]], väri: [[color]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Timer ID (optional)",
+        "fi": "Ajastimen tunniste (valinnainen)"
+      },
+      "placeholder": {
+        "en": "timer",
+        "fi": "timer"
+      },
+      "title": {
+        "en": "Timer ID (optional)",
+        "fi": "Ajastimen tunniste (valinnainen)"
+      }
+    },
+    {
+      "name": "minutes",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 59,
+      "label": {
+        "en": "Minutes (0-59)",
+        "fi": "Minuutit (0-59)"
+      },
+      "placeholder": {
+        "en": "5",
+        "fi": "5"
+      },
+      "title": {
+        "en": "Minutes (0-59)",
+        "fi": "Minuutit (0-59)"
+      }
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 59,
+      "label": {
+        "en": "Seconds (0-59)",
+        "fi": "Sekunnit (0-59)"
+      },
+      "placeholder": {
+        "en": "0",
+        "fi": "0"
+      },
+      "title": {
+        "en": "Seconds (0-59)",
+        "fi": "Sekunnit (0-59)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      },
+      "placeholder": {
+        "en": "yellow",
+        "fi": "yellow"
+      },
+      "title": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      }
+    }
+  ]
+}

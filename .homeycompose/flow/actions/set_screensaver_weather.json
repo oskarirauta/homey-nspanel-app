@@ -1,0 +1,146 @@
+{
+  "id": "set_screensaver_weather_action",
+  "title": {
+    "en": "Set screensaver weather & temperature",
+    "fi": "Aseta lepotilan säätiedot ja lämpötila"
+  },
+  "titleFormatted": {
+    "en": "Set weather: outdoor [[temperature]] °C, condition [[weather_type]], indoor [[indoor_temperature]] °C",
+    "fi": "Aseta sää: ulkona [[temperature]] °C, sää [[weather_type]], sisällä [[indoor_temperature]] °C"
+  },
+  "hint": {
+    "en": "Updates the outdoor temperature, weather icon, and optionally indoor temperature displayed on the screensaver.",
+    "fi": "Päivittää lepotilassa (screensaver) näkyvän ulkolämpötilan, sääkuvakkeen ja valinnaisesti sisälämpötilan."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "temperature",
+      "type": "number",
+      "label": {
+        "en": "Outdoor temperature (°C)",
+        "fi": "Ulkolämpötila (°C)"
+      },
+      "placeholder": {
+        "en": "e.g. 18.5",
+        "fi": "esim. 18.5"
+      },
+      "title": {
+        "en": "Outdoor temperature (°C)",
+        "fi": "Ulkolämpötila (°C)"
+      }
+    },
+    {
+      "name": "weather_type",
+      "type": "dropdown",
+      "label": {
+        "en": "Weather condition",
+        "fi": "Säätyyppi / Kuvake"
+      },
+      "values": [
+        {
+          "id": "sunny",
+          "label": {
+            "en": "☀️ Sunny",
+            "fi": "☀️ Aurinkoista"
+          }
+        },
+        {
+          "id": "partly_cloudy",
+          "label": {
+            "en": "⛅ Partly cloudy",
+            "fi": "⛅ Puolipilvistä"
+          }
+        },
+        {
+          "id": "cloudy",
+          "label": {
+            "en": "☁️ Cloudy",
+            "fi": "☁️ Pilvistä"
+          }
+        },
+        {
+          "id": "rainy",
+          "label": {
+            "en": "🌧️ Rainy",
+            "fi": "🌧️ Sadetta"
+          }
+        },
+        {
+          "id": "pouring",
+          "label": {
+            "en": "🌧️ Heavy rain",
+            "fi": "🌧️ Kaatosadetta"
+          }
+        },
+        {
+          "id": "lightning_rainy",
+          "label": {
+            "en": "⛈️ Thunderstorm",
+            "fi": "⛈️ Ukkosta"
+          }
+        },
+        {
+          "id": "snowy",
+          "label": {
+            "en": "❄️ Snow",
+            "fi": "❄️ Lumisadetta"
+          }
+        },
+        {
+          "id": "snowy_rainy",
+          "label": {
+            "en": "🌨️ Sleet",
+            "fi": "🌨️ Räntäsadetta"
+          }
+        },
+        {
+          "id": "fog",
+          "label": {
+            "en": "🌫️ Fog",
+            "fi": "🌫️ Sumua"
+          }
+        },
+        {
+          "id": "windy",
+          "label": {
+            "en": "💨 Windy",
+            "fi": "💨 Tuulista"
+          }
+        },
+        {
+          "id": "clear_night",
+          "label": {
+            "en": "🌙 Clear night",
+            "fi": "🌙 Selkeä yö"
+          }
+        }
+      ],
+      "title": {
+        "en": "Weather condition",
+        "fi": "Säätyyppi / Kuvake"
+      }
+    },
+    {
+      "name": "indoor_temperature",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Indoor temperature (°C, optional)",
+        "fi": "Sisälämpötila (°C, valinnainen)"
+      },
+      "placeholder": {
+        "en": "e.g. 21.0 (empty = keep current)",
+        "fi": "esim. 21.0 (tyhjä = pidä nykyinen)"
+      },
+      "title": {
+        "en": "Indoor temperature (°C, optional)",
+        "fi": "Sisälämpötila (°C, valinnainen)"
+      }
+    }
+  ]
+}

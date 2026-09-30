@@ -1,0 +1,168 @@
+{
+  "id": "update_slot_value_action",
+  "title": {
+    "en": "Update slot value",
+    "fi": "Päivitä paikan arvo"
+  },
+  "titleFormatted": {
+    "en": "Update slot [[slot]] value to [[value]] (title: [[title]], icon: [[icon]], color: [[color]]) (page: [[page]])",
+    "fi": "Päivitä paikan [[slot]] arvoksi [[value]] (otsikko: [[title]], kuvake: [[icon]], väri: [[color]]) (sivu: [[page]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "slot",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "1",
+          "label": {
+            "en": "Slot 1",
+            "fi": "Paikka 1"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Slot 2",
+            "fi": "Paikka 2"
+          }
+        },
+        {
+          "id": "3",
+          "label": {
+            "en": "Slot 3",
+            "fi": "Paikka 3"
+          }
+        },
+        {
+          "id": "4",
+          "label": {
+            "en": "Slot 4",
+            "fi": "Paikka 4"
+          }
+        },
+        {
+          "id": "5",
+          "label": {
+            "en": "Slot 5 (Grid only)",
+            "fi": "Paikka 5 (Vain ruudukko)"
+          }
+        },
+        {
+          "id": "6",
+          "label": {
+            "en": "Slot 6 (Grid only)",
+            "fi": "Paikka 6 (Vain ruudukko)"
+          }
+        },
+        {
+          "id": "7",
+          "label": {
+            "en": "Slot 7 (Grid2 only)",
+            "fi": "Paikka 7 (Vain Grid2)"
+          }
+        },
+        {
+          "id": "8",
+          "label": {
+            "en": "Slot 8 (Grid2 only)",
+            "fi": "Paikka 8 (Vain Grid2)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Slot number",
+        "fi": "Paikan numero"
+      }
+    },
+    {
+      "name": "value",
+      "type": "text",
+      "label": {
+        "en": "New Value / State",
+        "fi": "Uusi arvo / tila"
+      },
+      "placeholder": {
+        "en": "ON, OFF, 22.1 °C, 50% etc.",
+        "fi": "ON, OFF, 22.1 °C, 50% jne."
+      },
+      "title": {
+        "en": "New Value / State",
+        "fi": "Uusi arvo / tila"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Optional: New Title (leave empty to keep)",
+        "fi": "Valinnainen: Uusi otsikko (tyhjä = säilytä)"
+      },
+      "placeholder": {
+        "en": "Leave empty to keep existing",
+        "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+      },
+      "title": {
+        "en": "Optional: New Title (leave empty to keep)",
+        "fi": "Valinnainen: Uusi otsikko (tyhjä = säilytä)"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Optional: New Icon (leave empty to keep)",
+        "fi": "Valinnainen: Uusi kuvake (tyhjä = säilytä)"
+      },
+      "placeholder": {
+        "en": "Leave empty to keep existing",
+        "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+      },
+      "title": {
+        "en": "Optional: New Icon (leave empty to keep)",
+        "fi": "Valinnainen: Uusi kuvake (tyhjä = säilytä)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Optional: New Color (leave empty to keep)",
+        "fi": "Valinnainen: Uusi väri (tyhjä = säilytä)"
+      },
+      "placeholder": {
+        "en": "Leave empty to keep existing",
+        "fi": "Jätä tyhjäksi säilyttääksesi nykyisen"
+      },
+      "title": {
+        "en": "Optional: New Color (leave empty to keep)",
+        "fi": "Valinnainen: Uusi väri (tyhjä = säilytä)"
+      }
+    },
+    {
+      "name": "page",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page ID (default: active)",
+        "fi": "Sivun tunniste (oletus: active)"
+      },
+      "title": {
+        "en": "Page ID (default: active)",
+        "fi": "Sivun tunniste (oletus: active)"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+    "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+  }
+}

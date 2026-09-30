@@ -1,0 +1,99 @@
+{
+  "id": "show_fan_popup_action",
+  "title": {
+    "en": "Show ventilation / fan popup",
+    "fi": "Avaa ilmanvaihdon / puhaltimen säätöikkuna"
+  },
+  "titleFormatted": {
+    "en": "Open fan/ventilation [[entity]] popup (on: [[onoff]], speed: [[speed]], mode: [[mode]], modes: [[modes]])",
+    "fi": "Avaa ilmanvaihdon [[entity]] säätöikkuna (päällä: [[onoff]], teho: [[speed]], tila: [[mode]], tilat: [[modes]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (default: fan)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: fan)"
+      },
+      "placeholder": {
+        "en": "fan",
+        "fi": "fan"
+      },
+      "title": {
+        "en": "Entity ID (default: fan)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: fan)"
+      }
+    },
+    {
+      "name": "onoff",
+      "type": "checkbox",
+      "required": false,
+      "label": {
+        "en": "Power state",
+        "fi": "Virtatila"
+      },
+      "title": {
+        "en": "Power state",
+        "fi": "Virtatila"
+      }
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Speed level",
+        "fi": "Nopeus- / tehotaso"
+      },
+      "placeholder": {
+        "en": "2",
+        "fi": "2"
+      },
+      "title": {
+        "en": "Speed level",
+        "fi": "Nopeus- / tehotaso"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Selected mode",
+        "fi": "Valittu tila"
+      },
+      "placeholder": {
+        "en": "Kotona",
+        "fi": "Kotona"
+      },
+      "title": {
+        "en": "Selected mode",
+        "fi": "Valittu tila"
+      }
+    },
+    {
+      "name": "modes",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Modes list (? separated)",
+        "fi": "Tilalista (?-eroteltuna)"
+      },
+      "placeholder": {
+        "en": "Poissa?Kotona?Tehostus?Takkatila",
+        "fi": "Poissa?Kotona?Tehostus?Takkatila"
+      },
+      "title": {
+        "en": "Modes list (? separated)",
+        "fi": "Tilalista (?-eroteltuna)"
+      }
+    }
+  ]
+}

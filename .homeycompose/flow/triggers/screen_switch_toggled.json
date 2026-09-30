@@ -1,0 +1,40 @@
+{
+  "id": "screen_switch_toggled",
+  "title": {
+    "en": "Screen switch toggled",
+    "fi": "Näytön kytkintä käännetty"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "page",
+      "type": "string",
+      "title": { "en": "Page", "fi": "Sivu" },
+      "example": "grid"
+    },
+    {
+      "name": "slot",
+      "type": "number",
+      "title": { "en": "Slot number", "fi": "Paikkanumero" },
+      "example": 1
+    },
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID / Name", "fi": "Tunniste / Nimi" },
+      "example": "floor_heating"
+    },
+    {
+      "name": "state",
+      "type": "boolean",
+      "title": { "en": "State (true = ON, false = OFF)", "fi": "Tila (tosi = PÄÄLLÄ, epätosi = POIS)" },
+      "example": true
+    }
+  ]
+}

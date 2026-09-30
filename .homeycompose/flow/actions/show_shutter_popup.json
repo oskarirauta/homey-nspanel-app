@@ -1,0 +1,73 @@
+{
+  "id": "show_shutter_popup_action",
+  "title": {
+    "en": "Show shutter popup (popupShutter)",
+    "fi": "Avaa verhojen säätöikkuna (popupShutter)"
+  },
+  "titleFormatted": {
+    "en": "Open shutter popup [[entity]] (position: [[position]], tilt: [[tilt]])",
+    "fi": "Avaa verhojen [[entity]] säätöikkuna (asento: [[position]], säleasento: [[tilt]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (optional)",
+        "fi": "Verhon tunniste (valinnainen)"
+      },
+      "placeholder": {
+        "en": "shutter",
+        "fi": "shutter"
+      },
+      "title": {
+        "en": "Entity ID (optional)",
+        "fi": "Verhon tunniste (valinnainen)"
+      }
+    },
+    {
+      "name": "position",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 100,
+      "label": {
+        "en": "Position (optional, 0-100 %)",
+        "fi": "Asento (valinnainen, 0-100 %)"
+      },
+      "placeholder": {
+        "en": "50",
+        "fi": "50"
+      },
+      "title": {
+        "en": "Position (optional, 0-100 %)",
+        "fi": "Asento (valinnainen, 0-100 %)"
+      }
+    },
+    {
+      "name": "tilt",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 100,
+      "label": {
+        "en": "Tilt angle (optional, 0-100 %)",
+        "fi": "Säleasento (valinnainen, 0-100 %)"
+      },
+      "placeholder": {
+        "en": "50",
+        "fi": "50"
+      },
+      "title": {
+        "en": "Tilt angle (optional, 0-100 %)",
+        "fi": "Säleasento (valinnainen, 0-100 %)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "id": "update_power_node_action",
+  "title": {
+    "en": "Update power card node",
+    "fi": "Päivitä energiasolmun tiedot"
+  },
+  "titleFormatted": {
+    "en": "Update power node [[node]] on [[page]]: [[title]] [[power_text]], dir [[flow_direction]], speed [[speed]], icon [[icon]], color [[color]]",
+    "fi": "Päivitä energiasolmu [[node]] sivulla [[page]]: [[title]] [[power_text]], suunta [[flow_direction]], nopeus [[speed]], kuvake [[icon]], väri [[color]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "node",
+      "type": "dropdown",
+      "label": {
+        "en": "Energy Node",
+        "fi": "Energiasolmu"
+      },
+      "values": [
+        {
+          "id": "home",
+          "label": {
+            "en": "Center: Home",
+            "fi": "Keskus: Koti"
+          }
+        },
+        {
+          "id": "node1",
+          "label": {
+            "en": "Node 1: Top-Left",
+            "fi": "Solmu 1: Ylävasen"
+          }
+        },
+        {
+          "id": "node2",
+          "label": {
+            "en": "Node 2: Middle-Left",
+            "fi": "Solmu 2: Keskivasen"
+          }
+        },
+        {
+          "id": "node3",
+          "label": {
+            "en": "Node 3: Bottom-Left",
+            "fi": "Solmu 3: Alavasen"
+          }
+        },
+        {
+          "id": "node4",
+          "label": {
+            "en": "Node 4: Top-Right",
+            "fi": "Solmu 4: Yläoikea"
+          }
+        },
+        {
+          "id": "node5",
+          "label": {
+            "en": "Node 5: Middle-Right",
+            "fi": "Solmu 5: Keskioikea"
+          }
+        },
+        {
+          "id": "node6",
+          "label": {
+            "en": "Node 6: Bottom-Right",
+            "fi": "Solmu 6: Alaoikea"
+          }
+        }
+      ],
+      "title": {
+        "en": "Energy Node",
+        "fi": "Energiasolmu"
+      }
+    },
+    {
+      "name": "power_text",
+      "type": "text",
+      "label": {
+        "en": "Power / Reading",
+        "fi": "Teho / Lukema"
+      },
+      "placeholder": {
+        "en": "3.5 kW",
+        "fi": "3.5 kW"
+      },
+      "title": {
+        "en": "Power / Reading",
+        "fi": "Teho / Lukema"
+      }
+    },
+    {
+      "name": "flow_direction",
+      "type": "dropdown",
+      "required": false,
+      "label": {
+        "en": "Flow Direction",
+        "fi": "Virtaussuunta"
+      },
+      "values": [
+        {
+          "id": "auto",
+          "label": {
+            "en": "Automatic from sign (+ inflow, - outflow)",
+            "fi": "Automaattinen (+ tuotto kotiin, - kulutus ulos)"
+          }
+        },
+        {
+          "id": "inflow",
+          "label": {
+            "en": "Inflow (Moving toward home - Generation / Import)",
+            "fi": "Kotiin päin (Tuotto / Osto verkosta)"
+          }
+        },
+        {
+          "id": "outflow",
+          "label": {
+            "en": "Outflow (Moving from home - Consumption / Export)",
+            "fi": "Kodista ulos (Kulutus / Lataus / Myynti)"
+          }
+        },
+        {
+          "id": "none",
+          "label": {
+            "en": "No flow animation (Standby / Off)",
+            "fi": "Ei virtausanimaatiota (Pois päältä)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Flow Direction",
+        "fi": "Virtaussuunta"
+      }
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Speed (0 = automatic, 1–100 = manual)",
+        "fi": "Nopeus (0 = automaattinen, 1–100 = oma)"
+      },
+      "min": 0,
+      "max": 100,
+      "title": {
+        "en": "Speed (0 = automatic, 1–100 = manual)",
+        "fi": "Nopeus (0 = automaattinen, 1–100 = oma)"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Node Title",
+        "fi": "Solmun otsikko"
+      },
+      "placeholder": {
+        "en": "Solar",
+        "fi": "Aurinko"
+      },
+      "title": {
+        "en": "Node Title",
+        "fi": "Solmun otsikko"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Icon (MDI name)",
+        "fi": "Kuvake (MDI-nimi)"
+      },
+      "placeholder": {
+        "en": "solar-power",
+        "fi": "solar-power"
+      },
+      "title": {
+        "en": "Icon (MDI name)",
+        "fi": "Kuvake (MDI-nimi)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Color (name or hex)",
+        "fi": "Väri (nimi tai hex)"
+      },
+      "placeholder": {
+        "en": "yellow",
+        "fi": "yellow"
+      },
+      "title": {
+        "en": "Color (name or hex)",
+        "fi": "Väri (nimi tai hex)"
+      }
+    },
+    {
+      "name": "page",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page ID (optional, default active)",
+        "fi": "Sivun tunniste (valinnainen, oletus aktiivinen)"
+      },
+      "placeholder": {
+        "en": "active",
+        "fi": "active"
+      },
+      "title": {
+        "en": "Page ID (optional, default active)",
+        "fi": "Sivun tunniste (valinnainen, oletus aktiivinen)"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+    "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+  }
+}

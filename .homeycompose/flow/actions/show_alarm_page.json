@@ -1,0 +1,146 @@
+{
+  "id": "show_alarm_page_action",
+  "title": {
+    "en": "Show alarm card",
+    "fi": "Näytä hälytyssivu"
+  },
+  "titleFormatted": {
+    "en": "Set alarm [[title]]: state [[state]] (pin: [[pin_required]], prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Aseta hälytys [[title]]: tila [[state]] (pin: [[pin_required]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "state",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "disarmed",
+          "label": {
+            "en": "Disarmed",
+            "fi": "Pois päältä"
+          }
+        },
+        {
+          "id": "armed_home",
+          "label": {
+            "en": "Armed Home",
+            "fi": "Koti-tila (Yö/Kotona)"
+          }
+        },
+        {
+          "id": "armed_away",
+          "label": {
+            "en": "Armed Away",
+            "fi": "Poissa-tila"
+          }
+        },
+        {
+          "id": "armed_night",
+          "label": {
+            "en": "Armed Night",
+            "fi": "Yötila"
+          }
+        },
+        {
+          "id": "arming",
+          "label": {
+            "en": "Arming (pending)",
+            "fi": "Kytkeytyy (odottaa)"
+          }
+        },
+        {
+          "id": "triggered",
+          "label": {
+            "en": "Triggered (Alarm!)",
+            "fi": "Hälytys lauennut!"
+          }
+        }
+      ],
+      "title": {
+        "en": "Alarm state",
+        "fi": "Hälytystila"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "placeholder": {
+        "en": "Home Alarm",
+        "fi": "Kotihälytin"
+      },
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "pin_required",
+      "type": "dropdown",
+      "required": false,
+      "values": [
+        {
+          "id": "yes",
+          "label": {
+            "en": "PIN required (show keypad)",
+            "fi": "PIN vaaditaan (näytä näppäimistö)"
+          }
+        },
+        {
+          "id": "no",
+          "label": {
+            "en": "No PIN required",
+            "fi": "Ei PIN-koodia"
+          }
+        }
+      ],
+      "title": {
+        "en": "Require PIN",
+        "fi": "Vaadi PIN-koodi"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

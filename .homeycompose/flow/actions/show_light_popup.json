@@ -1,0 +1,125 @@
+{
+  "id": "show_light_popup_action",
+  "title": {
+    "en": "Show light popup (popupLight)",
+    "fi": "Avaa valon säätöikkuna (popupLight)"
+  },
+  "titleFormatted": {
+    "en": "Open light popup [[entity]] (power: [[onoff]], brightness: [[brightness]], color temp: [[color_temp]], color: [[color]])",
+    "fi": "Avaa valon [[entity]] säätöikkuna (virta: [[onoff]], kirkkaus: [[brightness]], värilämpötila: [[color_temp]], väri: [[color]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (optional)",
+        "fi": "Valon tunniste (valinnainen)"
+      },
+      "placeholder": {
+        "en": "light",
+        "fi": "light"
+      },
+      "title": {
+        "en": "Entity ID (optional)",
+        "fi": "Valon tunniste (valinnainen)"
+      }
+    },
+    {
+      "name": "onoff",
+      "type": "dropdown",
+      "label": {
+        "en": "Power state",
+        "fi": "Virtatila"
+      },
+      "values": [
+        {
+          "id": "keep",
+          "label": {
+            "en": "Keep current state",
+            "fi": "Säilytä nykyinen tila"
+          }
+        },
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "fi": "Päällä"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "fi": "Pois"
+          }
+        }
+      ],
+      "title": {
+        "en": "Power state",
+        "fi": "Virtatila"
+      }
+    },
+    {
+      "name": "brightness",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 100,
+      "label": {
+        "en": "Brightness (optional, 0-100 %)",
+        "fi": "Kirkkaus (valinnainen, 0-100 %)"
+      },
+      "placeholder": {
+        "en": "80",
+        "fi": "80"
+      },
+      "title": {
+        "en": "Brightness (optional, 0-100 %)",
+        "fi": "Kirkkaus (valinnainen, 0-100 %)"
+      }
+    },
+    {
+      "name": "color_temp",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 100,
+      "label": {
+        "en": "Color temperature (optional, 0-100 %)",
+        "fi": "Värilämpötila (valinnainen, 0-100 %)"
+      },
+      "placeholder": {
+        "en": "50",
+        "fi": "50"
+      },
+      "title": {
+        "en": "Color temperature (optional, 0-100 %)",
+        "fi": "Värilämpötila (valinnainen, 0-100 %)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      },
+      "placeholder": {
+        "en": "yellow",
+        "fi": "yellow"
+      },
+      "title": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      }
+    }
+  ]
+}

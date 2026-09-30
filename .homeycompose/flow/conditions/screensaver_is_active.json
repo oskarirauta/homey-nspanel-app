@@ -1,10 +1,12 @@
 {
     "id": "screensaver_is_active",
     "title": {
-        "en": "Screensaver is !{{active|inactive}}"
+        "en": "Screensaver is !{{active|inactive}}",
+        "fi": "Näytönsäästäjä !{{on|ei ole}} päällä"
     },
     "titleFormatted": {
-        "en": "Screensaver is !{{active|inactive}}"
+        "en": "Screensaver is !{{active|inactive}}",
+        "fi": "Näytönsäästäjä !{{on|ei ole}} päällä"
     },
     "args": [
         {

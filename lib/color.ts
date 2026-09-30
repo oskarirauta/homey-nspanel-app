@@ -46,6 +46,7 @@ export namespace Color {
     [ 'weather_home', rgb_to_565(220, 220, 220) ], 
     [ 'weather_windy', 38066 ],
     [ 'weather_partlycloudy', 38066 ],
+    [ 'weather_partly-cloudy', 38066 ],
     [ 'weather_clear-night', 38060 ],
     [ 'weather_windy-variant', 64495 ],
     [ 'weather_cloudy', 31728 ],
@@ -92,21 +93,85 @@ export namespace Color {
     if (typeof value === 'number') {
       return value;
     } else if (typeof value === 'string') {
-      if (Names.has(value as string)) {
-        return Names.get(value as string);
-      } else {
-        if ((defaultValue === undefined) || (typeof defaultValue === 'number')) {
-          return defaultValue;
-        } else if (typeof defaultValue === 'string') {
-          return Names.has(defaultValue as string) ? Names.get(defaultValue as string) : undefined;
-        } else {
-          return rgb_to_565(((value as unknown) as RGB).red, ((value as unknown) as RGB).green, ((value as unknown) as RGB).blue);
-        }
+      if (Names.has(value)) {
+        return Names.get(value);
+      }
+      // Check if it's a numeric string like "65535" or "46521"
+      if (/^\d+$/.test(value)) {
+        const parsedNum = parseInt(value, 10);
+        if (!isNaN(parsedNum)) return parsedNum;
+      }
+      // Check if it's a hex string like "#FF5500" or "FF5500"
+      const hexMatch = value.replace('#', '').trim();
+      if (/^[0-9A-Fa-f]{6}$/.test(hexMatch)) {
+        const r = parseInt(hexMatch.substring(0, 2), 16);
+        const g = parseInt(hexMatch.substring(2, 4), 16);
+        const b = parseInt(hexMatch.substring(4, 6), 16);
+        return rgb_to_565(r, g, b);
+      }
+
+      if ((defaultValue === undefined) || (typeof defaultValue === 'number')) {
+        return defaultValue;
+      } else if (typeof defaultValue === 'string') {
+        return Names.has(defaultValue) ? Names.get(defaultValue) : undefined;
+      } else if (typeof defaultValue === 'object') {
+        return rgb_to_565(defaultValue.red, defaultValue.green, defaultValue.blue);
       }
       return undefined;
     }
 
     return rgb_to_565(value.red, value.green, value.blue);
   }
+
+  export const hsv_to_rgb = (h: number, s: number, v: number): RGB => {
+    const hue = (h > 1 ? (h % 360) / 360 : Math.max(0, Math.min(1, h))) * 6;
+    const sat = Math.max(0, Math.min(1, s));
+    const val = Math.max(0, Math.min(1, v));
+
+    const i = Math.floor(hue);
+    const f = hue - i;
+    const p = val * (1 - sat);
+    const q = val * (1 - sat * f);
+    const t = val * (1 - sat * (1 - f));
+
+    let r = 0, g = 0, b = 0;
+    switch (i % 6) {
+      case 0: r = val; g = t; b = p; break;
+      case 1: r = q; g = val; b = p; break;
+      case 2: r = p; g = val; b = t; break;
+      case 3: r = p; g = q; b = val; break;
+      case 4: r = t; g = p; b = val; break;
+      case 5: r = val; g = p; b = q; break;
+    }
+    return {
+      red: Math.round(r * 255),
+      green: Math.round(g * 255),
+      blue: Math.round(b * 255)
+    };
+  };
+
+  export const hsv_to_565 = (h: number, s: number, v: number): number => {
+    const rgb = hsv_to_rgb(h, s, v);
+    return rgb_to_565(rgb.red, rgb.green, rgb.blue);
+  };
+
+  export const pos_to_hsv = (x: number, y: number, wh: number): { hue: number; saturation: number } => {
+    const r = (wh && wh > 0) ? wh / 2 : 80;
+    const dx = (x - r) / r;
+    const dy = (r - y) / r;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const saturation = Math.min(1, Math.max(0, dist));
+    const angleDeg = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
+    const hue = angleDeg / 360;
+    return { hue, saturation };
+  };
+
+  export const kelvin_fraction_to_565 = (fraction: number): number => {
+    const f = Math.max(0, Math.min(1, fraction));
+    const r = Math.round(200 + f * 55);
+    const g = Math.round(230 - f * 60);
+    const b = Math.round(255 - f * 195);
+    return rgb_to_565(r, g, b);
+  };
 
 }

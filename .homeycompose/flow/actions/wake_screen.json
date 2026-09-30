@@ -1,0 +1,39 @@
+{
+  "id": "wake_screen_action",
+  "title": {
+    "en": "Wake up screen",
+    "fi": "Herätä näyttö lepotilasta"
+  },
+  "titleFormatted": {
+    "en": "Wake up screen (open page: [[target_page]])",
+    "fi": "Herätä näyttö lepotilasta (avaa sivu: [[target_page]])"
+  },
+  "hint": {
+    "en": "Wakes the screen from screensaver or standby, restores active brightness, and optionally navigates to a specific page.",
+    "fi": "Herättää näytön lepotilasta tai himmennyksestä, nostaa normaalin kirkkauden ja valinnaisesti avaa tietyn sivun."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "target_page",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Target page (optional)",
+        "fi": "Avattava sivu (valinnainen)"
+      },
+      "placeholder": {
+        "en": "e.g. active, alarm (empty = current)",
+        "fi": "esim. active, alarm (tyhjä = nykyinen)"
+      },
+      "title": {
+        "en": "Target page (optional)",
+        "fi": "Avattava sivu (valinnainen)"
+      }
+    }
+  ]
+}

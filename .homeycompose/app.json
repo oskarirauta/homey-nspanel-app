@@ -1,6 +1,6 @@
 {
   "id": "rauta.oskari.nspanel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": ">=12.4.0",
   "sdk": 3,
   "brandColor": "#2696A8",
@@ -8,10 +8,12 @@
     "local"
   ],
   "name": {
-    "en": "NSPanel"
+    "en": "NSPanel",
+    "fi": "NSPanel"
   },
   "description": {
-    "en": "Sonoff NSPanel"
+    "en": "Sonoff NSPanel with Lovelace UI",
+    "fi": "Sonoff NSPanel Lovelace UI -käyttöliittymällä"
   },
   "category": [
     "appliances"
@@ -21,22 +23,69 @@
       "sonoff",
       "nspanel",
       "mqtt"
+    ],
+    "fi": [
+      "sonoff",
+      "nspanel",
+      "mqtt"
     ]
   },
   "permissions": [
-    "homey:app:nl.scanno.mqtt"
+    "homey:app:nl.scanno.mqtt",
+    "homey:manager:api",
+    "homey:manager:geolocation"
   ],
   "images": {
     "small": "/assets/images/small.jpg",
     "large": "/assets/images/large.jpg",
     "xlarge": "/assets/images/xlarge.jpg"
   },
-  "source": "https://github.com/DayS/homey-intex-spa",
-  "bugs": {
-    "url": "https://github.com/DayS/homey-intex-spa/issues"
-  },
   "author": {
     "name": "Oskari Rauta",
     "email": "oskari.rauta@gmail.com"
+  },
+  "support": "https://github.com/oskarirauta/homey-nspanel-app/issues",
+  "source": "https://github.com/oskarirauta/homey-nspanel-app",
+  "api": {
+    "getDevices": {
+      "method": "GET",
+      "path": "/devices"
+    },
+    "setDevicePage": {
+      "method": "POST",
+      "path": "/devices/:id/page"
+    },
+    "deleteDevicePage": {
+      "method": "DELETE",
+      "path": "/devices/:id/page/:pageId"
+    },
+    "getIcons": {
+      "method": "GET",
+      "path": "/icons"
+    },
+    "testMqtt": {
+      "method": "POST",
+      "path": "/test-mqtt"
+    },
+    "setDeviceSettings": {
+      "method": "POST",
+      "path": "/devices/:id/settings"
+    },
+    "getHomeyDevices": {
+      "method": "GET",
+      "path": "/homey-devices"
+    },
+    "controlHomeyDevice": {
+      "method": "POST",
+      "path": "/homey-devices/:id/toggle"
+    },
+    "getGlobalWeather": {
+      "method": "GET",
+      "path": "/weather-settings"
+    },
+    "setGlobalWeather": {
+      "method": "POST",
+      "path": "/weather-settings"
+    }
   }
 }

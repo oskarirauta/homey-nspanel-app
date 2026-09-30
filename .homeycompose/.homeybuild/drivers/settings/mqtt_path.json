@@ -1,8 +1,0 @@
-{
-    "id": "mqtt_path",
-    "type": "text",
-    "label": {
-        "en": "Device MQTT topic format"
-    },
-    "value": "%prefix%/%topic%/"
-}

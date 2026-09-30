@@ -1,0 +1,195 @@
+{
+  "id": "set_screensaver_forecast_day_action",
+  "title": {
+    "en": "Set screensaver forecast day",
+    "fi": "Aseta lepotilan ennustepäivä"
+  },
+  "titleFormatted": {
+    "en": "Set forecast for [[day_index]] ([[day_name]]): temp [[temperature]] °C, condition [[weather_type]]",
+    "fi": "Aseta ennuste kohteelle [[day_index]] ([[day_name]]): lämpötila [[temperature]] °C, sää [[weather_type]]"
+  },
+  "hint": {
+    "en": "Sets forecast days 1–5 for the five-day page. The screensaver displays days 1–3. Choose the Flow weather source in Studio.",
+    "fi": "Asettaa viiden päivän näkymän ennustepäivät 1–5. Lepotila näyttää päivät 1–3. Valitse Studiossa sääennusteen lähteeksi Flow."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "day_index",
+      "type": "dropdown",
+      "label": {
+        "en": "Forecast day slot",
+        "fi": "Ennustepäivä"
+      },
+      "values": [
+        {
+          "id": "day1",
+          "label": {
+            "en": "Day 1 (Tomorrow)",
+            "fi": "Päivä 1 (Huomenna)"
+          }
+        },
+        {
+          "id": "day2",
+          "label": {
+            "en": "Day 2 (Day after tomorrow)",
+            "fi": "Päivä 2 (Ylihuomenna)"
+          }
+        },
+        {
+          "id": "day3",
+          "label": {
+            "en": "Day 3 (3 days ahead)",
+            "fi": "Päivä 3 (3 päivän päästä)"
+          }
+        },
+        {
+          "id": "day4",
+          "label": {
+            "en": "Day 4 (five-day forecast page)",
+            "fi": "Päivä 4 (viiden päivän sääsivu)"
+          }
+        },
+        {
+          "id": "day5",
+          "label": {
+            "en": "Day 5 (five-day forecast page)",
+            "fi": "Päivä 5 (viiden päivän sääsivu)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Forecast day slot",
+        "fi": "Ennustepäivä"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "number",
+      "label": {
+        "en": "Forecast temperature (°C)",
+        "fi": "Ennustelämpötila (°C)"
+      },
+      "placeholder": {
+        "en": "e.g. 15.0",
+        "fi": "esim. 15.0"
+      },
+      "title": {
+        "en": "Forecast temperature (°C)",
+        "fi": "Ennustelämpötila (°C)"
+      }
+    },
+    {
+      "name": "weather_type",
+      "type": "dropdown",
+      "label": {
+        "en": "Weather condition",
+        "fi": "Säätyyppi / Kuvake"
+      },
+      "values": [
+        {
+          "id": "sunny",
+          "label": {
+            "en": "☀️ Sunny",
+            "fi": "☀️ Aurinkoista"
+          }
+        },
+        {
+          "id": "partly_cloudy",
+          "label": {
+            "en": "⛅ Partly cloudy",
+            "fi": "⛅ Puolipilvistä"
+          }
+        },
+        {
+          "id": "cloudy",
+          "label": {
+            "en": "☁️ Cloudy",
+            "fi": "☁️ Pilvistä"
+          }
+        },
+        {
+          "id": "rainy",
+          "label": {
+            "en": "🌧️ Rainy",
+            "fi": "🌧️ Sadetta"
+          }
+        },
+        {
+          "id": "pouring",
+          "label": {
+            "en": "🌧️ Heavy rain",
+            "fi": "🌧️ Kaatosadetta"
+          }
+        },
+        {
+          "id": "lightning_rainy",
+          "label": {
+            "en": "⛈️ Thunderstorm",
+            "fi": "⛈️ Ukkosta"
+          }
+        },
+        {
+          "id": "snowy",
+          "label": {
+            "en": "❄️ Snow",
+            "fi": "❄️ Lumisadetta"
+          }
+        },
+        {
+          "id": "snowy_rainy",
+          "label": {
+            "en": "🌨️ Sleet",
+            "fi": "🌨️ Räntäsadetta"
+          }
+        },
+        {
+          "id": "fog",
+          "label": {
+            "en": "🌫️ Fog",
+            "fi": "🌫️ Sumua"
+          }
+        },
+        {
+          "id": "windy",
+          "label": {
+            "en": "💨 Windy",
+            "fi": "💨 Tuulista"
+          }
+        },
+        {
+          "id": "clear_night",
+          "label": {
+            "en": "🌙 Clear night",
+            "fi": "🌙 Selkeä yö"
+          }
+        }
+      ],
+      "title": {
+        "en": "Weather condition",
+        "fi": "Säätyyppi / Kuvake"
+      }
+    },
+    {
+      "name": "day_name",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Day name override (optional)",
+        "fi": "Viikonpäivän nimi (valinnainen)"
+      },
+      "placeholder": {
+        "en": "e.g. Mon, Tue, Wed (or empty for auto)",
+        "fi": "esim. Ma, Ti, Ke (tai tyhjä = auto)"
+      },
+      "title": {
+        "en": "Day name override (optional)",
+        "fi": "Viikonpäivän nimi (valinnainen)"
+      }
+    }
+  ]
+}

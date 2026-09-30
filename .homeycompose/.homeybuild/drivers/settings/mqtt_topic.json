@@ -1,9 +1,0 @@
-{
-    "id": "mqtt_topic_root",
-    "type": "text",
-    "label": {
-        "en": "Device MQTT topic"
-    },
-    "value": "",
-    "pattern": "^[^#+\\/]+$"
-}

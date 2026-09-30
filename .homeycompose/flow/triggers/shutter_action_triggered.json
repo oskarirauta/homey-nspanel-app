@@ -1,0 +1,40 @@
+{
+  "id": "shutter_action_triggered",
+  "title": {
+    "en": "Shutter action triggered on panel",
+    "fi": "Verhoa tai sälekaihdinta ohjattu paneelilta"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID", "fi": "Verhon tunniste" },
+      "example": "shutter"
+    },
+    {
+      "name": "action_type",
+      "type": "string",
+      "title": { "en": "Action type (up/down/stop/position/tilt_open/tilt_close/tilt_stop/tilt)", "fi": "Toimintotyyppi (up/down/stop/position/tilt_open/tilt_close/tilt_stop/tilt)" },
+      "example": "position"
+    },
+    {
+      "name": "position",
+      "type": "number",
+      "title": { "en": "Position (0-100 %)", "fi": "Asento (0-100 %)" },
+      "example": 75
+    },
+    {
+      "name": "tilt",
+      "type": "number",
+      "title": { "en": "Tilt angle (0-100 %)", "fi": "Säleasento (0-100 %)" },
+      "example": 50
+    }
+  ]
+}

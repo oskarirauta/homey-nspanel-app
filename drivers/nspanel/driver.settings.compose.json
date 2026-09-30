@@ -2,14 +2,83 @@
   {
     "type": "group",
     "label": {
-      "en": "Connection"
+      "en": "Connection",
+      "fi": "Yhteys"
     },
     "children": [
+      {
+        "id": "mqtt_mode",
+        "type": "dropdown",
+        "label": {
+          "en": "MQTT Connection Mode",
+          "fi": "MQTT-yhteystapa"
+        },
+        "value": "standalone",
+        "values": [
+          {
+            "id": "standalone",
+            "label": {
+              "en": "Built-in Direct MQTT Client (Recommended)",
+              "fi": "Sisäänrakennettu suora MQTT-asiakas (Suositeltu)"
+            }
+          },
+          {
+            "id": "scanno",
+            "label": {
+              "en": "Scanno MQTT Client (nl.scanno.mqtt)",
+              "fi": "Scanno MQTT Client -sovellus (nl.scanno.mqtt)"
+            }
+          }
+        ]
+      },
+      {
+        "id": "mqtt_host",
+        "type": "text",
+        "label": {
+          "en": "Broker Host / IP (Direct mode)",
+          "fi": "Brokerin osoite / IP (Suora tila)"
+        },
+        "value": "",
+        "hint": {
+          "en": "e.g. 192.168.1.50 or mybroker.local",
+          "fi": "esim. 192.168.1.50 tai broker.local"
+        }
+      },
+      {
+        "id": "mqtt_port",
+        "type": "number",
+        "label": {
+          "en": "Broker Port (Direct mode)",
+          "fi": "Brokerin portti (Suora tila)"
+        },
+        "value": 1883,
+        "min": 1,
+        "max": 65535
+      },
+      {
+        "id": "mqtt_user",
+        "type": "text",
+        "label": {
+          "en": "Username (Direct mode, optional)",
+          "fi": "Käyttäjätunnus (Suora tila, valinnainen)"
+        },
+        "value": ""
+      },
+      {
+        "id": "mqtt_password",
+        "type": "password",
+        "label": {
+          "en": "Password (Direct mode, optional)",
+          "fi": "Salasana (Suora tila, valinnainen)"
+        },
+        "value": ""
+      },
       {
         "id": "mqtt_topic",
         "type": "text",
         "label": {
-          "en": "Device MQTT topic"
+          "en": "Device MQTT topic",
+          "fi": "Laitteen MQTT-aihe (topic)"
         },
         "value": "",
         "pattern": "^[^#+\\/]+$"
@@ -18,7 +87,8 @@
         "id": "mqtt_path",
         "type": "text",
         "label": {
-          "en": "Device MQTT topic format"
+          "en": "Device MQTT topic format",
+          "fi": "Laitteen MQTT-aiheen muoto"
         },
         "value": "%prefix%/%topic%/"
       }
@@ -185,6 +255,230 @@
         "hint": {
           "en": "Time interval between consecutive reports"
         }
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Security & Alarm",
+      "fi": "Turvallisuus ja hälytin"
+    },
+    "children": [
+      {
+        "id": "disable_nav_when_armed",
+        "type": "checkbox",
+        "label": {
+          "en": "Disable Next & Prev navigation when alarm is armed",
+          "fi": "Poista Next ja Prev -navigointi käytöstä hälyttimen ollessa päällä"
+        },
+        "hint": {
+          "en": "Locks the panel onto the alarm card when armed; prevents navigating away until disarmed.",
+          "fi": "Lukitsee paneelin hälytysnäkymään kun hälytin on viritetty; estää siirtymisen muille sivuille ennen hälytyksen poiskytkentää."
+        },
+        "value": false
+      },
+      {
+        "id": "wake_to_alarm",
+        "type": "checkbox",
+        "label": {
+          "en": "Wake from screensaver to Alarm page",
+          "fi": "Herää lepotilasta aina hälytinsivulle"
+        },
+        "hint": {
+          "en": "When enabled and an alarm page exists, the panel returns to the alarm page whenever the screen wakes from screensaver.",
+          "fi": "Kun käytössä ja paneelilla on hälytinsivu, näyttö herää lepotilasta aina hälytinsivulle."
+        },
+        "value": true
+      },
+      {
+        "id": "global_pin",
+        "type": "text",
+        "label": {
+          "en": "Default PIN Code",
+          "fi": "Yleinen PIN-koodi"
+        },
+        "value": "",
+        "hint": {
+          "en": "Default PIN code for protected slots, pages, and alarm disarm (4-8 digits).",
+          "fi": "Oletus-PIN-koodi suojatuille toiminnoille, sivuille ja hälytyksen kuittaukseen (4-8 numeroa)."
+        }
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Night Mode & Schedule",
+      "fi": "Yötila ja aikataulutus"
+    },
+    "children": [
+      {
+        "id": "night_mode_enabled",
+        "type": "checkbox",
+        "label": {
+          "en": "Enable scheduled night mode",
+          "fi": "Ota käyttöön aikataulutettu yötila"
+        },
+        "hint": {
+          "en": "Automatically dims the panel during specified night hours.",
+          "fi": "Himmeltää näytön automaattisesti määritettynä yöaikana."
+        },
+        "value": false
+      },
+      {
+        "id": "night_mode_start",
+        "type": "text",
+        "label": {
+          "en": "Night mode start time",
+          "fi": "Yötilan alkamisaika"
+        },
+        "value": "22:00",
+        "hint": {
+          "en": "HH:MM (24h format, e.g. 22:00)",
+          "fi": "TT:MM (24h muoto, esim. 22:00)"
+        }
+      },
+      {
+        "id": "night_mode_end",
+        "type": "text",
+        "label": {
+          "en": "Night mode end time",
+          "fi": "Yötilan päättymisaika"
+        },
+        "value": "07:00",
+        "hint": {
+          "en": "HH:MM (24h format, e.g. 07:00)",
+          "fi": "TT:MM (24h muoto, esim. 07:00)"
+        }
+      },
+      {
+        "id": "night_brightness",
+        "type": "number",
+        "label": {
+          "en": "Night active brightness",
+          "fi": "Yökirkkaus aktiivisena"
+        },
+        "value": 30,
+        "min": 1,
+        "max": 100,
+        "units": {
+          "en": "%"
+        },
+        "hint": {
+          "en": "Screen brightness when active during night mode",
+          "fi": "Näytön kirkkaus kun paneelia käytetään yötilassa"
+        }
+      },
+      {
+        "id": "night_sleep_brightness",
+        "type": "number",
+        "label": {
+          "en": "Night standby brightness",
+          "fi": "Yökirkkaus lepotilassa"
+        },
+        "value": 2,
+        "min": 0,
+        "max": 100,
+        "units": {
+          "en": "%"
+        },
+        "hint": {
+          "en": "Standby brightness in night mode (0 = turn backlight completely off)",
+          "fi": "Näytön kirkkaus lepotilassa yötilan aikana (0 = sammuta taustavalo kokonaan)"
+        }
+      },
+      {
+        "id": "night_sleep_timeout",
+        "type": "number",
+        "label": {
+          "en": "Night deep sleep timeout",
+          "fi": "Yön syvän unen aikakatkaisu"
+        },
+        "value": 15,
+        "min": 0,
+        "max": 300,
+        "units": {
+          "en": "s"
+        },
+        "hint": {
+          "en": "Time before screen backlight is turned off at night (0 = keep at standby brightness)",
+          "fi": "Aika ennen taustavalon sammumista yöllä (0 = pysyy lepotilan kirkkaudessa)"
+        }
+      },
+      {
+        "id": "night_theme_black",
+        "type": "checkbox",
+        "label": {
+          "en": "Use black background at night",
+          "fi": "Käytä yöllä mustaa taustaa (Black)"
+        },
+        "hint": {
+          "en": "Reduces stray light emission by forcing pitch black background.",
+          "fi": "Minimoi hajavalon vaihtamalla taustan täysin mustaksi yöllä."
+        },
+        "value": true
+      },
+      {
+        "id": "night_follow_alarm",
+        "type": "checkbox",
+        "label": {
+          "en": "Follow alarm night mode automatically",
+          "fi": "Seuraa automaattisesti hälyttimen yötilaa"
+        },
+        "hint": {
+          "en": "Activates night mode whenever Heimdall or panel alarm is armed to Night mode.",
+          "fi": "Aktivoi yötilan aina kun Heimdall tai paneeli viritetään yötilaan (Armed Night)."
+        },
+        "value": true
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": {
+      "en": "Physical Buttons, Relays & Buzzer",
+      "fi": "Fyysiset painikkeet, releet ja summeri"
+    },
+    "children": [
+      {
+        "id": "decouple_buttons",
+        "type": "checkbox",
+        "label": {
+          "en": "Decouple physical buttons from relays",
+          "fi": "Erota fyysiset painikkeet releistä (Decouple)"
+        },
+        "hint": {
+          "en": "When enabled, pressing physical buttons will not toggle relays directly, but triggers Homey flow events (e.g. for smart lights).",
+          "fi": "Kun käytössä, fyysiset painikkeet eivät ohjaa releitä suoraan, vaan laukaisevat Homey-floweja (esim. älyvalojen ohjaukseen)."
+        },
+        "value": false
+      },
+      {
+        "id": "button_navigation",
+        "type": "checkbox",
+        "label": {
+          "en": "Use buttons for page navigation (Prev / Next)",
+          "fi": "Käytä painikkeita sivujen vaihtoon (Edellinen / Seuraava)"
+        },
+        "hint": {
+          "en": "Button 1 navigates to previous page, Button 2 navigates to next page.",
+          "fi": "Painike 1 siirtyy edelliselle sivulle, Painike 2 seuraavalle sivulle."
+        },
+        "value": false
+      },
+      {
+        "id": "buzzer_pwm",
+        "type": "checkbox",
+        "label": {
+          "en": "Enable buzzer PWM frequency mode (SetOption111)",
+          "fi": "Käytä summerin PWM-äänitilaa (SetOption111)"
+        },
+        "hint": {
+          "en": "Enables buzzer PWM frequency/pitch control on NSPanel for variable beeps and tones.",
+          "fi": "Ottaa käyttöön summerin PWM-taajuussäädön NSPanelissa (vaihtelevat merkkiäänet ja sävelet)."
+        },
+        "value": false
       }
     ]
   }

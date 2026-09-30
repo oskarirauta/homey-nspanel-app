@@ -1,0 +1,148 @@
+{
+  "id": "show_notification_action",
+  "title": {
+    "en": "Show popup notification",
+    "fi": "Näytä ponnahdusilmoitus"
+  },
+  "titleFormatted": {
+    "en": "Show popup [[heading]]: [[message]] (button 1: [[button1]], color: [[color1]], button 2: [[button2]], color: [[color2]], timeout: [[timeout]], beep: [[beep]])",
+    "fi": "Näytä ilmoitus [[heading]]: [[message]] (painike 1: [[button1]], väri: [[color1]], painike 2: [[button2]], väri: [[color2]], aikakatkaisu: [[timeout]], ääni: [[beep]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "heading",
+      "type": "text",
+      "label": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "placeholder": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "message",
+      "type": "text",
+      "label": {
+        "en": "Message",
+        "fi": "Viesti"
+      },
+      "placeholder": {
+        "en": "Message",
+        "fi": "Viesti"
+      },
+      "title": {
+        "en": "Message",
+        "fi": "Viesti"
+      }
+    },
+    {
+      "name": "button1",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Button 1 Label",
+        "fi": "Painike 1"
+      },
+      "placeholder": {
+        "en": "OK",
+        "fi": "OK"
+      },
+      "title": {
+        "en": "Button 1 Label",
+        "fi": "Painike 1"
+      }
+    },
+    {
+      "name": "button2",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Optional: Button 2 Label",
+        "fi": "Valinnainen: Painike 2"
+      },
+      "placeholder": {
+        "en": "Cancel",
+        "fi": "Peruuta"
+      },
+      "title": {
+        "en": "Optional: Button 2 Label",
+        "fi": "Valinnainen: Painike 2"
+      }
+    },
+    {
+      "name": "color1",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Button 1 Color",
+        "fi": "Painikkeen 1 väri"
+      },
+      "placeholder": {
+        "en": "white",
+        "fi": "white"
+      },
+      "title": {
+        "en": "Button 1 Color",
+        "fi": "Painikkeen 1 väri"
+      }
+    },
+    {
+      "name": "color2",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Button 2 Color",
+        "fi": "Painikkeen 2 väri"
+      },
+      "placeholder": {
+        "en": "white",
+        "fi": "white"
+      },
+      "title": {
+        "en": "Button 2 Color",
+        "fi": "Painikkeen 2 väri"
+      }
+    },
+    {
+      "name": "timeout",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Timeout in seconds (0 = manual click)",
+        "fi": "Aikakatkaisu sekunneissa (0 = vaatii painalluksen)"
+      },
+      "placeholder": {
+        "en": "e.g. 10 (0 = wait for button)",
+        "fi": "esim. 10 (0 = odota painallusta)"
+      },
+      "title": {
+        "en": "Timeout in seconds (0 = manual click)",
+        "fi": "Aikakatkaisu sekunneissa (0 = vaatii painalluksen)"
+      }
+    },
+    {
+      "name": "beep",
+      "type": "checkbox",
+      "required": false,
+      "label": {
+        "en": "Play buzzer beep sound",
+        "fi": "Soita äänimerkki (piip)"
+      },
+      "title": {
+        "en": "Play buzzer beep sound",
+        "fi": "Soita äänimerkki (piip)"
+      }
+    }
+  ]
+}

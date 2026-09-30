@@ -1,0 +1,66 @@
+{
+  "id": "set_screensaver_status_icon_action",
+  "title": {
+    "en": "Set screensaver status icon",
+    "fi": "Aseta näytönsäästäjän tilakuvake"
+  },
+  "titleFormatted": {
+    "en": "Set screensaver icon [[slot]] to [[icon]] ([[color]])",
+    "fi": "Aseta näytönsäästäjän kuvake [[slot]] kuvakkeeksi [[icon]] ([[color]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "slot",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "1",
+          "label": {
+            "en": "Top-Left (Icon 1)",
+            "fi": "Vasen yläkulma (Kuvake 1)"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Top-Right (Icon 2)",
+            "fi": "Oikea yläkulma (Kuvake 2)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Status icon slot",
+        "fi": "Tilakuvakkeen paikka"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "text",
+      "placeholder": {
+        "en": "e.g. shield-check, lock, battery, car-electric (empty to clear)",
+        "fi": "esim. shield-check, lock, battery, car-electric (tyhjä poistaa)"
+      },
+      "title": {
+        "en": "Icon name",
+        "fi": "Kuvakkeen nimi"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "placeholder": {
+        "en": "white, green, red, orange, #FFAA00",
+        "fi": "white, green, red, orange, #FFAA00"
+      },
+      "title": {
+        "en": "Icon color",
+        "fi": "Kuvakkeen väri"
+      }
+    }
+  ]
+}

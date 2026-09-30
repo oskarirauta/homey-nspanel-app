@@ -1,0 +1,3292 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NSPanel Studio for Homey</title>
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0a0e14;
+      --bg-card: #121820;
+      --bg-card-alt: #1a222d;
+      --bg-input: #1e2633;
+      --bg-hover: #263344;
+      --border-color: #334155;
+      --border-focus: #2696a8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-label: #cbd5e1;
+      --primary: #2696a8;
+      --primary-hover: #2db3c8;
+      --primary-glow: rgba(38, 150, 168, 0.35);
+      --accent: #f778ba;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Force all inputs to have dark slate background and bright white text */
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="email"],
+    select,
+    textarea,
+    .form-control {
+      width: 100% !important;
+      background-color: #1e2633 !important;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      border: 1px solid #3b4758 !important;
+      border-radius: var(--radius-sm) !important;
+      padding: 0.6rem 0.85rem !important;
+      font-size: 0.92rem !important;
+      outline: none !important;
+      box-sizing: border-box !important;
+      font-family: inherit !important;
+      transition: border-color 0.2s, box-shadow 0.2s !important;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="password"]:focus,
+    input[type="search"]:focus,
+    select:focus,
+    textarea:focus,
+    .form-control:focus {
+      background-color: #242f40 !important;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff !important;
+      border-color: #2696a8 !important;
+      box-shadow: 0 0 0 3px rgba(38, 150, 168, 0.35) !important;
+    }
+
+    input::placeholder,
+    .form-control::placeholder {
+      color: #64748b !important;
+      -webkit-text-fill-color: #64748b !important;
+    }
+
+    select option {
+      background-color: #121820 !important;
+      color: #ffffff !important;
+      padding: 8px !important;
+    }
+
+    header {
+      background: rgba(18, 24, 32, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    @media (min-width: 680px) {
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.85rem 1.5rem;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), #38bdf8);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.3rem;
+      background: rgba(10, 14, 20, 0.6);
+      padding: 3px;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 680px) {
+      .nav-tabs {
+        width: auto;
+      }
+    }
+
+    .tab-btn {
+      flex: 1 1 0;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.45rem 0.35rem;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    main {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* 3-column Studio Layout */
+    .studio-layout {
+      display: grid;
+      grid-template-columns: 360px auto 380px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1280px) {
+      .studio-layout {
+        grid-template-columns: 340px 1fr;
+      }
+      .studio-layout > .panel:last-child {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .studio-layout {
+        grid-template-columns: 1fr;
+      }
+      .studio-layout > .panel:last-child {
+        grid-column: span 1;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.65rem;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-label) !important;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--bg-card-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      border-color: #475569;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: var(--danger);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.82rem;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* Modal Dialog */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: #141b24;
+      border: 1px solid #334155;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .modal-close-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* NSPanel Screen Bezel & Display */
+    .screen-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nspanel-bezel {
+      background: linear-gradient(145deg, #242c38, #181d24);
+      padding: 16px 14px 22px;
+      border-radius: 28px;
+      box-shadow: 0 24px 50px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.15);
+      border: 3px solid #333d4d;
+      position: relative;
+    }
+
+    .nspanel-bezel::after {
+      content: 'SONOFF';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: #556275;
+      font-weight: 700;
+    }
+
+    .nspanel-display {
+      width: 320px;
+      height: 480px;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      user-select: none;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.8);
+      border: 1px solid #1a1e24;
+    }
+
+    /* Top Display Header */
+    .display-header {
+      height: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .display-header .nav-btn {
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+
+    .display-header .nav-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .display-header .header-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 6px;
+    }
+
+    /* Screen Card Area */
+    .screen-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Grid Views */
+    .display-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .display-grid.grid8 {
+      grid-template-rows: 1fr 1fr 1fr 1fr;
+      gap: 6px;
+      padding: 6px;
+    }
+
+    .grid-cell {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      text-align: center;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .grid-cell:hover, .grid-cell.active {
+      background: rgba(38, 150, 168, 0.18);
+      border-color: var(--primary);
+    }
+
+    .grid-cell-icon {
+      font-size: 1.55rem;
+      margin-bottom: 2px;
+    }
+
+    .grid-cell-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 125px;
+    }
+
+    .grid-cell-val {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .grid-cell.is-on {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    /* Entities View */
+    .display-entities {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+      justify-content: center;
+    }
+
+    .entity-row {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .entity-row:hover, .entity-row.active {
+      background: rgba(38, 150, 168, 0.18);
+      border-color: var(--primary);
+    }
+
+    .entity-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .entity-icon {
+      font-size: 1.3rem;
+    }
+
+    .entity-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .entity-toggle {
+      width: 44px;
+      height: 24px;
+      background: #334155;
+      border-radius: 12px;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .entity-toggle.active {
+      background: #10b981;
+    }
+
+    .entity-toggle-thumb {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.2s;
+    }
+
+    .entity-toggle.active .entity-toggle-thumb {
+      left: 22px;
+    }
+
+    .entity-text-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+
+    /* Thermostat View */
+    .display-thermo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 12px;
+    }
+
+    .thermo-dial {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 8px solid #f59e0b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, rgba(0,0,0,0) 70%);
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.2);
+      position: relative;
+    }
+
+    .thermo-temp-target {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .thermo-temp-target small {
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    .thermo-temp-current {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .thermo-controls {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .thermo-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .thermo-btn:hover {
+      background: rgba(255,255,255,0.18);
+    }
+
+    .thermo-modes {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .thermo-mode-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.06);
+      color: #94a3b8;
+    }
+
+    .thermo-mode-badge.active {
+      background: #f59e0b;
+      color: #000;
+      font-weight: 600;
+    }
+
+    /* popupThermo Preview */
+    .popup-thermo-view {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0f172a;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      overflow-y: auto;
+    }
+    .popup-thermo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .popup-thermo-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #f59e0b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .popup-thermo-close {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .popup-thermo-close:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    .popup-thermo-row {
+      margin-bottom: 12px;
+    }
+    .popup-thermo-row-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .popup-thermo-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .popup-thermo-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .popup-thermo-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    .popup-thermo-btn.active {
+      background: #f59e0b;
+      border-color: #f59e0b;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* Media View */
+    .display-media {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .media-art {
+      width: 160px;
+      height: 160px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+    }
+
+    .media-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 280px;
+    }
+
+    .media-artist {
+      font-size: 0.88rem;
+      color: #94a3b8;
+    }
+
+    .media-controls {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      font-size: 1.6rem;
+    }
+
+    .media-play-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .media-vol-bar {
+      width: 220px;
+      height: 6px;
+      background: #334155;
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .media-vol-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      width: 65%;
+    }
+
+    /* Alarm View */
+    .display-alarm {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 12px;
+    }
+
+    .alarm-status-icon {
+      font-size: 3rem;
+      color: #10b981;
+    }
+
+    .alarm-status-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .alarm-keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      width: 210px;
+    }
+
+    .alarm-key {
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 8px 0;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .alarm-modes-bar {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .alarm-mode-btn {
+      background: rgba(255,255,255,0.08);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .alarm-mode-btn.active {
+      background: #10b981;
+      color: #000;
+    }
+
+    /* QR Code View */
+    .display-qrcode {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .qrcode-box {
+      width: 190px;
+      height: 190px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .qrcode-text {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      max-width: 240px;
+      word-break: break-all;
+    }
+
+    /* Power View (cardPower) */
+    .display-power {
+      flex: 1;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #1e293b 0%, #0b0f17 100%);
+    }
+
+    .power-flow-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      grid-template-rows: 1fr 1.2fr 1fr;
+      padding: 6px;
+      box-sizing: border-box;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .power-node-center {
+      grid-column: 2;
+      grid-row: 2;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.95);
+      border: 2px solid #38bdf8;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      text-align: center;
+      padding: 4px;
+      box-sizing: border-box;
+    }
+
+    .power-node-center .node-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+      color: #38bdf8;
+    }
+
+    .power-node-center .node-power {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .power-node-center .node-title {
+      font-size: 0.65rem;
+      color: #94a3b8;
+    }
+
+    .power-node-outer {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 2;
+      padding: 3px;
+      box-sizing: border-box;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .power-node-outer:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.04);
+    }
+
+    .power-node-outer.active {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.45) !important;
+      background: rgba(56, 189, 248, 0.12) !important;
+    }
+
+    .power-node-outer .node-title {
+      font-size: 0.62rem;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 66px;
+    }
+
+    .power-node-outer .node-icon {
+      font-size: 1.15rem;
+      line-height: 1;
+      margin: 2px 0;
+    }
+
+    .power-node-outer .node-power {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .power-node-0 { grid-column: 1; grid-row: 1; }
+    .power-node-1 { grid-column: 1; grid-row: 2; }
+    .power-node-2 { grid-column: 1; grid-row: 3; }
+    .power-node-3 { grid-column: 3; grid-row: 1; }
+    .power-node-4 { grid-column: 3; grid-row: 2; }
+    .power-node-5 { grid-column: 3; grid-row: 3; }
+
+    .power-flow-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes dashInflow {
+      from { stroke-dashoffset: 24; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes dashOutflow {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 24; }
+    }
+
+    .flow-line-in {
+      animation: dashInflow 1.2s linear infinite;
+    }
+
+    /* Chart View (cardChart / cardLChart) */
+    .display-chart {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #000;
+      padding: 8px 12px 6px 12px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .chart-main {
+      flex: 1;
+      display: flex;
+      position: relative;
+      min-height: 0;
+    }
+
+    .chart-y-axis {
+      width: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-right: 8px;
+      border-right: 1px solid #334155;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      font-family: monospace;
+      padding-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .chart-unit-label {
+      font-size: 0.7rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      text-align: right;
+      margin-bottom: 4px;
+    }
+
+    .chart-plot-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      margin-left: 8px;
+      min-height: 0;
+    }
+
+    .chart-bars-wrap {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3px;
+      border-bottom: 1px solid #334155;
+      position: relative;
+      padding-top: 10px;
+    }
+
+    .chart-bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      position: relative;
+    }
+
+    .chart-bar-rect {
+      width: 100%;
+      border-radius: 2px 2px 0 0;
+      transition: height 0.3s ease;
+      min-height: 2px;
+    }
+
+    .chart-bar-rect:hover {
+      filter: brightness(1.25);
+      cursor: pointer;
+    }
+
+    .chart-x-labels {
+      display: flex;
+      justify-content: space-between;
+      height: 20px;
+      padding-top: 4px;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+
+    /* Screen Bottom Footer */
+    .display-footer {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.78rem;
+      color: #64748b;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .icon-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .icon-chip {
+      background: #1e2633;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: #cbd5e1;
+      transition: all 0.15s;
+    }
+
+    .icon-chip:hover {
+      border-color: var(--primary);
+      color: #fff;
+      background: var(--bg-hover);
+    }
+
+    /* Slot Tabs */
+    .slot-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .slot-tab-btn {
+      flex: 1;
+      min-width: 32px;
+      background: #1e2633;
+      border: 1px solid #334155;
+      color: #cbd5e1;
+      padding: 6px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .slot-tab-btn:hover {
+      background: var(--bg-hover);
+    }
+
+    .slot-tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Status badge */
+    .badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+
+    .badge-offline {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    pre {
+      background: #0a0e14;
+      border: 1px solid var(--border-color);
+      padding: 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      color: #38bdf8;
+    }
+
+    /* Screensaver View */
+    .screensaver-view {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: radial-gradient(circle at 50% 30%, #151a24 0%, #0a0d13 100%);
+      color: #fff;
+      user-select: none;
+      box-sizing: border-box;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .screensaver-view.theme-black {
+      background: #000000;
+    }
+
+    .ss-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 38px;
+    }
+
+    .ss-status-icon {
+      display: flex;
+      align-items: center;
+      min-width: 60px;
+      height: 34px;
+      transition: all 0.2s ease;
+    }
+
+    .ss-status-left {
+      justify-content: flex-start;
+    }
+
+    .ss-status-right {
+      justify-content: flex-end;
+    }
+
+    .ss-status-glyph {
+      font-size: 1.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 6px currentColor);
+    }
+
+    .ss-time-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: -6px;
+    }
+
+    .ss-clock {
+      font-size: 3.8rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      line-height: 1;
+      color: #ffffff;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .ss-date {
+      font-size: 0.92rem;
+      color: #94a3b8;
+      margin-top: 6px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+    }
+
+    .ss-weather-summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin: 0 auto;
+      font-size: 0.88rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .ss-weather-main-icon {
+      font-size: 1.25rem;
+    }
+
+    .ss-temp-indoor {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .ss-temp-divider {
+      color: #64748b;
+    }
+
+    .ss-temp-outdoor {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    .ss-forecast-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .ss-fc-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .ss-fc-day {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .ss-fc-icon {
+      font-size: 1.25rem;
+      margin: 2px 0;
+    }
+
+    .ss-fc-temp {
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    body { color-scheme: dark; }
+    #studio-save-spacer { flex: 0 0 auto; height: calc(var(--studio-savebar-height, 130px) + 32px); }
+    .btn, .tab-btn { background: var(--bg-input) !important; color: var(--text-main) !important; border: 1px solid var(--border-color) !important; border-radius: 8px; cursor: pointer; }
+    .btn-primary { background: var(--primary) !important; color: #fff !important; }
+    .btn:disabled { opacity: .5; cursor: default; }
+    .form-group { min-width: 0; }
+    .source-box { width: 100%; min-width: 0; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px; margin: 12px 0; background: var(--bg-card-alt); }
+    .source-box select, .source-box button { max-width: 100%; }
+    .source-detail { font-size: .75rem; color: var(--text-muted); overflow-wrap: anywhere; margin: 8px 0; }
+    .source-device { display: block; width: 100%; padding: 10px 12px; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 8px; }
+    .studio-savebar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 900; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: #121820; border-top: 1px solid #3b4758; box-shadow: 0 -4px 18px #0005; }
+    .studio-savebar[hidden] { display: none; }
+    .studio-savebar .save-copy { min-width: 0; }
+    .studio-savebar p { font-size: .72rem; color: var(--text-muted); margin: 2px 0 0; }
+    .studio-savebar button { flex-shrink: 0; padding: 10px 14px; white-space: nowrap; }
+    #studio-save-state { font-size: .82rem; font-weight: 600; }
+    .studio-savebar[data-dirty="true"] #studio-save-state { color: #fbbf24; }
+    @media(max-width: 420px) { .studio-savebar { gap: 8px; padding-left: 10px; padding-right: 10px; } .studio-savebar button { padding: 10px; font-size: .8rem; } }
+    details > summary { cursor:pointer; padding:10px 0; font-weight:600; }
+    .preset-group .btn {display:block;width:100%;margin:6px 0;}
+      #editor-panel {scroll-margin-top:135px;}
+    .settings-nav {display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;}
+    .settings-nav [aria-pressed="true"] {outline:2px solid var(--accent-color, #2696a8);}
+    [hidden] {display:none !important;}
+    .binding-status {font-size:.8rem;margin:8px 0;overflow-wrap:anywhere;}
+    .binding-status[data-state="error"] {color:#fca5a5;}
+    .binding-status[data-state="ok"] {color:#6ee7b7;}
+    #tab-studio[data-settings-view="panel"] .screen-wrapper,#tab-studio[data-settings-view="services"] .screen-wrapper {display:none;}
+      @media(min-width:1101px) {#tab-studio[data-settings-view="panel"] .studio-layout,#tab-studio[data-settings-view="services"] .studio-layout {grid-template-columns:360px minmax(0,1fr);}}
+    .panel-title.device-panel-heading { display: block; }
+    .device-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; }
+    .device-heading-row > span:first-child { flex: 0 0 auto; }
+    .device-heading-row .badge { flex: 0 0 auto; white-space: nowrap; }
+    .device-status-help { display: block; margin-top: 8px; color: var(--text-muted); font-size: 0.75rem; font-weight: 400; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">NS</div>
+      <div>
+        <h1>NSPanel Studio</h1>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Homey Sonoff NSPanel Lovelace UI</div>
+      </div>
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('studio')">📱 Studio</button>
+      <button class="tab-btn" onclick="switchTab('firmware')">⚡ Firmware</button>
+      <button class="tab-btn" onclick="switchTab('mqtt')">🔌 MQTT</button>
+    </div>
+  </header>
+
+  <div id="studio-startup-error" role="alert" hidden style="margin:16px;padding:16px;border:1px solid #ef4444;border-radius:8px;">
+    <p id="studio-startup-error-text"></p>
+    <button type="button" class="btn" onclick="startStudio()" data-i18n="common.try_again">Yritä uudelleen</button>
+  </div>
+  <main>
+    <!-- TAB 1: STUDIO -->
+    <div id="tab-studio" class="tab-content active">
+      <div class="studio-layout">
+
+        <!-- 1. LEFT PANEL: Device & Pages Manager -->
+        <div class="panel">
+          <div class="panel-title device-panel-heading">
+            <div class="device-heading-row">
+              <span>1. Valitse NSPanel</span>
+              <span id="device-status-badge" class="badge" role="status" data-i18n="common.status_unknown">Tilaa ei vielä tiedetä</span>
+            </div>
+            <small class="device-status-help" data-i18n="common.status_help">Homeyn ilmoittama tila. Virrankatkaisu näkyy viiveellä.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="device-select">NSPanel-laite</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="device-select" class="form-control" onchange="onDeviceChange()">
+                <option value="demo">NSPanel (Olohuone)</option>
+              </select>
+              <button class="btn btn-sm" onclick="loadDevices()" title="Päivitä laitelista" data-i18n-title="common.refresh_list">↻</button>
+            </div>
+            <div id="device-info-text" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
+              Topic: tasmota_486CD0
+            </div>
+          </div>
+
+          <div class="settings-nav" aria-label="Studion asetukset">
+            <button type="button" class="btn btn-sm" onclick="openStudioSettings('sleep')">Lepotila</button>
+            <button type="button" class="btn btn-sm" onclick="openStudioSettings('panel')">Paneelin toiminnot</button>
+            <button type="button" class="btn btn-sm" onclick="openStudioSettings('services')">Yhteiset palvelut</button>
+          </div>
+          <div class="panel-title" style="margin-top: 1.25rem;">
+            <span data-i18n="common.views_section">2. Näkymät</span>
+            <button class="btn btn-sm btn-primary" onclick="openNewPageModal()">+ Uusi sivu</button>
+          </div>
+
+          <div class="form-group">
+            <label for="page-select">Valittu sivu</label>
+            <div style="display: flex; gap: 0.35rem; align-items: center;">
+              <select id="page-select" class="form-control" style="flex: 1;" onchange="onPageSelectChange()">
+                <option value="active">active (Kotisivu)</option>
+              </select>
+              <button class="btn btn-sm" onclick="movePageUp()" title="Siirrä sivu ylemmäs (järjestä)" data-i18n-title="common.move_up">▲</button>
+              <button class="btn btn-sm" onclick="movePageDown()" title="Siirrä sivu alemmas (järjestä)" data-i18n-title="common.move_down">▼</button>
+              <button class="btn btn-sm" onclick="duplicateCurrentPage()" title="Kopioi tämä sivu" data-i18n-title="common.duplicate">⧉</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteCurrentPage()" title="Poista tämä sivu" data-i18n-title="common.delete">🗑</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="page-id-input">Sivun tunniste (Page ID)</label>
+            <input type="text" id="page-id-input" class="form-control" value="active" onchange="onPageIdChange()">
+            <span style="font-size: 0.72rem; color: var(--text-muted);">
+              <span data-i18n="common.active_id_note">Tunniste "active" on laitteen oletussivu lepotilasta herätessä.</span>
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="page-title-input">Sivun otsikko</label>
+            <input type="text" id="page-title-input" class="form-control" value="Koti" oninput="onTitleChange()">
+          </div>
+
+          <div class="form-group">
+            <label for="page-type-select">Kortin tyyppi</label>
+            <select id="page-type-select" class="form-control" onchange="onPageTypeChange()">
+              <option value="grid">Ruudukko (6 painiketta)</option>
+              <option value="grid2">Ruudukko (8 painiketta)</option>
+              <option value="entities" data-i18n="common.entity_list">Entiteettilista (4 riviä)</option>
+              <option value="thermostat">Termostaattikortti</option>
+              <option value="media">Mediasoitin</option>
+              <option value="alarm" data-i18n="common.alarm_panel">Hälytyspaneeli</option>
+              <option value="qrcode">QR-koodi</option>
+              <option value="power" data-i18n="common.power_flow">Tehovirtanäyttö</option>
+              <option value="chart">Kaavio</option>
+              <option value="screensaver">Lepotila (Screensaver)</option>
+            </select>
+          </div>
+
+          <div id="nav-links-container">
+            <div class="panel-title" style="margin-top: 1.25rem;">
+              <span>3. Navigointilinkit</span>
+            </div>
+
+            <div class="form-group">
+              <label for="prev-page-select">Edellinen sivu (‹ Prev)</label>
+              <select id="prev-page-select" class="form-control" onchange="onNavigationChange()">
+                <option value="screensaver">screensaver (Lepotila)</option>
+                <option value="" data-i18n="common.none_option">[Ei mitään]</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="next-page-select">Seuraava sivu (› Next)</label>
+              <select id="next-page-select" class="form-control" onchange="onNavigationChange()">
+                <option value="" data-i18n="common.none_option">[Ei mitään]</option>
+                <option value="screensaver">screensaver (Lepotila)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="page-security-container" style="margin-top: 1rem; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-surface-secondary, rgba(255,255,255,0.02));">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px; font-weight: 500;">
+              <input type="checkbox" id="page-pin-req" onchange="togglePagePinInput()">
+              🔒 Vaadi PIN-koodi sivun avaamiseen
+            </label>
+            <div id="page-pin-group" style="display: none; margin-top: 6px;">
+              <label for="page-pin-code" style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="common.pin_label">Sivukohtainen PIN-koodi (tyhjä = yleinen laite-PIN):</label>
+              <input type="password" id="page-pin-code" class="form-control" placeholder="esim. 1234" maxlength="8" oninput="updatePageSecurity()">
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; margin-bottom: 0.75rem; cursor: pointer; color: #f1f5f9;">
+              <input type="checkbox" id="show-now-checkbox" checked>
+              <span data-i18n="common.switch_display_now">Vaihda laitteen näyttö tälle sivulle heti</span>
+            </label>
+
+            <button class="btn btn-primary btn-block studio-save" onclick="pushToDevice()">
+              💾 Tallenna muutokset
+            </button>
+            <div id="push-status" style="font-size: 0.82rem; text-align: center; margin-top: 0.5rem; min-height: 1.2rem;"></div>
+          </div>
+        </div>
+
+        <!-- 2. CENTER PANEL: NSPanel Live Screen Simulator -->
+        <div class="screen-wrapper">
+          <div class="nspanel-bezel">
+            <div class="nspanel-display" id="screen-display">
+              <!-- Top bar -->
+              <div class="display-header">
+                <div class="nav-btn" id="header-prev" onclick="simulateNavigate('prev')" title="Edellinen sivu">‹</div>
+                <div class="header-title" id="screen-title">Koti</div>
+                <div class="nav-btn" id="header-next" onclick="simulateNavigate('next')" title="Seuraava sivu">›</div>
+              </div>
+
+              <!-- Interactive Dynamic Content -->
+              <div class="screen-content" id="screen-content">
+                <!-- Dynamically rendered based on active card type -->
+              </div>
+
+              <!-- Bottom Bar -->
+              <div class="display-footer">
+                <span id="footer-temp">21.5 °C</span>
+                <span>NSPanel UI</span>
+                <span>Homey</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <button class="btn btn-sm" onclick="simulateNavigate('prev')">‹ Edellinen</button>
+            <button class="btn btn-sm" onclick="simulateScreensaver()">⏰ Screensaver</button>
+            <button class="btn btn-sm" onclick="simulateNavigate('next')">Seuraava ›</button>
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-muted); text-align: center;">
+            <span data-i18n="common.edit_hint">Klikkaa ruudun elementtejä muokataksesi niiden asetuksia oikealta.</span>
+          </div>
+        </div>
+
+        <!-- 3. RIGHT PANEL: Card / Slot Detail Editor -->
+        <div class="panel" id="editor-panel">
+          <div id="studio-pending-deletions" class="source-box" role="status" hidden></div>
+          <div class="panel-title">
+            <span id="editor-title">Asetukset</span>
+            <span id="editor-subtitle" style="font-size: 0.75rem; color: var(--text-muted);">Slot 1</span>
+          </div>
+
+          <!-- A. Grid / Grid2 Editor -->
+          <div id="editor-grid" style="display: none;">
+            <div class="slot-tabs" id="slot-tabs-container">
+              <!-- Rendered dynamically (1-6 or 1-8) -->
+            </div>
+
+            <div class="form-group">
+              <label for="slot-label-input">Otsikko / Nimi</label>
+              <input type="text" id="slot-label-input" class="form-control" value="Kytkin 1" oninput="updateCurrentSlot()">
+            </div>
+
+            <div class="form-group">
+              <label for="slot-action-select">Toimintotyyppi</label>
+              <select id="slot-action-select" class="form-control" onchange="onSlotActionChange()">
+                <option value="switch">Kytkin (Rele / Laite On-Off)</option>
+                <option value="light" data-i18n="common.light_option">Valo · kirkkaus ja väri</option>
+                <option value="shutter">Verhot / Kaihtimet</option>
+                <option value="fan">Ilmanvaihto / Puhallin</option>
+                <option value="input_sel">Valintalista / Tilavalitsin</option>
+                <option value="timer">Ajastin / Munakello</option>
+                <option value="button" data-i18n="common.button_option">Painike (Triggeröi Flow)</option>
+                <option value="navigate">Navigointi (Avaa sivu)</option>
+                <option value="text">Teksti / Sensoriarvo</option>
+                <option value="delete" data-i18n="common.empty_hidden">Tyhjä (Piilotettu)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="slot-icon-input">Kuvake (Icon)</label>
+              <input type="text" id="slot-icon-input" class="form-control" value="lightbulb" oninput="updateCurrentSlot()">
+              <div class="icon-chips">
+                <span class="icon-chip" onclick="setIcon('lightbulb')">💡 Valo</span>
+                <span class="icon-chip" onclick="setIcon('power')">⏻ Rele</span>
+                <span class="icon-chip" onclick="setIcon('lamp')">🛋 Lamppu</span>
+                <span class="icon-chip" onclick="setIcon('thermometer')" data-i18n="common.icon_thermometer">🌡 Lämpö</span>
+                <span class="icon-chip" onclick="setIcon('fan')">🌀 Tuuletin</span>
+                <span class="icon-chip" onclick="setIcon('home')">🏠 Koti</span>
+                <span class="icon-chip" onclick="setIcon('music')">🎵 Musiikki</span>
+                <span class="icon-chip" onclick="setIcon('shield')" data-i18n="common.icon_shield">🛡 Hälytys</span>
+                <span class="icon-chip" onclick="setIcon('television')">📺 TV</span>
+                <span class="icon-chip" onclick="setIcon('lock')">🔒 Lukko</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="slot-color-select" data-i18n="common.color_label">Väri</label>
+              <select id="slot-color-select" class="form-control" onchange="updateCurrentSlot()">
+                <option value="#FFAA00">Kulta / Keltainen (#FFAA00)</option>
+                <option value="#2696A8">Syaani (#2696A8)</option>
+                <option value="#10B981" data-i18n="common.color_green">Vihreä (#10B981)</option>
+                <option value="#3B82F6">Sininen (#3B82F6)</option>
+                <option value="#EF4444">Punainen (#EF4444)</option>
+                <option value="#A855F7">Purppura (#A855F7)</option>
+                <option value="white">Valkoinen</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="slot-id-input">Kohde-ID / Entiteetti</label>
+              <input type="text" id="slot-id-input" class="form-control" value="slot_1" placeholder="esim. slot_1 (Rele 1), slot_2 (Rele 2) tai sivun nimi" oninput="updateCurrentSlot()">
+              <div class="icon-chips" id="slot-target-chips" style="margin-top: 6px;"></div>
+              <span style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 4px;">
+                <span data-i18n="common.screensaver_hint_text">Käytä 'screensaver' lepotilalle/kellolle, 'power1'/'power2' fyysisille releille tai sivun tunniste navigoinnille.</span>
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="slot-val-input">Aloitusarvo</label>
+              <input type="text" id="slot-val-input" class="form-control" value="1" placeholder="1 = Päällä, 0 = Pois, tai teksti" data-i18n-placeholder="common.slot_val_placeholder" oninput="updateCurrentSlot()">
+            </div>
+
+            <div class="form-group" id="slot-modes-group" style="display: none;">
+              <label for="slot-modes-input">Valintalistan vaihtoehdot (? tai pilkulla eroteltuna)</label>
+              <input type="text" id="slot-modes-input" class="form-control" value="Kotona?Poissa?Nukkumassa?Loma" placeholder="esim. Kotona?Poissa?Nukkumassa?Loma" oninput="updateCurrentSlot()">
+            </div>
+
+            <div class="form-group" style="margin-top: 10px; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: var(--bg-surface-secondary, rgba(255,255,255,0.02));">
+              <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px; font-weight: 500;">
+                <input type="checkbox" id="slot-pin-req" onchange="toggleSlotPinInput()">
+                🔒 Vaadi PIN-koodi toiminnolle
+              </label>
+              <div id="slot-pin-group" style="display: none; margin-top: 6px;">
+                <label for="slot-pin-code" style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="common.pin_label">Mukautettu PIN-koodi (tyhjä = yleinen laite-PIN):</label>
+                <input type="password" id="slot-pin-code" class="form-control" placeholder="esim. 1234" maxlength="8" oninput="updateCurrentSlot()">
+              </div>
+            </div>
+          </div>
+
+          <!-- B. Entities Editor -->
+          <div id="editor-entities" style="display: none;">
+            <div class="slot-tabs" id="entity-tabs-container">
+              <!-- Rendered dynamically (1-4) -->
+            </div>
+          </div>
+
+          <!-- C. Thermostat Editor -->
+          <div id="editor-thermostat" style="display: none;">
+            <div class="form-group">
+              <label for="thermo-target-input" data-i18n="common.thermo_target_label">Tavoitelämpötila (°C)</label>
+              <input type="number" step="0.5" id="thermo-target-input" class="form-control" value="21.5" oninput="updateThermoConfig()">
+            </div>
+            <div class="form-group">
+              <label for="thermo-current-input" data-i18n="common.thermo_current_label">Nykyinen lämpötila (°C)</label>
+              <input type="number" step="0.1" id="thermo-current-input" class="form-control" value="20.8" oninput="updateThermoConfig()">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="thermo-min-input">Min (°C)</label>
+                <input type="number" step="1" id="thermo-min-input" class="form-control" value="15" oninput="updateThermoConfig()">
+              </div>
+              <div class="form-group">
+                <label for="thermo-max-input">Max (°C)</label>
+                <input type="number" step="1" id="thermo-max-input" class="form-control" value="30" oninput="updateThermoConfig()">
+              </div>
+            </div>
+
+            <!-- popupThermo lisäsäätöikkunan asetukset -->
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+              <h4 style="font-size: 0.9rem; color: #f59e0b; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                <span data-i18n="common.thermo_popup_title">Lisäsäätöikkuna (popupThermo)</span>
+                <button type="button" class="btn btn-sm" onclick="toggleThermoPopupPreview()" style="font-size: 0.75rem; padding: 2px 8px;" data-i18n="common.preview_on_screen">Esikatsele näytöllä</button>
+              </h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="thermo-heading1-input">Rivi 1 Otsikko</label>
+                  <input type="text" id="thermo-heading1-input" class="form-control" value="Toimintatila" oninput="updateThermoConfig()">
+                </div>
+                <div class="form-group">
+                  <label for="thermo-curmode1-input">Rivi 1 Aktiivinen tila</label>
+                  <input type="text" id="thermo-curmode1-input" class="form-control" value="Lämmitys" data-i18n-value="studio.preview.heating" oninput="updateThermoConfig()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="thermo-modes1-input">Rivi 1 Valinnat (? tai pilkulla eroteltuna)</label>
+                <input type="text" id="thermo-modes1-input" class="form-control" value="Auto?Lämmitys?Viilennys?Pois" data-i18n-value-list="studio.preview.auto,studio.preview.heating,studio.preview.cooling,studio.preview.off_mode" oninput="updateThermoConfig()">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="thermo-heading2-input">Rivi 2 Otsikko (Esiasetus)</label>
+                  <input type="text" id="thermo-heading2-input" class="form-control" value="Esiasetus" oninput="updateThermoConfig()">
+                </div>
+                <div class="form-group">
+                  <label for="thermo-curmode2-input">Rivi 2 Aktiivinen esiasetus</label>
+                  <input type="text" id="thermo-curmode2-input" class="form-control" value="Koti" oninput="updateThermoConfig()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="thermo-modes2-input">Rivi 2 Valinnat (? tai pilkulla eroteltuna)</label>
+                <input type="text" id="thermo-modes2-input" class="form-control" value="Koti?Säästö?Mukavuus?Tehostus" data-i18n-value-list="studio.preview.home,studio.preview.eco,studio.preview.comfort,studio.preview.boost" oninput="updateThermoConfig()">
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="thermo-heading3-input">Rivi 3 Otsikko (Puhallin)</label>
+                  <input type="text" id="thermo-heading3-input" class="form-control" value="Puhallin" oninput="updateThermoConfig()">
+                </div>
+                <div class="form-group">
+                  <label for="thermo-curmode3-input">Rivi 3 Aktiivinen puhallintila</label>
+                  <input type="text" id="thermo-curmode3-input" class="form-control" value="Auto" oninput="updateThermoConfig()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="thermo-modes3-input">Rivi 3 Valinnat (? tai pilkulla eroteltuna)</label>
+                <input type="text" id="thermo-modes3-input" class="form-control" value="Auto?Matala?Keski?Korkea" oninput="updateThermoConfig()">
+              </div>
+            </div>
+          </div>
+
+          <!-- D. Media Editor -->
+          <div id="editor-media" style="display: none;">
+            <div class="form-group">
+              <label for="media-title-input">Kappale</label>
+              <input type="text" id="media-title-input" class="form-control" value="Nemo" oninput="updateMediaConfig()">
+            </div>
+            <div class="form-group">
+              <label for="media-artist-input" data-i18n="common.media_artist_label">Artisti / Lähde</label>
+              <input type="text" id="media-artist-input" class="form-control" value="Nightwish" oninput="updateMediaConfig()">
+            </div>
+            <div class="form-group">
+              <label for="media-vol-input" data-i18n="common.media_vol_label">Äänenvoimakkuus (%)</label>
+              <input type="range" id="media-vol-input" min="0" max="100" value="65" class="form-control" oninput="updateMediaConfig()">
+            </div>
+          </div>
+
+          <!-- E. Alarm Editor -->
+          <div id="editor-alarm" style="display: none;">
+            <div id="alarm-binding-container"></div>
+
+            <div class="form-group" style="margin-top: 0.75rem;">
+              <label for="alarm-state-select" data-i18n="common.alarm_state_label">Hälyttimen tila (esikatselu)</label>
+              <select id="alarm-state-select" class="form-control" onchange="updateAlarmConfig()">
+                <option value="disarmed" data-i18n="common.alarm_disarmed_opt">Pois päältä (Disarmed)</option>
+                <option value="armed_home" data-i18n="common.alarm_home_opt">Kotona (Armed Home / Partially)</option>
+                <option value="armed_away" data-i18n="common.alarm_away_opt">Poissa (Armed Away)</option>
+                <option value="armed_night" data-i18n="common.alarm_night_opt">Yötila (Armed Night)</option>
+                <option value="arming" data-i18n="common.alarm_arming_opt">Kytkeytyy (Arming / Pending)</option>
+                <option value="triggered" data-i18n="common.alarm_triggered_opt">Hälyttää! (Triggered)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="alarm-pin-code" data-i18n="common.pin_code_label">PIN-koodi</label>
+              <input type="password" id="alarm-pin-code" maxlength="8" placeholder="esim. 1234" data-i18n-placeholder="common.pin_placeholder" class="form-control" oninput="updateAlarmConfig()">
+              <span style="font-size: 0.72rem; color: var(--text-muted);" data-i18n="common.alarm_pin_help">
+                <span data-i18n="common.alarm_pin_help">Aseta numeerinen PIN-koodi hälytyksen kuittausta varten. Jätä tyhjäksi, jos PIN-koodia ei vaadita.</span>
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="alarm-pin-req" checked onchange="updateAlarmConfig()">
+                <span data-i18n="common.alarm_require_disarm">Vaadi PIN-koodi poiskytkentään (Disarm)</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="alarm-pin-for-arm" onchange="updateAlarmConfig()">
+                <span data-i18n="common.alarm_require_arm">Vaadi PIN-koodi myös viritykseen (Arm)</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="alarm-lang-select" data-i18n="common.alarm_lang_label">Painikkeiden kieli</label>
+              <select id="alarm-lang-select" class="form-control" onchange="updateAlarmConfig()">
+                <option value="fi" data-i18n="common.lang_fi_opt">Suomi (Kotona, Poissa, Yö, Pois)</option>
+                <option value="en" data-i18n="common.lang_en_opt">English (Home, Away, Night, Disarm)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- F. QR Code Editor -->
+          <div id="editor-qrcode" style="display: none;">
+            <div class="form-group">
+              <label for="qrcode-content-input" data-i18n="common.qr_content_label">QR-koodin sisältö / WiFi-tiedot</label>
+              <input type="text" id="qrcode-content-input" class="form-control" value="WIFI:S:Kotiverkko;T:WPA;P:Salasana123;;" oninput="updateQRConfig()">
+              <span style="font-size: 0.72rem; color: var(--text-muted);" data-i18n="common.qr_wifi_example">
+                Esimerkki WiFi: WIFI:S:VerkonNimi;T:WPA;P:Salasana;;
+              </span>
+            </div>
+          </div>
+
+          <!-- G. Power Flow Card Editor -->
+          <div id="editor-power" style="display: none;">
+            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span data-i18n="common.power_center_title">Keskus / Koti (Center Node)</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="power-home-title" data-i18n="common.power_center_label">Keskuksen otsikko</label>
+                <input type="text" id="power-home-title" class="form-control" value="Koti" oninput="updatePowerConfig()">
+              </div>
+              <div class="form-group" id="home-power-default" style="flex: 1;">
+                <label for="power-home-power" data-i18n="common.power_default_label">Oletusteho</label>
+                <input type="text" id="power-home-power" class="form-control" value="2.4 kW" oninput="updatePowerConfig()">
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="power-home-icon" data-i18n="common.icon_label">Kuvake</label>
+                <input type="text" id="power-home-icon" class="form-control" value="home" oninput="updatePowerConfig()">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="power-home-color" data-i18n="common.color_label">Väri</label>
+                <input type="text" id="power-home-color" class="form-control" value="white" oninput="updatePowerConfig()">
+              </div>
+            </div>
+
+            <div id="home-power-source"></div>
+            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+              <span data-i18n="common.power_nodes_title">Ulkoiset solmut (1–6)</span>
+              <button class="btn btn-sm" onclick="applyPowerDefaults()" style="font-size: 0.72rem; padding: 3px 8px;" data-i18n="common.fill_defaults">⚡ Täytä oletukset</button>
+            </div>
+
+            <div id="power-node-tabs" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 0.75rem;">
+              <!-- Populated by JS -->
+            </div>
+
+            <div id="power-node-detail" style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.06);">
+              <!-- Selected node controls populated by JS -->
+            </div>
+          </div>
+
+          <!-- I. Chart Editor -->
+          <div id="editor-chart" style="display: none;">
+            <div id="chart-binding-container" style="margin-bottom: 0.75rem;"></div>
+
+            <div class="form-row" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="chart-type-select" data-i18n="common.chart_type_label">Kaaviotyyppi</label>
+                <select id="chart-type-select" class="form-control" onchange="updateChartConfig()">
+                  <option value="bar" data-i18n="common.chart_bar_opt">Pylväskaavio</option>
+                  <option value="line" data-i18n="common.chart_line_opt">Viivakaavio</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="chart-unit-input" data-i18n="common.chart_unit_label">Y-akselin yksikkö</label>
+                <input type="text" id="chart-unit-input" class="form-control" placeholder="esim. c/kWh tai °C" oninput="updateChartConfig()">
+              </div>
+            </div>
+
+            <div class="form-row" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="chart-color-select" data-i18n="common.chart_color_label">Pääväri</label>
+                <select id="chart-color-select" class="form-control" onchange="updateChartConfig()">
+                  <option value="yellow">Keltainen</option>
+                  <option value="green" data-i18n="common.color_green_opt">Vihreä</option>
+                  <option value="blue">Sininen</option>
+                  <option value="red">Punainen</option>
+                  <option value="orange">Oranssi</option>
+                  <option value="cyan">Syaani</option>
+                  <option value="white">Valkoinen</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="chart-ticks-input">Y-akselin asteikko (valinnainen)</label>
+                <input type="text" id="chart-ticks-input" class="form-control" placeholder="esim. 10:20:30:40:50" oninput="updateChartConfig()">
+              </div>
+            </div>
+
+            <div class="form-group" id="chart-values-group">
+              <label for="chart-values-input" data-i18n="common.chart_values_label">Esimerkkidata / Kiinteät arvot</label>
+              <textarea id="chart-values-input" class="form-control" rows="3" placeholder="Arvot pilkulla erotettuna (esim. 45, 38, 55, 95... tai 45^00:00, 95^06:00)" oninput="updateChartConfig()"></textarea>
+              <span style="font-size: 0.72rem; color: var(--text-muted);" data-i18n="common.chart_values_help">24 tuntiarvoa. Jos yksikkö on c/kWh tai °C, arvo 10 näyttää ruudulla 1.0 (skaalaus 10x).</span>
+            </div>
+          </div>
+
+          <!-- H. Screensaver & Device Settings Editor -->
+          <div id="editor-screensaver" style="display: none;">
+            <nav class="settings-nav" aria-label="Asetusalue">
+              <button type="button" class="btn" data-settings-view="sleep" onclick="openStudioSettings('sleep')">Lepotila</button>
+              <button type="button" class="btn" data-settings-view="panel" onclick="openStudioSettings('panel')">Paneelin toiminnot</button>
+              <button type="button" class="btn" data-settings-view="services" onclick="openStudioSettings('services')">Yhteiset palvelut</button>
+            </nav>
+            <p id="settings-scope" class="source-detail"></p>
+            <div id="settings-sleep"><div id="sleep-sources"></div>            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span data-i18n="common.ss_icons_title">Yläkulmien ilmoitusikonit (Status Icons)</span>
+            </div>
+            <!-- Icon 1 (Left) -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; margin-bottom: 0.75rem;">
+              <div style="display: flex; gap: 0.5rem; align-items: flex-end; margin-bottom: 0.4rem;">
+                <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                  <label for="ss-icon1">Vasen ilmoitusikoni (Icon 1)</label>
+                  <input type="text" id="ss-icon1" class="form-control" placeholder="esim. alert-circle, mail..." oninput="updateScreensaverConfig()">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                  <label for="ss-color1" data-i18n="common.color_label">Väri</label>
+                  <div style="display: flex; gap: 4px;">
+                    <input type="color" id="ss-color1" value="#FFB74D" style="width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 2px;" oninput="document.getElementById('ss-color1-hex').value = this.value; updateScreensaverConfig()">
+                    <input type="text" id="ss-color1-hex" class="form-control" value="#FFB74D" style="width: 70px;" oninput="document.getElementById('ss-color1').value = this.value; updateScreensaverConfig()">
+                  </div>
+                </div>
+              </div>
+              <div class="icon-chips">
+                <span class="icon-chip" onclick="setScreensaverIcon(1, 'alert-circle', '#EF4444')">⚠️ Varoitus</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(1, 'mail', '#38BDF8')">✉️ Viesti</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(1, 'washing-machine', '#A855F7')">🧺 Pesukone</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(1, 'bell', '#F59E0B')">🔔 Kello</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(1, '', '#ffffff')" data-i18n="common.icon_empty">✕ Tyhjä</span>
+              </div>
+            </div>
+
+            <!-- Icon 2 (Right) -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; margin-bottom: 1rem;">
+              <div style="display: flex; gap: 0.5rem; align-items: flex-end; margin-bottom: 0.4rem;">
+                <div class="form-group" style="flex: 2; margin-bottom: 0;">
+                  <label for="ss-icon2">Oikea ilmoitusikoni (Icon 2)</label>
+                  <input type="text" id="ss-icon2" class="form-control" placeholder="esim. wifi, lock..." oninput="updateScreensaverConfig()">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                  <label for="ss-color2" data-i18n="common.color_label">Väri</label>
+                  <div style="display: flex; gap: 4px;">
+                    <input type="color" id="ss-color2" value="#4FC3F7" style="width: 36px; height: 36px; border: none; border-radius: 6px; cursor: pointer; padding: 2px;" oninput="document.getElementById('ss-color2-hex').value = this.value; updateScreensaverConfig()">
+                    <input type="text" id="ss-color2-hex" class="form-control" value="#4FC3F7" style="width: 70px;" oninput="document.getElementById('ss-color2').value = this.value; updateScreensaverConfig()">
+                  </div>
+                </div>
+              </div>
+              <div class="icon-chips">
+                <span class="icon-chip" onclick="setScreensaverIcon(2, 'wifi', '#10B981')">📶 WiFi</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(2, 'lock', '#38BDF8')">🔒 Lukko</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(2, 'shield-check', '#10B981')">🛡 Turva</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(2, 'battery-charging', '#F59E0B')">🔋 Akku</span>
+                <span class="icon-chip" onclick="setScreensaverIcon(2, '', '#ffffff')" data-i18n="common.icon_empty">✕ Tyhjä</span>
+              </div>
+            </div>
+
+</div>
+            <div id="settings-panel" hidden><section id="panel-display">            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span>Lepotilan aikakatkaisut & kirkkaus</span>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-screensaver-timeout">Siirtymisaika (s)</label>
+                <input type="number" id="ss-screensaver-timeout" class="form-control" min="20" max="300" value="45" oninput="updateScreensaverConfig()">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-dim-timeout">Himmennysaika (s)</label>
+                <input type="number" id="ss-dim-timeout" class="form-control" min="20" max="300" value="45" oninput="updateScreensaverConfig()">
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-sleep-timeout">Sammutusaika (s)</label>
+                <input type="number" id="ss-sleep-timeout" class="form-control" min="0" max="300" value="45" oninput="updateScreensaverConfig()">
+                <span style="font-size: 0.72rem; color: var(--text-muted);">0 = ei koskaan sammuteta</span>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-bg-color">Taustateema</label>
+                <select id="ss-bg-color" class="form-control" onchange="updateScreensaverConfig()">
+                  <option value="dark">Tumma (Dark)</option>
+                  <option value="black">Musta (Black)</option>
+                </select>
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-brightness">Aktiivinen kirkkaus (%)</label>
+                <input type="number" id="ss-brightness" class="form-control" min="1" max="100" value="100" oninput="updateScreensaverConfig()">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-sleep-brightness">Himmennetty kirkkaus (%)</label>
+                <input type="number" id="ss-sleep-brightness" class="form-control" min="1" max="100" value="20" oninput="updateScreensaverConfig()">
+              </div>
+            </div>
+
+</section><section id="panel-sensor">            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span data-i18n="common.sensor_report_title">Sisäisen anturin raportointi</span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-use-internal-temp" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.use_internal_temp">Käytä sisäistä anturia sään yhteydessä</span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-outdoor-from-forecast" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.outdoor_from_forecast">Hae ulkolämpötila sääennusteesta</span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label for="ss-update-interval" data-i18n="common.temp_report_interval">Lämpötilaraportoinnin väli (s)</label>
+              <input type="number" id="ss-update-interval" class="form-control" min="25" max="120" value="50" oninput="updateScreensaverConfig()">
+            </div>
+
+</section><section id="panel-hardware">            <div class="panel-title" style="margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span>Fyysiset painikkeet, releet & summeri</span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-decouple-buttons" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.setoption73_label">Erota fyysiset painikkeet releistä (SetOption73)</span>
+              </label>
+              <span style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-left: 1.5rem;">
+                Painikkeiden toiminnot valitaan alla. Homey-linkitys ja Flow toimivat ilman suoraa releohjausta.
+              </span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-button-navigation" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.rule2_label">Käytä painikkeita sivujen vaihtoon Prev / Next (Rule2)</span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-buzzer-pwm" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.setoption111_label">Käytä summerin PWM-äänitilaa (SetOption111)</span>
+              </label>
+              <span style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-left: 1.5rem;" data-i18n="common.setoption111_help">
+                <span data-i18n="common.setoption111_help">Ottaa käyttöön summerin PWM-säädön (moniääniset piippaukset ja soittoäänet).</span>
+              </span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-disable-nav-alarm" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.lock_on_alarm">Lukitse näyttö hälytyksen ollessa päällä</span>
+              </label>
+            </div>
+
+</section><section id="panel-night">            <div class="panel-title" style="margin-top: 1rem; margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span data-i18n="common.night_mode_title">🌙 Yötila & kirkkauden ajastus (Night Mode)</span>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9; font-weight: 500;">
+                <input type="checkbox" id="ss-night-mode-enabled" onchange="updateScreensaverConfig()">
+                <span data-i18n="common.enable_night_schedule">Ota yötila käyttöön aikataululla</span>
+              </label>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-night-mode-start" data-i18n="common.night_start_label">Yötilan alkamisaika</label>
+                <input type="time" required id="ss-night-mode-start" class="form-control" value="22:00" oninput="updateScreensaverConfig()">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-night-mode-end" data-i18n="common.night_end_label">Yötilan päättymisaika</label>
+                <input type="time" required id="ss-night-mode-end" class="form-control" value="07:00" oninput="updateScreensaverConfig()">
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-night-brightness" data-i18n="common.night_brightness_label">Yötilan kirkkaus (%)</label>
+                <input type="number" id="ss-night-brightness" class="form-control" min="1" max="100" value="20" oninput="updateScreensaverConfig()">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-night-sleep-brightness" data-i18n="common.night_sleep_brightness_label">Lepotilan kirkkaus yöllä (%)</label>
+                <input type="number" id="ss-night-sleep-brightness" class="form-control" min="0" max="100" value="0" oninput="updateScreensaverConfig()">
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="ss-night-sleep-timeout" data-i18n="common.night_sleep_timeout_label">Yötilan lepotilan viive (s)</label>
+                <input type="number" id="ss-night-sleep-timeout" class="form-control" min="0" max="300" value="15" oninput="updateScreensaverConfig()">
+                <span style="font-size: 0.72rem; color: var(--text-muted);" data-i18n="common.night_sleep_timeout_help">Näyttö sammuu nopeammin yöllä</span>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.5rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-night-theme-black" onchange="updateScreensaverConfig()" checked>
+                <span data-i18n="common.night_black_theme">Käytä mustaa taustateemaa yötilassa</span>
+              </label>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f1f5f9;">
+                <input type="checkbox" id="ss-night-follow-alarm" onchange="updateScreensaverConfig()" checked>
+                <span data-i18n="common.night_follow_alarm">Seuraa hälyttimen yöviritystä (Heimdall armed_night)</span>
+              </label>
+            </div>
+
+</section><section id="panel-security">            <div class="panel-title" style="margin-top: 1rem; margin-bottom: 0.6rem; font-size: 0.85rem;">
+              <span data-i18n="common.security_title">🔒 Yleinen PIN-koodi & turvallisuus</span>
+            </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label for="ss-global-pin" data-i18n="common.global_pin_label">Yleinen PIN-koodi (oletus toiminnoille ja sivuille)</label>
+              <input type="password" id="ss-global-pin" class="form-control" placeholder="1234" maxlength="8" oninput="updateScreensaverConfig()">
+              <span style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-top: 4px;" data-i18n="common.global_pin_help">
+                <span data-i18n="common.global_pin_help">Tätä PIN-koodia käytetään suojatuille painikkeille ja sivuille, ellei niille ole asetettu omaa koodia.</span>
+              </span>
+            </div>
+</section><div id="panel-buttons"></div></div>
+            <div id="settings-services" hidden></div>
+          </div>
+
+          <!-- Presets -->
+          <div id="presets-container">
+            <div class="panel-title" style="margin-top: 1.5rem;">
+              <span data-i18n="common.presets_title">Pikamallit</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <button class="btn btn-sm" onclick="applyPreset('lights')" data-i18n="common.preset_lights">💡 Valot & Releet (Grid)</button>
+              <button class="btn btn-sm" onclick="applyPreset('thermo')" data-i18n="common.preset_thermo">🌡 Huonetermostaatti</button>
+              <button class="btn btn-sm" onclick="applyPreset('media')" data-i18n="common.preset_media">🎵 Musiikkisoitin</button>
+              <button class="btn btn-sm" onclick="applyPreset('alarm')" data-i18n="common.preset_alarm">🛡 Turvajärjestelmä</button>
+              <button class="btn btn-sm" onclick="applyPreset('qrcode')" data-i18n="common.preset_qrcode">📶 Vieras-WiFi QR</button>
+              <button class="btn btn-sm" onclick="applyPreset('weather')" data-i18n="common.preset_weather">🌤 Viiden päivän sääennuste</button>
+              <button class="btn btn-sm" onclick="applyPreset('power')" data-i18n="common.preset_power">⚡ Energiavirta (Power Flow)</button>
+              <button class="btn btn-sm" onclick="applyPreset('spot')" data-i18n="common.preset_spot">📊 Pörssisähkö (Flow-syöttö)</button>
+              <button class="btn btn-sm" onclick="applyPreset('chart_temp')" data-i18n="common.preset_chart_temp">📈 Lämpötilatrendi 24h</button>
+              <button class="btn btn-sm" onclick="applyPreset('chart_power')" data-i18n="common.preset_chart_power">⚡ Sähkönkulutus 24h (W)</button>
+              <button class="btn btn-sm" onclick="applyPreset('chart_weather')" data-i18n="common.preset_chart_weather">🌤 24h Lämpötilaennuste (MET)</button>
+              <button class="btn btn-sm" onclick="applyPreset('ventilation')" data-i18n="common.preset_ventilation">🌀 Ilmanvaihto (LTO)</button>
+              <button class="btn btn-sm" onclick="applyPreset('modes')" data-i18n="common.preset_modes">🏠 Kodin tilat</button>
+              <button class="btn btn-sm" onclick="applyPreset('timer')" data-i18n="common.preset_timer">⏱ Munakello / Ajastin</button>
+              <button class="btn btn-sm" onclick="applyPreset('lights_popup')" data-i18n="common.preset_lights_popup">💡 Älyvalot</button>
+              <button class="btn btn-sm" onclick="applyPreset('shutters')" data-i18n="common.preset_shutters">🪟 Verhot & Kaihtimet</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div id="studio-save-spacer" aria-hidden="true"></div>
+    </div>
+
+    <!-- TAB 2: FIRMWARE & FLASHING GUIDE -->
+    <div id="tab-firmware" class="tab-content">
+      <div class="panel" style="max-width: 900px; margin: 0 auto;">
+        <div class="panel-title" data-i18n="common.firmware_guide_title">NSPanel Firmware -pikaohje</div>
+        <p style="margin-bottom: 1.5rem; color: var(--text-muted);" data-i18n="common.firmware_guide_desc">
+          <span data-i18n="common.firmware_guide_desc">Käytä seuraavia komentoja Tasmotan konsolissa (Tasmota Console) asentaaksesi Lovelace UI -firmwaren ja Nextion TFT -näytön.</span>
+        </p>
+
+        <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-main);" data-i18n="common.firmware_step1_title">1. Berry Driverin asennus (Tasmota Console)</h3>
+        <pre><code>Backlog UrlFetch https://raw.githubusercontent.com/joBr99/nspanel-lovelace-ui/main/tasmota/autoexec.be; SetOption151 0; Restart 1</code></pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);" data-i18n="common.firmware_step2_title">2. Nextion TFT -näyttöohjelmiston asennus (EU-malli)</h3>
+        <pre><code>FlashNextion http://nspanel.pky.eu/lui-release.tft</code></pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);" data-i18n="common.firmware_step3_title">3. Nextion TFT -näyttöohjelmiston asennus (US Pysty)</h3>
+        <pre><code>FlashNextion http://nspanel.pky.eu/lui-us-p-release.tft</code></pre>
+
+        <h3 style="font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);" data-i18n="common.firmware_step4_title">4. Nextion TFT -näyttöohjelmiston asennus (US Vaaka)</h3>
+        <pre><code>FlashNextion http://nspanel.pky.eu/lui-us-l-release.tft</code></pre>
+      </div>
+    </div>
+
+    <!-- TAB 3: MQTT SETUP -->
+    <div id="tab-mqtt" class="tab-content">
+      <div class="panel" style="max-width: 800px; margin: 0 auto;">
+        <div class="panel-title" data-i18n="common.mqtt_title">MQTT-välittäjän asetukset</div>
+        <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+          <span data-i18n="common.mqtt_desc">Määritä Homeyn NSPanel-sovelluksen käyttämä MQTT-välittäjä.</span>
+        </p>
+
+        <!-- Mode selector -->
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label style="font-size: 0.9rem; margin-bottom: 0.5rem; font-weight: 600;">MQTT-yhteystapa</label>
+          <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-main);">
+              <input type="radio" name="global_mqtt_mode" value="standalone" id="mode_standalone" checked onchange="onGlobalMqttModeChange()">
+              <span><strong>Direct Standalone MQTT</strong> (Suora yhteys, Suositeltu)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-main);">
+              <input type="radio" name="global_mqtt_mode" value="scanno" id="mode_scanno" onchange="onGlobalMqttModeChange()">
+              <span><strong>Scanno MQTT Client</strong> (nl.scanno.mqtt)</span>
+            </label>
+          </div>
+          <p id="global_mode_desc" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <span data-i18n="common.mqtt_direct_desc">Direct Standalone MQTT muodostaa yhteyden suoraan Homeysta MQTT-brokeriin ilman ulkoisia lisäsovelluksia.</span>
+          </p>
+        </div>
+
+        <!-- Direct broker form -->
+        <div id="global_broker_fields" style="background: #0a0e14; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+          <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.95rem;">MQTT-brokerin tiedot</h4>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="cfg_host">Palvelimen IP / Osoite *</label>
+              <input type="text" id="cfg_host" class="form-control" placeholder="esim. 10.0.30.2">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="cfg_port">Portti *</label>
+              <input type="number" id="cfg_port" class="form-control" value="1883">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="cfg_user" data-i18n="common.mqtt_user_label">Käyttäjätunnus (Valinnainen)</label>
+              <input type="text" id="cfg_user" class="form-control" placeholder="Valinnainen">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="cfg_password">Salasana (Valinnainen)</label>
+              <input type="password" id="cfg_password" class="form-control" placeholder="Valinnainen">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+            <button type="button" class="btn" id="btn_test_global_mqtt" onclick="testGlobalMqtt()">
+              <span data-i18n="common.mqtt_test_connection">Testaa broker-yhteyttä</span>
+            </button>
+            <span id="global_mqtt_test_status" style="font-size: 0.85rem;"></span>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+          <span id="global_mqtt_save_status" style="font-size: 0.85rem;"></span>
+          <button type="button" class="btn btn-primary" onclick="saveGlobalMqttSettings()">
+            Tallenna MQTT-asetukset
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL: Uusi sivu -->
+  <div id="modal-new-page" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-title">
+        <span>Luo uusi sivu</span>
+        <button type="button" class="modal-close-btn" onclick="closeNewPageModal()">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label for="modal-page-id">Sivun tunniste (Page ID) *</label>
+        <input type="text" id="modal-page-id" class="form-control" placeholder="esim. lights, climate, media, alarm">
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 4px;">Pienet kirjaimet, numerot ja alaviiva (esim. valot).</div>
+      </div>
+
+      <div class="form-group">
+        <label for="modal-page-title">Sivun otsikko *</label>
+        <input type="text" id="modal-page-title" class="form-control" placeholder="esim. Valot & Kytkimet">
+      </div>
+
+      <div class="form-group">
+        <label for="modal-page-type">Kortin tyyppi</label>
+        <select id="modal-page-type" class="form-control">
+          <option value="grid">Ruudukko (6 painiketta)</option>
+          <option value="grid2">Ruudukko (8 painiketta)</option>
+          <option value="entities" data-i18n="common.entity_list">Entiteettilista (4 riviä)</option>
+          <option value="thermostat">Termostaattikortti</option>
+          <option value="media">Mediasoitin</option>
+          <option value="alarm" data-i18n="common.alarm_panel">Hälytyspaneeli</option>
+          <option value="qrcode">QR-koodi</option>
+          <option value="power" data-i18n="common.power_flow">Tehovirtanäyttö</option>
+          <option value="chart">Kaavio</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="modal-prev-target">Edellinen sivu (‹ Prev)</label>
+        <select id="modal-prev-target" class="form-control"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="modal-next-target">Seuraava sivu (› Next)</label>
+        <select id="modal-next-target" class="form-control"></select>
+      </div>
+
+      <div id="modal-new-page-err" style="color: var(--danger); font-size: 0.82rem; margin-top: 0.5rem; min-height: 1.2rem;"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeNewPageModal()">Peruuta</button>
+        <button type="button" class="btn btn-primary" onclick="confirmCreateNewPage()">✓ Luo sivu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Poista sivu -->
+  <div id="modal-delete-page" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 380px;">
+      <div class="modal-title">
+        <span style="color: var(--danger);">Poista sivu</span>
+        <button type="button" class="modal-close-btn" onclick="closeDeletePageModal()">✕</button>
+      </div>
+      <p id="delete-page-desc" style="color: #f1f5f9; font-size: 0.9rem; margin-bottom: 1.25rem;">
+        Haluatko varmasti poistaa valitun sivun?
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="btn" onclick="closeDeletePageModal()">Peruuta</button>
+        <button type="button" class="btn btn-danger" onclick="confirmDeleteCurrentPage()">Merkitse poistettavaksi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="studio-pages.js"></script>
+  <script src="studio-card-bindings.js"></script>
+  <script src="studio-slot-bindings.js"></script>
+  <script src="studio-energy.js"></script>
+  <script src="studio-card-forms.js"></script>
+  <script src="studio-preview.js"></script>
+  <script src="studio-presets.js"></script>
+  <script src="studio-mqtt.js"></script>
+  <script>
+    // App State
+    let devices = [];
+    let selectedDeviceId = 'demo';
+    let currentDevice = null;
+    let selectedPageId = 'active';
+    let selectedSlot = 1;
+    let selectedPowerNode = 0; // 0 to 5 for outer nodes
+
+    const POWER_NODE_NAMES = [
+      Homey.__('common.power_node_1'),
+      Homey.__('common.power_node_2'),
+      Homey.__('common.power_node_3'),
+      Homey.__('common.power_node_4'),
+      Homey.__('common.power_node_5'),
+      Homey.__('common.power_node_6')
+    ];
+
+    // Ensure power page rawOptions is a clean parsed object with home and 6 nodes
+    function ensurePowerOptions(p) {
+      if (!p) return { home: {}, nodes: [] };
+      if (typeof p.rawOptions === 'string') {
+        try {
+          p.rawOptions = JSON.parse(p.rawOptions || '{}');
+        } catch {
+          p.rawOptions = {};
+        }
+      }
+      if (!p.rawOptions || typeof p.rawOptions !== 'object') {
+        p.rawOptions = {};
+      }
+      const raw = p.rawOptions;
+      if (!raw.home || typeof raw.home !== 'object') {
+        raw.home = { title: Homey.__('common.power_home_default'), icon: 'home', color: 'white', consumption: '2.4 kW' };
+      }
+      if (!raw.nodes || !Array.isArray(raw.nodes)) {
+        raw.nodes = [
+          { title: Homey.__('common.power_node_grid'), icon: 'transmission-tower', color: 'orange', consumption: '1.2 kW', speed: 20 },
+          { title: Homey.__('common.power_node_battery'), icon: 'battery-charging', color: 'green', consumption: '0.8 kW', speed: -15 },
+          { title: Homey.__('common.power_node_heatpump'), icon: 'heat-pump', color: 'cyan', consumption: '1.6 kW', speed: -25 },
+          { title: Homey.__('common.power_node_solar'), icon: 'solar-power', color: 'yellow', consumption: '3.5 kW', speed: 35 },
+          { title: Homey.__('common.power_node_ev'), icon: 'car-electric', color: 'blue', consumption: '11.0 kW', speed: -45 },
+          { title: Homey.__('common.power_node_other'), icon: 'power-socket-eu', color: 'purple', consumption: '0.6 kW', speed: -10 }
+        ];
+      }
+      while (raw.nodes.length < 6) {
+        raw.nodes.push({});
+      }
+      for (let i = 0; i < 6; i++) {
+        if (!raw.nodes[i] || typeof raw.nodes[i] !== 'object') {
+          raw.nodes[i] = {};
+        }
+      }
+      return raw;
+    }
+
+    // Default Fallback Pages Store for current device
+    let currentPages = {
+      'active': {
+        type: 'grid',
+        title: 'Koti',
+        navigation: { leading: { target: 'screensaver' }, trailing: { target: '' } },
+        slots: {
+          1: { title: 'Kytkin 1', icon: 'lightbulb', color: '#FFAA00', type: 'switch', binding: { source: 'relay', relay: 1 }, id: 'slot_1', val: '1' },
+          2: { title: 'Kytkin 2', icon: 'power', color: '#2696A8', type: 'switch', binding: { source: 'relay', relay: 2 }, id: 'slot_2', val: '0' },
+          3: { title: Homey.__('common.temperature'), icon: 'thermometer', color: '#10B981', type: 'text', binding: { source: 'internal' }, id: 'slot_3', val: '21.5 °C' },
+          4: { title: 'Kello', icon: 'clock-outline', color: '#94A3B8', type: 'button', id: 'screensaver', val: '' }
+        }
+      }
+    };
+
+    // --- Device Management ---
+    function loadDevices() {
+      if (window.Homey && window.Homey.api) {
+        window.Homey.api('GET', '/devices', null, (err, result) => {
+          if (!err && result && result.length > 0) {
+            devices = result;
+            const select = document.getElementById('device-select');
+            select.innerHTML = '';
+            devices.forEach(d => {
+              const opt = document.createElement('option');
+              opt.value = d.id;
+              opt.textContent = d.name;
+              select.appendChild(opt);
+            });
+
+            // Keep selected or pick first
+            if (!devices.some(d => d.id === selectedDeviceId)) {
+              selectedDeviceId = devices[0].id;
+            }
+            select.value = selectedDeviceId;
+            onDeviceChange();
+          } else {
+            console.log('No devices or error', err);
+            renderUI();
+          }
+        });
+      } else {
+        renderUI();
+      }
+    }
+
+    // Screensaver & Device Settings State
+    let currentScreensaverConfig = {
+      screensaver_timeout: 45,
+      dim_timeout: 45,
+      sleep_timeout: 45,
+      brightness: 100,
+      sleep_brightness: 20,
+      background_color: 'dark',
+      use_internal_temperature: true,
+      outdoor_temperature_from_forecast: true,
+      update_interval: 50,
+      decouple_buttons: false,
+      button_navigation: false,
+      buzzer_pwm: false,
+      disable_nav_when_armed: false,
+      night_mode_enabled: false,
+      night_mode_start: '22:00',
+      night_mode_end: '07:00',
+      night_brightness: 20,
+      night_sleep_brightness: 0,
+      night_sleep_timeout: 15,
+      night_theme_black: true,
+      night_follow_alarm: true,
+      global_pin: '',
+      statusIcon1: { icon: '', color: '#FFB74D' },
+      statusIcon2: { icon: '', color: '#4FC3F7' }
+    };
+
+    function loadStudioDeviceData() {
+      selectedDeviceId = document.getElementById('device-select').value;
+      currentDevice = devices.find(d => d.id === selectedDeviceId);
+
+      if (currentDevice) {
+        // Update topic
+        const topic = currentDevice.settings ? (currentDevice.settings['mqtt_topic'] || currentDevice.id) : currentDevice.id;
+        document.getElementById('device-info-text').textContent = 'Topic: ' + topic;
+
+        // Load screensaver & device hardware settings
+        if (currentDevice.settings) {
+          const s = currentDevice.settings;
+          currentScreensaverConfig = {
+            screensaver_timeout: s.screensaver_timeout ?? 45,
+            dim_timeout: s.dim_timeout ?? 45,
+            sleep_timeout: s.sleep_timeout ?? 45,
+            brightness: s.brightness ?? 100,
+            sleep_brightness: s.sleep_brightness ?? 20,
+            background_color: s.background_color || 'dark',
+            use_internal_temperature: s.use_internal_temperature !== false,
+            outdoor_temperature_from_forecast: s.outdoor_temperature_from_forecast !== false,
+            update_interval: s.update_interval ?? 50,
+            decouple_buttons: !!s.decouple_buttons,
+            button_navigation: !!s.button_navigation,
+            buzzer_pwm: !!s.buzzer_pwm,
+            disable_nav_when_armed: !!s.disable_nav_when_armed,
+            night_mode_enabled: !!s.night_mode_enabled,
+            night_mode_start: s.night_mode_start || '22:00',
+            night_mode_end: s.night_mode_end || '07:00',
+            night_brightness: s.night_brightness ?? 20,
+            night_sleep_brightness: s.night_sleep_brightness ?? 0,
+            night_sleep_timeout: s.night_sleep_timeout ?? 15,
+            night_theme_black: s.night_theme_black !== false,
+            night_follow_alarm: s.night_follow_alarm !== false,
+            global_pin: s.global_pin || '',
+            statusIcon1: currentDevice.statusIcon1 || { icon: '', color: '#FFB74D' },
+            statusIcon2: currentDevice.statusIcon2 || { icon: '', color: '#4FC3F7' }
+          };
+        }
+
+        // Load device pages
+        if (currentDevice.pages && Object.keys(currentDevice.pages).length > 0) {
+          currentPages = JSON.parse(JSON.stringify(currentDevice.pages));
+        } else {
+          // Initialize default
+          currentPages = {
+            'active': {
+              type: 'grid',
+              title: 'Koti',
+              navigation: { leading: { target: 'screensaver' }, trailing: { target: '' } },
+              slots: {
+                1: { title: 'Kytkin 1', icon: 'lightbulb', color: '#FFAA00', type: 'switch', binding: { source: 'relay', relay: 1 }, id: 'slot_1', val: '1' },
+                2: { title: 'Kytkin 2', icon: 'power', color: '#2696A8', type: 'switch', binding: { source: 'relay', relay: 2 }, id: 'slot_2', val: '0' },
+                3: { title: Homey.__('common.temperature'), icon: 'thermometer', color: '#10B981', type: 'text', binding: { source: 'internal' }, id: 'slot_3', val: '21.5 °C' },
+                4: { title: 'Kello', icon: 'clock-outline', color: '#94A3B8', type: 'button', id: 'screensaver', val: '' }
+              }
+            }
+          };
+        }
+      }
+
+      // Ensure active page is selected if valid
+      if (selectedPageId !== 'screensaver' && !currentPages[selectedPageId]) {
+        selectedPageId = Object.keys(currentPages)[0] || 'active';
+      }
+
+      studioBindings=JSON.parse(JSON.stringify(currentDevice?.bindings||{indoor:{source:currentScreensaverConfig.use_internal_temperature?'internal':'flow'},outdoor:{source:currentScreensaverConfig.outdoor_temperature_from_forecast?'forecast':'flow'},indoorVisible:true,outdoorVisible:true,buttons:{}}));
+    }
+
+    // --- Page Management ---
+    function updatePageDropdown() {
+      const select = document.getElementById('page-select');
+      select.innerHTML = '';
+
+      // 1. System section (Screensaver)
+      const sysGroup = document.createElement('optgroup');
+      sysGroup.label = Homey.__('common.system_group');
+      const ssOpt = document.createElement('option');
+      ssOpt.value = 'screensaver';
+      ssOpt.textContent = '⏰ ' + Homey.__('common.screensaver_option');
+      sysGroup.appendChild(ssOpt);
+      select.appendChild(sysGroup);
+
+      // 2. Pages (Cards)
+      const pagesGroup = document.createElement('optgroup');
+      pagesGroup.label = Homey.__('common.pages_group');
+      Object.keys(currentPages).sort((a,b)=>(currentPages[a].order??Number.MAX_SAFE_INTEGER)-(currentPages[b].order??Number.MAX_SAFE_INTEGER)).forEach(pid => {
+        const p = currentPages[pid];
+        const opt = document.createElement('option');
+        opt.value = pid;
+        opt.textContent = `${pid} (${p.title || Homey.__('common.untitled')})` + (typeof studioDeletions!=='undefined' && studioDeletions.has(pid)?' — ' + Homey.__('common.pending_deletion'):'');
+        pagesGroup.appendChild(opt);
+      });
+      select.appendChild(pagesGroup);
+
+      select.value = selectedPageId;
+      updateNavigationDropdowns();
+    }
+
+    function updateNavigationDropdowns() {
+      const prevSelect = document.getElementById('prev-page-select');
+      const nextSelect = document.getElementById('next-page-select');
+      const prevVal = prevSelect.value;
+      const nextVal = nextSelect.value;
+
+      const baseOpts = [
+        { val: '', label: Homey.__('common.none_option') },
+        { val: 'screensaver', label: 'screensaver (' + Homey.__('common.screensaver_option') + ')' }
+      ];
+
+      const pageOpts = Object.keys(currentPages).map(pid => ({
+        val: pid,
+        label: `${pid} (${currentPages[pid].title || Homey.__('common.page_label')})`
+      }));
+
+      const all = [...baseOpts, ...pageOpts];
+
+      [prevSelect, nextSelect].forEach(sel => {
+        const cur = sel.value;
+        sel.innerHTML = '';
+        all.forEach(item => {
+          const opt = document.createElement('option');
+          opt.value = item.val;
+          opt.textContent = item.label;
+          sel.appendChild(opt);
+        });
+        sel.value = cur;
+      });
+    }
+
+    function onPageSelectChange() {
+      selectedPageId = document.getElementById('page-select').value;
+      loadSelectedPage();
+    }
+
+    function loadSelectedPage() {
+      const isScreensaver = selectedPageId === 'screensaver';
+
+      const pageIdInput = document.getElementById('page-id-input');
+      const pageTitleInput = document.getElementById('page-title-input');
+      const pageTypeSelect = document.getElementById('page-type-select');
+      const navLinksContainer = document.getElementById('nav-links-container');
+      const presetsContainer = document.getElementById('presets-container');
+
+      const pageSecurityContainer = document.getElementById('page-security-container');
+      if (isScreensaver) {
+        pageIdInput.value = 'screensaver';
+        pageIdInput.disabled = true;
+        pageTitleInput.value = 'Lepotila';
+        pageTitleInput.disabled = true;
+        pageTypeSelect.value = 'screensaver';
+        pageTypeSelect.disabled = true;
+        if (navLinksContainer) navLinksContainer.style.display = 'none';
+        if (presetsContainer) presetsContainer.style.display = 'none';
+        if (pageSecurityContainer) pageSecurityContainer.style.display = 'none';
+
+        renderScreen();
+        renderEditor();
+        return;
+      }
+
+      pageIdInput.disabled = false;
+      pageTitleInput.disabled = false;
+      pageTypeSelect.disabled = false;
+      if (navLinksContainer) navLinksContainer.style.display = 'block';
+      if (presetsContainer) presetsContainer.style.display = 'block';
+      if (pageSecurityContainer) pageSecurityContainer.style.display = 'block';
+
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+
+      pageIdInput.value = selectedPageId;
+      pageTitleInput.value = p.title || '';
+      pageTypeSelect.value = p.type || 'grid';
+
+      // Page PIN security
+      const raw = typeof p.rawOptions === 'string' ? (() => { try { return JSON.parse(p.rawOptions); } catch { return {}; } })() : (p.rawOptions || {});
+      const isPagePinReq = !!(p.require_pin || p.pin_required || p.pin || raw.require_pin || raw.pin_required || raw.pin);
+      const pagePinReqEl = document.getElementById('page-pin-req');
+      const pagePinCodeEl = document.getElementById('page-pin-code');
+      const pagePinGroupEl = document.getElementById('page-pin-group');
+      if (pagePinReqEl) pagePinReqEl.checked = isPagePinReq;
+      if (pagePinCodeEl) pagePinCodeEl.value = p.pin || raw.pin || '';
+      if (pagePinGroupEl) pagePinGroupEl.style.display = isPagePinReq ? 'block' : 'none';
+
+      // Navigation targets
+      const leadingTarget = p.navigation?.leading?.target || '';
+      const trailingTarget = p.navigation?.trailing?.target || '';
+
+      document.getElementById('prev-page-select').value = leadingTarget;
+      document.getElementById('next-page-select').value = trailingTarget;
+
+      if (p.type === 'power') {
+        ensurePowerOptions(p);
+      } else if (p.type === 'thermostat') {
+        const raw = typeof p.rawOptions === 'string' ? (() => { try { return JSON.parse(p.rawOptions); } catch { return {}; } })() : (p.rawOptions || {});
+        document.getElementById('thermo-target-input').value = raw.target ?? 21.5;
+        document.getElementById('thermo-current-input').value = raw.current ?? 20.8;
+        document.getElementById('thermo-min-input').value = raw.min ?? 15;
+        document.getElementById('thermo-max-input').value = raw.max ?? 30;
+        const th1 = document.getElementById('thermo-heading1-input'); if (th1) th1.value = raw.heading1 ?? Homey.__('studio.preview.operation_mode');
+        const tc1 = document.getElementById('thermo-curmode1-input'); if (tc1) tc1.value = raw.currentMode1 ?? Homey.__('studio.preview.heating');
+        const tm1 = document.getElementById('thermo-modes1-input'); if (tm1) tm1.value = raw.modeList1 ?? [Homey.__('studio.preview.auto'),Homey.__('studio.preview.heating'),Homey.__('studio.preview.cooling'),Homey.__('studio.preview.off_mode')].join('?');
+        const th2 = document.getElementById('thermo-heading2-input'); if (th2) th2.value = raw.heading2 ?? Homey.__('studio.preview.preset_mode');
+        const tc2 = document.getElementById('thermo-curmode2-input'); if (tc2) tc2.value = raw.currentMode2 ?? Homey.__('studio.preview.home');
+        const tm2 = document.getElementById('thermo-modes2-input'); if (tm2) tm2.value = raw.modeList2 ?? [Homey.__('studio.preview.home'),Homey.__('studio.preview.eco'),Homey.__('studio.preview.comfort'),Homey.__('studio.preview.boost')].join('?');
+        const th3 = document.getElementById('thermo-heading3-input'); if (th3) th3.value = raw.heading3 ?? Homey.__('studio.preview.fan_mode');
+        const tc3 = document.getElementById('thermo-curmode3-input'); if (tc3) tc3.value = raw.currentMode3 ?? Homey.__('studio.preview.auto');
+        const tm3 = document.getElementById('thermo-modes3-input'); if (tm3) tm3.value = raw.modeList3 ?? [Homey.__('studio.preview.auto'),Homey.__('studio.preview.low'),Homey.__('studio.preview.medium'),Homey.__('studio.preview.high')].join('?');
+      } else if (p.type === 'media') {
+        const raw = typeof p.rawOptions === 'string' ? (() => { try { return JSON.parse(p.rawOptions); } catch { return {}; } })() : (p.rawOptions || {});
+        document.getElementById('media-title-input').value = raw.media?.title ?? '';
+        document.getElementById('media-artist-input').value = raw.media?.author ?? '';
+        document.getElementById('media-vol-input').value = raw.volume ?? 50;
+      } else if (p.type === 'chart') {
+        loadChartConfig(p);
+      }
+
+      renderScreen();
+      renderEditor();
+    }
+
+    function togglePagePinInput() {
+      const req = document.getElementById('page-pin-req')?.checked || false;
+      const grp = document.getElementById('page-pin-group');
+      if (grp) grp.style.display = req ? 'block' : 'none';
+      updatePageSecurity();
+    }
+
+    function updatePageSecurity() {
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+      const req = document.getElementById('page-pin-req')?.checked || false;
+      const pin = document.getElementById('page-pin-code')?.value?.trim() || '';
+      if (typeof p.rawOptions === 'string') {
+        try { p.rawOptions = JSON.parse(p.rawOptions); } catch { p.rawOptions = {}; }
+      } else if (!p.rawOptions) {
+        p.rawOptions = {};
+      }
+      p.require_pin = req;
+      p.rawOptions.require_pin = req;
+      if (pin) {
+        p.pin = pin;
+        p.rawOptions.pin = pin;
+      } else {
+        delete p.pin;
+        delete p.rawOptions.pin;
+      }
+      if (!req) {
+        delete p.require_pin;
+        delete p.rawOptions.require_pin;
+        delete p.pin;delete p.rawOptions.pin;delete p.pin_required;delete p.rawOptions.pin_required;
+      }
+      renderScreen();
+      markStudioDirty();
+    }
+
+    function escapeHtml(str) {
+      if (str === undefined || str === null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function loadChartConfig(p) {
+      const opts = typeof p.rawOptions === 'string' ? (() => { try { return JSON.parse(p.rawOptions); } catch { return {}; } })() : (p.rawOptions || {});
+      const typeSelect = document.getElementById('chart-type-select');
+      const unitInput = document.getElementById('chart-unit-input');
+      const colorSelect = document.getElementById('chart-color-select');
+      const ticksInput = document.getElementById('chart-ticks-input');
+      const valuesInput = document.getElementById('chart-values-input');
+
+      if (typeSelect) typeSelect.value = opts.chartType || 'bar';
+      if (unitInput) unitInput.value = opts.unit || opts.yAxisLabel || '';
+      if (colorSelect) colorSelect.value = opts.color || 'yellow';
+      if (ticksInput) ticksInput.value = Array.isArray(opts.yAxisTicks) ? opts.yAxisTicks.join(':') : (opts.yAxisTicks || '');
+
+      const rawValues = opts.values ?? opts.data;
+      if (valuesInput) {
+        if (Array.isArray(rawValues)) {
+          valuesInput.value = rawValues.map(v => typeof v === 'object' && v !== null ? (v.label ? `${v.value}^${v.label}` : v.value) : v).join(', ');
+        } else if (typeof rawValues === 'string') {
+          valuesInput.value = rawValues;
+        } else {
+          valuesInput.value = '';
+        }
+      }
+
+      const isAutoData = p.rawOptions?.binding?.source === 'homey' || p.rawOptions?.binding?.source === 'met' || p.rawOptions?.chartSource === 'met' || p.rawOptions?.weatherForecast;
+      const valuesGroup = document.getElementById('chart-values-group');
+      if (valuesGroup) {
+        valuesGroup.style.display = isAutoData ? 'none' : 'block';
+      }
+    }
+
+    function updateChartConfig() {
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+      if (!p.rawOptions) p.rawOptions = {};
+      const typeSelect = document.getElementById('chart-type-select');
+      const unitInput = document.getElementById('chart-unit-input');
+      const colorSelect = document.getElementById('chart-color-select');
+      const ticksInput = document.getElementById('chart-ticks-input');
+      const valuesInput = document.getElementById('chart-values-input');
+
+      if (typeSelect) p.rawOptions.chartType = typeSelect.value;
+      if (unitInput) {
+        p.rawOptions.unit = unitInput.value.trim();
+        p.rawOptions.yAxisLabel = p.rawOptions.unit;
+      }
+      if (colorSelect) p.rawOptions.color = colorSelect.value;
+
+      if (ticksInput) {
+        const val = ticksInput.value.trim();
+        p.rawOptions.yAxisTicks = val || undefined;
+      }
+
+      if (valuesInput) {
+        const val = valuesInput.value.trim();
+        if (val) {
+          p.rawOptions.values = val.split(/[,~]/).map(s => s.trim()).filter(Boolean);
+        } else {
+          p.rawOptions.values = undefined;
+        }
+      }
+
+      renderScreen();
+    }
+
+    // --- Right Editor Panel ---
+    function renderEditor() {
+      document.getElementById('editor-weather')?.remove();
+      // Hide all editor sections
+      ['grid', 'thermostat', 'media', 'alarm', 'qrcode', 'power', 'chart', 'screensaver'].forEach(sec => {
+        const el = document.getElementById('editor-' + sec);
+        if (el) el.style.display = 'none';
+      });
+
+      if (selectedPageId === 'screensaver') {
+        const el = document.getElementById('editor-screensaver');
+        if (el) el.style.display = 'block';
+        document.getElementById('editor-title').textContent = Homey.__('common.editor_screensaver_title');
+        document.getElementById('editor-subtitle').textContent = Homey.__('common.screensaver_option');
+        loadScreensaverConfig();
+        return;
+      }
+
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+
+      const type = p.type || 'grid';
+      if(p.type!=='chart' && p.rawOptions?.weatherForecast) {
+        const info=document.createElement('div');info.id='editor-weather';info.className='source-box';
+        info.textContent=Homey.__('common.weather_preview_info');
+        const button=document.createElement('button');button.className='btn';button.textContent=Homey.__('common.open_weather_settings');button.onclick=()=>{selectedPageId='screensaver';updatePageDropdown();loadSelectedPage();};info.append(button);
+        document.getElementById('editor-grid').parentElement.append(info);
+        document.getElementById('editor-title').textContent=Homey.__('common.five_day_forecast');document.getElementById('editor-subtitle').textContent=Homey.__('common.automatic_view');return;
+      }
+
+      if (type === 'grid' || type === 'grid2' || type === 'entities') {
+        const el = document.getElementById('editor-grid');
+        el.style.display = 'block';
+
+        const max = type === 'grid2' ? 8 : (type === 'grid' ? 6 : 4);
+        renderSlotTabs(max);
+        loadSlotDetail(selectedSlot);
+      } else if (type === 'thermostat') {
+        document.getElementById('editor-thermostat').style.display = 'block';
+        document.getElementById('editor-title').textContent = 'Termostaatin asetukset';
+        document.getElementById('editor-subtitle').textContent = '';
+        renderThermoBinding();
+      } else if (type === 'media') {
+        document.getElementById('editor-media').style.display = 'block';
+        document.getElementById('editor-title').textContent = 'Mediasoittimen asetukset';
+        document.getElementById('editor-subtitle').textContent = '';
+        renderMediaBinding();
+      } else if (type === 'alarm') {
+        document.getElementById('editor-alarm').style.display = 'block';
+        document.getElementById('editor-title').textContent = Homey.__('common.alarm_settings_title');
+        document.getElementById('editor-subtitle').textContent = '';
+        renderAlarmBinding();
+        loadAlarmConfig(p);
+      } else if (type === 'qrcode') {
+        document.getElementById('editor-qrcode').style.display = 'block';
+        document.getElementById('editor-title').textContent = 'QR-koodin asetukset';
+        document.getElementById('editor-subtitle').textContent = '';
+      } else if (type === 'power') {
+        document.getElementById('editor-power').style.display = 'block';
+        document.getElementById('editor-title').textContent = 'Energiavirtauksen asetukset (Power Flow)';
+        document.getElementById('editor-subtitle').textContent = '';
+        loadPowerConfig();
+      } else if (type === 'chart') {
+        document.getElementById('editor-chart').style.display = 'block';
+        document.getElementById('editor-title').textContent = 'Kaavion asetukset';
+        document.getElementById('editor-subtitle').textContent = '';
+        renderChartBinding();
+        loadChartConfig(p);
+      }
+    }
+
+    function loadScreensaverConfig() {
+      const cfg = currentScreensaverConfig;
+      document.getElementById('ss-screensaver-timeout').value = cfg.screensaver_timeout ?? 45;
+      document.getElementById('ss-dim-timeout').value = cfg.dim_timeout ?? 45;
+      document.getElementById('ss-sleep-timeout').value = cfg.sleep_timeout ?? 45;
+      document.getElementById('ss-bg-color').value = cfg.background_color || 'dark';
+      document.getElementById('ss-brightness').value = cfg.brightness ?? 100;
+      document.getElementById('ss-sleep-brightness').value = cfg.sleep_brightness ?? 20;
+
+      document.getElementById('ss-icon1').value = cfg.statusIcon1?.icon || '';
+      document.getElementById('ss-color1').value = cfg.statusIcon1?.color || '#FFB74D';
+      document.getElementById('ss-color1-hex').value = cfg.statusIcon1?.color || '#FFB74D';
+
+      document.getElementById('ss-icon2').value = cfg.statusIcon2?.icon || '';
+      document.getElementById('ss-color2').value = cfg.statusIcon2?.color || '#4FC3F7';
+      document.getElementById('ss-color2-hex').value = cfg.statusIcon2?.color || '#4FC3F7';
+
+      document.getElementById('ss-use-internal-temp').checked = cfg.use_internal_temperature !== false;
+      document.getElementById('ss-outdoor-from-forecast').checked = cfg.outdoor_temperature_from_forecast !== false;
+      document.getElementById('ss-update-interval').value = cfg.update_interval ?? 50;
+
+      document.getElementById('ss-decouple-buttons').checked = !!cfg.decouple_buttons;
+      document.getElementById('ss-button-navigation').checked = !!cfg.button_navigation;
+      document.getElementById('ss-buzzer-pwm').checked = !!cfg.buzzer_pwm;
+      document.getElementById('ss-disable-nav-alarm').checked = !!cfg.disable_nav_when_armed;
+
+      document.getElementById('ss-night-mode-enabled').checked = !!cfg.night_mode_enabled;
+      document.getElementById('ss-night-mode-start').value = cfg.night_mode_start || '22:00';
+      document.getElementById('ss-night-mode-end').value = cfg.night_mode_end || '07:00';
+      document.getElementById('ss-night-brightness').value = cfg.night_brightness ?? 20;
+      document.getElementById('ss-night-sleep-brightness').value = cfg.night_sleep_brightness ?? 0;
+      document.getElementById('ss-night-sleep-timeout').value = cfg.night_sleep_timeout ?? 15;
+      document.getElementById('ss-night-theme-black').checked = cfg.night_theme_black !== false;
+      document.getElementById('ss-night-follow-alarm').checked = cfg.night_follow_alarm !== false;
+      document.getElementById('ss-global-pin').value = cfg.global_pin || '';
+      clearPanelFieldValidity();
+      renderPanelBindings();
+    }
+
+    function updateScreensaverConfig() {
+      readPanelNumber('ss-screensaver-timeout', 'screensaver_timeout', 20, 300);
+      readPanelNumber('ss-dim-timeout', 'dim_timeout', 20, 300);
+      readPanelNumber('ss-sleep-timeout', 'sleep_timeout', 0, 300);
+      currentScreensaverConfig.background_color = document.getElementById('ss-bg-color').value;
+      readPanelNumber('ss-brightness', 'brightness', 1, 100);
+      readPanelNumber('ss-sleep-brightness', 'sleep_brightness', 1, 100);
+
+      currentScreensaverConfig.statusIcon1 = {
+        icon: document.getElementById('ss-icon1').value.trim(),
+        color: document.getElementById('ss-color1').value
+      };
+      currentScreensaverConfig.statusIcon2 = {
+        icon: document.getElementById('ss-icon2').value.trim(),
+        color: document.getElementById('ss-color2').value
+      };
+
+      currentScreensaverConfig.use_internal_temperature = document.getElementById('ss-use-internal-temp').checked;
+      currentScreensaverConfig.outdoor_temperature_from_forecast = document.getElementById('ss-outdoor-from-forecast').checked;
+      readPanelNumber('ss-update-interval', 'update_interval', 25, 120);
+
+      currentScreensaverConfig.decouple_buttons = document.getElementById('ss-decouple-buttons').checked;
+      currentScreensaverConfig.button_navigation = document.getElementById('ss-button-navigation').checked;
+      currentScreensaverConfig.buzzer_pwm = document.getElementById('ss-buzzer-pwm').checked;
+      currentScreensaverConfig.disable_nav_when_armed = document.getElementById('ss-disable-nav-alarm').checked;
+
+      currentScreensaverConfig.night_mode_enabled = document.getElementById('ss-night-mode-enabled').checked;
+      readPanelTime('ss-night-mode-start', 'night_mode_start');
+      readPanelTime('ss-night-mode-end', 'night_mode_end');
+      readPanelNumber('ss-night-brightness', 'night_brightness', 1, 100);
+      readPanelNumber('ss-night-sleep-brightness', 'night_sleep_brightness', 0, 100);
+      readPanelNumber('ss-night-sleep-timeout', 'night_sleep_timeout', 0, 300);
+      currentScreensaverConfig.night_theme_black = document.getElementById('ss-night-theme-black').checked;
+      currentScreensaverConfig.night_follow_alarm = document.getElementById('ss-night-follow-alarm').checked;
+      currentScreensaverConfig.global_pin = document.getElementById('ss-global-pin').value.trim();
+
+      if (selectedPageId === 'screensaver') {
+        renderScreen();
+      }
+    }
+
+    function setScreensaverIcon(iconNum, iconName, color) {
+      if (iconNum === 1) {
+        document.getElementById('ss-icon1').value = iconName;
+        document.getElementById('ss-color1').value = color;
+        document.getElementById('ss-color1-hex').value = color;
+      } else {
+        document.getElementById('ss-icon2').value = iconName;
+        document.getElementById('ss-color2').value = color;
+        document.getElementById('ss-color2-hex').value = color;
+      }
+      updateScreensaverConfig();
+    }
+
+    function renderSlotTabs(max) {
+      const container = document.getElementById('slot-tabs-container');
+      container.innerHTML = '';
+
+      if (selectedSlot > max) selectedSlot = 1;
+
+      for (let i = 1; i <= max; i++) {
+        const btn = document.createElement('div');
+        btn.className = 'slot-tab-btn' + (selectedSlot === i ? ' active' : '');
+        btn.textContent = `Slot ${i}`;
+        btn.onclick = () => selectSlot(i);
+        container.appendChild(btn);
+      }
+    }
+
+    function selectSlot(num) {
+      selectedSlot = num;
+      const p = currentPages[selectedPageId];
+      const max = p?.type === 'grid2' ? 8 : (p?.type === 'grid' ? 6 : 4);
+      renderSlotTabs(max);
+      loadSlotDetail(num);
+      renderScreen();
+    }
+
+    function loadSlotDetail(num) {
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+      if (!p.slots) p.slots = {};
+
+      document.getElementById('editor-title').textContent = Homey.__('common.configure_slot');
+      document.getElementById('editor-subtitle').textContent = `Slot ${num}`;
+
+      const s = p.slots[num] || {
+        title: `Toiminto ${num}`,
+        icon: 'power',
+        color: '#2696A8',
+        type: 'switch',
+        id: `slot_${num}`,
+        val: '0'
+      };
+
+      document.getElementById('slot-label-input').value = s.title || '';
+      document.getElementById('slot-action-select').value = s.type || 'switch';
+      document.getElementById('slot-icon-input').value = s.icon || 'power';
+      document.getElementById('slot-color-select').value = s.color || '#2696A8';
+      document.getElementById('slot-id-input').value = s.name || s.id || `slot_${num}`;
+      document.getElementById('slot-val-input').value = s.val !== undefined ? s.val : (s.value ?? '');
+
+      const isPinReq = !!(s.require_pin || s.pin_required || s.pin);
+      const pinReqEl = document.getElementById('slot-pin-req');
+      const pinCodeEl = document.getElementById('slot-pin-code');
+      const pinGroupEl = document.getElementById('slot-pin-group');
+      if (pinReqEl) pinReqEl.checked = isPinReq;
+      if (pinCodeEl) pinCodeEl.value = s.pin || '';
+      if (pinGroupEl) pinGroupEl.style.display = isPinReq ? 'block' : 'none';
+
+      const isInputSel = (s.type === 'input_sel');
+      const modesGrp = document.getElementById('slot-modes-group');
+      if (modesGrp) modesGrp.style.display = isInputSel ? 'block' : 'none';
+      const modesInp = document.getElementById('slot-modes-input');
+      if (modesInp) modesInp.value = s.modes || 'Kotona?Poissa?Nukkumassa?Loma';
+
+      renderSlotTargetChips();
+      renderSlotBinding();
+    }
+
+    function onSlotActionChange() {
+      const act = document.getElementById('slot-action-select').value;
+      const idInput = document.getElementById('slot-id-input');
+      const isInputSel = (act === 'input_sel');
+      const modesGrp = document.getElementById('slot-modes-group');
+      if (modesGrp) modesGrp.style.display = isInputSel ? 'block' : 'none';
+
+      if (act === 'navigate') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2') {
+          idInput.value = 'screensaver';
+          document.getElementById('slot-icon-input').value = 'clock';
+          document.getElementById('slot-label-input').value = 'Kello';
+        }
+      } else if (act === 'fan') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2' || idInput.value.startsWith('slot_')) {
+          idInput.value = 'ventilation';
+          document.getElementById('slot-icon-input').value = 'fan';
+          document.getElementById('slot-label-input').value = 'Ilmanvaihto';
+          document.getElementById('slot-val-input').value = 'Kotona';
+        }
+      } else if (act === 'input_sel') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2' || idInput.value.startsWith('slot_')) {
+          idInput.value = 'home_mode';
+          document.getElementById('slot-icon-input').value = 'home';
+          document.getElementById('slot-label-input').value = 'Kodin tila';
+          document.getElementById('slot-val-input').value = 'Kotona';
+        }
+      } else if (act === 'timer') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2' || idInput.value.startsWith('slot_')) {
+          idInput.value = 'timer';
+          document.getElementById('slot-icon-input').value = 'timer';
+          document.getElementById('slot-label-input').value = 'Ajastin';
+          document.getElementById('slot-val-input').value = '05:00';
+        }
+      } else if (act === 'light') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2' || idInput.value.startsWith('slot_')) {
+          idInput.value = 'light';
+          document.getElementById('slot-icon-input').value = 'lightbulb';
+          document.getElementById('slot-label-input').value = 'Kattovalo';
+          document.getElementById('slot-val-input').value = '100 %';
+        }
+      } else if (act === 'shutter') {
+        if (!idInput.value || idInput.value === 'slot_1' || idInput.value === 'slot_2' || idInput.value.startsWith('slot_')) {
+          idInput.value = 'shutter';
+          document.getElementById('slot-icon-input').value = 'window-shutter';
+          document.getElementById('slot-label-input').value = 'Rullaverho';
+          document.getElementById('slot-val-input').value = '50 %';
+        }
+      }
+      updateCurrentSlot();
+      const slot=currentPages[selectedPageId]?.slots?.[selectedSlot];
+      if(slot?.type==='timer')slot.binding={source:'fixed'};
+      else if(['fan','input_sel','light','shutter'].includes(slot?.type)&&slot.binding?.source!=='homey')slot.binding={source:'flow'};
+      renderSlotBinding();
+    }
+
+    function renderSlotTargetChips() {
+      const container = document.getElementById('slot-target-chips');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const targets = [
+        { label: '⏰ screensaver (Lepotila)', val: 'screensaver' },
+        { label: '🏠 active (Koti)', val: 'active' },
+        { label: '⏻ power1 (Rele 1)', val: 'power1' },
+        { label: '⏻ power2 (Rele 2)', val: 'power2' }
+      ];
+
+      Object.keys(currentPages).sort((a,b)=>(currentPages[a].order??Number.MAX_SAFE_INTEGER)-(currentPages[b].order??Number.MAX_SAFE_INTEGER)).forEach(pid => {
+        if (pid !== 'active' && pid !== selectedPageId) {
+          targets.push({
+            label: `📄 ${currentPages[pid].title || pid}`,
+            val: pid
+          });
+        }
+      });
+
+      targets.forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = 'icon-chip';
+        chip.textContent = t.label;
+        chip.onclick = () => {
+          const slot = currentPages[selectedPageId]?.slots?.[selectedSlot];
+          if (slot) delete slot.binding;
+          document.getElementById('slot-id-input').value = t.val;
+          if (t.val === 'screensaver') {
+            document.getElementById('slot-action-select').value = 'navigate';
+            document.getElementById('slot-icon-input').value = 'clock';
+          } else if (t.val !== 'power1' && t.val !== 'power2') {
+            document.getElementById('slot-action-select').value = 'navigate';
+          }
+          updateCurrentSlot();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function toggleSlotPinInput() {
+      const pinReq = document.getElementById('slot-pin-req')?.checked || false;
+      const pinGroupEl = document.getElementById('slot-pin-group');
+      if (pinGroupEl) pinGroupEl.style.display = pinReq ? 'block' : 'none';
+      updateCurrentSlot();
+    }
+
+    function updateCurrentSlot() {
+      const p = currentPages[selectedPageId];
+      if (!p) return;
+      if (!p.slots) p.slots = {};
+
+      const slotIdVal = document.getElementById('slot-id-input').value.trim();
+      const slotActionType = document.getElementById('slot-action-select').value;
+      const modesInp = document.getElementById('slot-modes-input');
+      const pinReq = document.getElementById('slot-pin-req')?.checked || false;
+      const pinCode = document.getElementById('slot-pin-code')?.value?.trim() || '';
+
+      p.slots[selectedSlot] = {
+        ...p.slots[selectedSlot],
+        title: document.getElementById('slot-label-input').value,
+        type: slotActionType,
+        icon: document.getElementById('slot-icon-input').value,
+        color: document.getElementById('slot-color-select').value,
+        id: slotIdVal,
+        name: slotIdVal,
+        target: slotIdVal,
+        val: document.getElementById('slot-val-input').value,
+        require_pin: pinReq,
+        ...(pinCode ? { pin: pinCode } : {}),
+        ...(slotActionType === 'input_sel' ? { modes: modesInp ? modesInp.value : 'Kotona?Poissa?Nukkumassa?Loma' } : {})
+      };
+      if (!pinCode || !pinReq) delete p.slots[selectedSlot].pin;
+      delete p.slots[selectedSlot].pin_required;
+      if (!pinReq) delete p.slots[selectedSlot].require_pin;
+
+      renderScreen();
+    }
+
+    function setIcon(iconName) {
+      document.getElementById('slot-icon-input').value = iconName;
+      updateCurrentSlot();
+    }
+
+    // --- Save & Push to Device ---
+    function pushToDevice() { return saveStudioChanges(); }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    function renderUI() {
+      updatePageDropdown();
+      loadSelectedPage();
+    }
+
+    function onHomeyReady(Homey) {
+      window.Homey = Homey;
+      if (typeof startStudio === 'function') startStudio();
+      else if (typeof Homey.ready === 'function') Homey.ready();
+    }
+  </script>
+<script src="studio-sources.js"></script>
+<script src="studio-panel-settings.js"></script>
+
+<div class="studio-savebar" id="studio-savebar" data-dirty="false">
+  <div class="save-copy"><div id="studio-save-state" role="status" aria-live="polite">Ei tallentamattomia muutoksia</div><p id="studio-save-hint">Muutokset tallentuvat vasta painamalla Tallenna.</p></div>
+  <button type="button" class="btn btn-primary studio-save" onclick="pushToDevice()" disabled>💾 Tallenna muutokset</button>
+</div>
+<script src="studio-save.js"></script>
+<script>
+const targetField=document.getElementById('slot-id-input')?.closest('.form-group');
+if(targetField){const details=document.createElement('details');const label=document.createElement('summary');label.textContent=Homey.__('common.advanced_flow_nav');details.append(label);targetField.before(details);details.append(targetField);}
+
+const presetButtons=Array.from(document.querySelectorAll('#presets-container button[onclick]'));
+for(const [title,names] of [[Homey.__('common.preset_group_basic'),['lights','lights_popup','shutters','thermo','media','alarm','qrcode']],[Homey.__('common.preset_group_energy'),['power','spot','chart_temp','chart_power','chart_weather','weather']],[Homey.__('common.preset_group_climate'),['ventilation','modes','timer']]]) {
+  const section=document.createElement('details');section.className='preset-group';
+  const heading=document.createElement('summary');heading.textContent=title;section.append(heading);
+  for(const button of presetButtons)if(names.some(name=>button.getAttribute('onclick').includes("'"+name+"'")))section.append(button);
+  document.getElementById('presets-container').append(section);
+}
+// Reserve actual toolbar height in the scrollable content, including wrapped text.
+const savebarElement=document.getElementById('studio-savebar');
+function syncSavebarSpace() {
+  if(!savebarElement.hidden)document.documentElement.style.setProperty('--studio-savebar-height', Math.ceil(savebarElement.getBoundingClientRect().height)+'px');
+}
+if(typeof ResizeObserver !== 'undefined')new ResizeObserver(syncSavebarSpace).observe(savebarElement);
+window.addEventListener('resize',syncSavebarSpace);
+syncSavebarSpace();
+</script>
+<script src="studio-ux.js"></script>
+<script src="studio-status.js"></script>
+<script src="studio-init.js"></script>
+</body>
+</html>

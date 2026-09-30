@@ -1,0 +1,161 @@
+{
+  "id": "show_chart_page_action",
+  "title": {
+    "en": "Show chart page",
+    "fi": "Näytä kaaviosivu"
+  },
+  "titleFormatted": {
+    "en": "Show [[chart_type]] chart [[title]] (unit: [[unit]], data: [[data]], color: [[color]], ticks: [[ticks]], prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Näytä [[chart_type]] [[title]] (yksikkö: [[unit]], data: [[data]], väri: [[color]], asteikko: [[ticks]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      },
+      "placeholder": {
+        "en": "Spot Prices",
+        "fi": "Pörssisähkö"
+      },
+      "title": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      }
+    },
+    {
+      "name": "chart_type",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "bar",
+          "label": {
+            "en": "Bar chart (cardChart)",
+            "fi": "Pylväskaavio (cardChart)"
+          }
+        },
+        {
+          "id": "line",
+          "label": {
+            "en": "Line chart (cardLChart)",
+            "fi": "Viivakaavio (cardLChart)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Chart layout",
+        "fi": "Kaavionäkymä"
+      }
+    },
+    {
+      "name": "unit",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Y-axis Unit",
+        "fi": "Y-akselin yksikkö"
+      },
+      "placeholder": {
+        "en": "c/kWh",
+        "fi": "c/kWh"
+      },
+      "title": {
+        "en": "Y-axis Unit",
+        "fi": "Y-akselin yksikkö"
+      }
+    },
+    {
+      "name": "data",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Datapoints (numbers separated by comma / tilde or JSON)",
+        "fi": "Arvot (pilkulla/aaltoviivalla eroteltuna tai JSON)"
+      },
+      "placeholder": {
+        "en": "5.2, 4.8, 7.5, 12.0...",
+        "fi": "5.2, 4.8, 7.5, 12.0..."
+      },
+      "title": {
+        "en": "Datapoints (numbers separated by comma / tilde or JSON)",
+        "fi": "Arvot (pilkulla/aaltoviivalla eroteltuna tai JSON)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Color (name, hex or dec565)",
+        "fi": "Väri (nimi, hex tai dec565)"
+      },
+      "placeholder": {
+        "en": "yellow",
+        "fi": "yellow"
+      },
+      "title": {
+        "en": "Color (name, hex or dec565)",
+        "fi": "Väri (nimi, hex tai dec565)"
+      }
+    },
+    {
+      "name": "ticks",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Y-axis Ticks (optional, e.g. 50:100:150:200)",
+        "fi": "Y-akselin asteikko (valinnainen, esim. 50:100:150:200)"
+      },
+      "placeholder": {
+        "en": "50:100:150:200",
+        "fi": "50:100:150:200"
+      },
+      "title": {
+        "en": "Y-axis Ticks (optional, e.g. 50:100:150:200)",
+        "fi": "Y-akselin asteikko (valinnainen, esim. 50:100:150:200)"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

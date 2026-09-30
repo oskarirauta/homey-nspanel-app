@@ -1,0 +1,46 @@
+{
+  "id": "screen_button_pressed",
+  "title": {
+    "en": "Screen button pressed",
+    "fi": "Näytön painiketta painettu"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "page",
+      "type": "string",
+      "title": { "en": "Page", "fi": "Sivu" },
+      "example": "grid"
+    },
+    {
+      "name": "slot",
+      "type": "number",
+      "title": { "en": "Slot number", "fi": "Paikkanumero" },
+      "example": 1
+    },
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID / Name", "fi": "Tunniste / Nimi" },
+      "example": "living_light"
+    },
+    {
+      "name": "button_type",
+      "type": "string",
+      "title": { "en": "Button Type", "fi": "Painiketyyppi" },
+      "example": "button"
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "title": { "en": "Value", "fi": "Arvo" },
+      "example": "1"
+    }
+  ]
+}

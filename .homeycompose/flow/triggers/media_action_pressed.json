@@ -1,0 +1,28 @@
+{
+  "id": "media_action_pressed",
+  "title": {
+    "en": "Media player action pressed",
+    "fi": "Mediasoittimen toimintoa painettu"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "action",
+      "type": "string",
+      "title": { "en": "Action (play, pause, next, prev, volume, shuffle)", "fi": "Toiminto (play, pause, next, prev, volume, shuffle)" },
+      "example": "play"
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "title": { "en": "Value (e.g. volume level)", "fi": "Arvo (esim. äänenvoimakkuus)" },
+      "example": 50
+    }
+  ]
+}

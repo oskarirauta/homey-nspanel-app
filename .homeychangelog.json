@@ -1,0 +1,14 @@
+{
+  "1.0.0": {
+    "en": "First version",
+    "fi": "Ensimmäinen versio"
+  },
+  "1.0.1": {
+    "en": "Update assets",
+    "fi": "Kuvakkeiden ja resurssien päivitys"
+  },
+  "1.1.0": {
+    "en": "NSPanel Studio with live Homey device bindings (grid, entities, power, thermostat, media), MET Norway weather automation with custom update intervals, and decouple button control",
+    "fi": "NSPanel Studio suorilla Homey-laitekytkennöillä (ruudut, laitelistat, teho, termostaatti, media), MET Norway -sääautomaatio päivitystiheydellä ja fyysisten painikkeiden decouple-tila"
+  }
+}

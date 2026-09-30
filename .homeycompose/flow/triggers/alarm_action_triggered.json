@@ -1,0 +1,28 @@
+{
+  "id": "alarm_action_triggered",
+  "title": {
+    "en": "Alarm action or PIN entered",
+    "fi": "Hälytystoiminto tai PIN syötetty"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "action",
+      "type": "string",
+      "title": { "en": "Action (disarm, arm_home, arm_away, arm_night, unlock)", "fi": "Toiminto (disarm, arm_home, arm_away, arm_night, unlock)" },
+      "example": "disarm"
+    },
+    {
+      "name": "pin",
+      "type": "string",
+      "title": { "en": "Entered PIN code", "fi": "Syötetty PIN-koodi" },
+      "example": "1234"
+    }
+  ]
+}

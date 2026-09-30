@@ -1,0 +1,152 @@
+{
+  "id": "show_qr_page_action",
+  "title": {
+    "en": "Show QR code card",
+    "fi": "Näytä QR-koodisivu"
+  },
+  "titleFormatted": {
+    "en": "Show QR code [[title]]: [[qrcode]] ([[line1_title]]: [[line1_val]], [[line2_title]]: [[line2_val]], prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Näytä QR-koodi [[title]]: [[qrcode]] ([[line1_title]]: [[line1_val]], [[line2_title]]: [[line2_val]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "label": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "placeholder": {
+        "en": "Guest Wi-Fi",
+        "fi": "Vierasverkko"
+      },
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "qrcode",
+      "type": "text",
+      "label": {
+        "en": "QR Content",
+        "fi": "QR-koodin sisältö"
+      },
+      "placeholder": {
+        "en": "WIFI:S:MySSID;T:WPA2;P:MyPassword;;",
+        "fi": "WIFI:S:Verkko;T:WPA2;P:Salasana;;"
+      },
+      "title": {
+        "en": "QR Content",
+        "fi": "QR-koodin sisältö"
+      }
+    },
+    {
+      "name": "line1_title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Line 1 Label",
+        "fi": "Rivin 1 otsikko"
+      },
+      "placeholder": {
+        "en": "Network Name",
+        "fi": "Verkon nimi"
+      },
+      "title": {
+        "en": "Line 1 Label",
+        "fi": "Rivin 1 otsikko"
+      }
+    },
+    {
+      "name": "line1_val",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Line 1 Value",
+        "fi": "Rivin 1 arvo"
+      },
+      "placeholder": {
+        "en": "MySSID",
+        "fi": "MySSID"
+      },
+      "title": {
+        "en": "Line 1 Value",
+        "fi": "Rivin 1 arvo"
+      }
+    },
+    {
+      "name": "line2_title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Line 2 Label",
+        "fi": "Rivin 2 otsikko"
+      },
+      "placeholder": {
+        "en": "Password",
+        "fi": "Salasana"
+      },
+      "title": {
+        "en": "Line 2 Label",
+        "fi": "Rivin 2 otsikko"
+      }
+    },
+    {
+      "name": "line2_val",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Line 2 Value",
+        "fi": "Rivin 2 arvo"
+      },
+      "placeholder": {
+        "en": "MyPassword",
+        "fi": "MyPassword"
+      },
+      "title": {
+        "en": "Line 2 Value",
+        "fi": "Rivin 2 arvo"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

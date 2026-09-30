@@ -1,0 +1,70 @@
+{
+  "id": "set_alarm_state_action",
+  "title": {
+    "en": "Set alarm state",
+    "fi": "Aseta hälyttimen tila"
+  },
+  "titleFormatted": {
+    "en": "Set panel alarm state to [[state]]",
+    "fi": "Aseta paneelin hälyttimen tilaksi [[state]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "state",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "disarmed",
+          "label": {
+            "en": "Disarmed",
+            "fi": "Pois päältä"
+          }
+        },
+        {
+          "id": "armed_home",
+          "label": {
+            "en": "Armed Home (Partially)",
+            "fi": "Kotona (Osittain)"
+          }
+        },
+        {
+          "id": "armed_away",
+          "label": {
+            "en": "Armed Away",
+            "fi": "Poissa"
+          }
+        },
+        {
+          "id": "armed_night",
+          "label": {
+            "en": "Armed Night",
+            "fi": "Yötila"
+          }
+        },
+        {
+          "id": "arming",
+          "label": {
+            "en": "Arming (pending)",
+            "fi": "Kytkeytyy (odottaa)"
+          }
+        },
+        {
+          "id": "triggered",
+          "label": {
+            "en": "Triggered (Alarm!)",
+            "fi": "Hälyttää!"
+          }
+        }
+      ],
+      "title": {
+        "en": "Alarm state",
+        "fi": "Hälytystila"
+      }
+    }
+  ]
+}

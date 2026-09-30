@@ -1,0 +1,22 @@
+{
+  "id": "notification_button_clicked",
+  "title": {
+    "en": "Notification button clicked",
+    "fi": "Ilmoituksen painiketta painettu"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "button",
+      "type": "string",
+      "title": { "en": "Clicked button (button1, button2, exit)", "fi": "Painettu painike (button1, button2, exit)" },
+      "example": "button1"
+    }
+  ]
+}

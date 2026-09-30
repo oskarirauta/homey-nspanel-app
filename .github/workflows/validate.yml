@@ -1,0 +1,34 @@
+name: Validate Homey App
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm test
+
+  validate:
+    name: Validate Homey App
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 18
+      - run: npm ci
+      - name: Install musl sharp binary for Alpine Docker action
+        run: npm install --no-save --os=linux --libc=musl --cpu=x64 sharp
+      - uses: athombv/github-action-homey-app-validate@master
+        with:
+          level: verified

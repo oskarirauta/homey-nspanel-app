@@ -1,0 +1,21 @@
+{
+  "title": {
+    "en": "Night mode changed",
+    "fi": "Yötila muuttui"
+  },
+  "hint": {
+    "en": "Triggered when panel night mode is enabled or disabled.",
+    "fi": "Laukeaa kun paneelin yötila kytkeytyy päälle tai pois."
+  },
+  "tokens": [
+    {
+      "name": "active",
+      "type": "boolean",
+      "title": {
+        "en": "Active",
+        "fi": "Päällä"
+      },
+      "example": true
+    }
+  ]
+}

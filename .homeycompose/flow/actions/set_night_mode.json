@@ -1,0 +1,47 @@
+{
+  "title": {
+    "en": "Set night mode",
+    "fi": "Aseta yötila"
+  },
+  "titleFormatted": {
+    "en": "Set night mode to [[mode]]",
+    "fi": "Aseta yötilaksi [[mode]]"
+  },
+  "hint": {
+    "en": "Manually enable, disable, or return to scheduled automatic night mode.",
+    "fi": "Kytke yötila päälle, pois tai palauta automaattinen aikataulutila."
+  },
+  "args": [
+    {
+      "name": "mode",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "fi": "Päällä"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "fi": "Pois päältä"
+          }
+        },
+        {
+          "id": "auto",
+          "label": {
+            "en": "Automatic (Follow schedule & alarm)",
+            "fi": "Automaattinen (Seuraa aikataulua ja hälytintä)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Night mode",
+        "fi": "Yötila"
+      }
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "id": "show_thermo_popup_action",
+  "title": {
+    "en": "Show thermostat popup",
+    "fi": "Avaa termostaatin lisäsäätöikkuna"
+  },
+  "titleFormatted": {
+    "en": "Open thermostat [[entity]] popup (mode 1: [[mode1]], options 1: [[modes1]], mode 2: [[mode2]], options 2: [[modes2]], mode 3: [[mode3]], options 3: [[modes3]])",
+    "fi": "Avaa termostaatin [[entity]] lisäsäätöikkuna (tila 1: [[mode1]], valinnat 1: [[modes1]], tila 2: [[mode2]], valinnat 2: [[modes2]], tila 3: [[mode3]], valinnat 3: [[modes3]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (default: thermo)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+      },
+      "placeholder": {
+        "en": "thermo",
+        "fi": "thermo"
+      },
+      "title": {
+        "en": "Entity ID (default: thermo)",
+        "fi": "Laitteen / entiteetin tunniste (oletus: thermo)"
+      }
+    },
+    {
+      "name": "mode1",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Mode 1 / Operation mode (e.g. Lämmitys)",
+        "fi": "Tila 1 / Toimintatila (esim. Lämmitys)"
+      },
+      "placeholder": {
+        "en": "Lämmitys",
+        "fi": "Lämmitys"
+      },
+      "title": {
+        "en": "Mode 1 / Operation mode (e.g. Lämmitys)",
+        "fi": "Tila 1 / Toimintatila (esim. Lämmitys)"
+      }
+    },
+    {
+      "name": "modes1",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Modes 1 list (? separated)",
+        "fi": "Tilat 1 lista (?-eroteltuna)"
+      },
+      "placeholder": {
+        "en": "Auto?Lämmitys?Viilennys?Pois",
+        "fi": "Auto?Lämmitys?Viilennys?Pois"
+      },
+      "title": {
+        "en": "Modes 1 list (? separated)",
+        "fi": "Tilat 1 lista (?-eroteltuna)"
+      }
+    },
+    {
+      "name": "mode2",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Mode 2 / Preset (e.g. Koti)",
+        "fi": "Tila 2 / Esiasetus (esim. Koti)"
+      },
+      "placeholder": {
+        "en": "Koti",
+        "fi": "Koti"
+      },
+      "title": {
+        "en": "Mode 2 / Preset (e.g. Koti)",
+        "fi": "Tila 2 / Esiasetus (esim. Koti)"
+      }
+    },
+    {
+      "name": "modes2",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Modes 2 list (? separated)",
+        "fi": "Tilat 2 lista (?-eroteltuna)"
+      },
+      "placeholder": {
+        "en": "Koti?Säästö?Mukavuus?Tehostus",
+        "fi": "Koti?Säästö?Mukavuus?Tehostus"
+      },
+      "title": {
+        "en": "Modes 2 list (? separated)",
+        "fi": "Tilat 2 lista (?-eroteltuna)"
+      }
+    },
+    {
+      "name": "mode3",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Mode 3 / Fan (e.g. Auto)",
+        "fi": "Tila 3 / Puhallin (esim. Auto)"
+      },
+      "placeholder": {
+        "en": "Auto",
+        "fi": "Auto"
+      },
+      "title": {
+        "en": "Mode 3 / Fan (e.g. Auto)",
+        "fi": "Tila 3 / Puhallin (esim. Auto)"
+      }
+    },
+    {
+      "name": "modes3",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Modes 3 list (? separated)",
+        "fi": "Tilat 3 lista (?-eroteltuna)"
+      },
+      "placeholder": {
+        "en": "Auto?Matala?Keski?Korkea",
+        "fi": "Auto?Matala?Keski?Korkea"
+      },
+      "title": {
+        "en": "Modes 3 list (? separated)",
+        "fi": "Tilat 3 lista (?-eroteltuna)"
+      }
+    }
+  ]
+}

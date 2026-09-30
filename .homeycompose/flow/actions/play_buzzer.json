@@ -1,0 +1,71 @@
+{
+  "id": "play_buzzer_action",
+  "title": {
+    "en": "Play buzzer sound (beep)",
+    "fi": "Soita äänimerkki (piip)"
+  },
+  "titleFormatted": {
+    "en": "Play buzzer [[sound_type]]",
+    "fi": "Soita äänimerkki [[sound_type]]"
+  },
+  "hint": {
+    "en": "Plays an audible buzzer beep pattern using NSPanel's onboard piezo buzzer.",
+    "fi": "Toistaa äänimerkin käyttäen NSPanelin sisäänrakennettua piezo-summeria."
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "sound_type",
+      "type": "dropdown",
+      "label": {
+        "en": "Sound type",
+        "fi": "Äänimerkin tyyppi"
+      },
+      "values": [
+        {
+          "id": "beep",
+          "label": {
+            "en": "🔔 Single beep (1x)",
+            "fi": "🔔 Lyhyt piippaus (1x)"
+          }
+        },
+        {
+          "id": "double_beep",
+          "label": {
+            "en": "🔔🔔 Double beep (2x)",
+            "fi": "🔔🔔 Kaksoispiippaus (2x)"
+          }
+        },
+        {
+          "id": "triple_beep",
+          "label": {
+            "en": "🔔🔔🔔 Triple beep (3x)",
+            "fi": "🔔🔔🔔 Kolmoispiippaus (3x)"
+          }
+        },
+        {
+          "id": "warning",
+          "label": {
+            "en": "⚠️ Warning beeps (5x fast)",
+            "fi": "⚠️ Varoituspiippaus (5x nopea)"
+          }
+        },
+        {
+          "id": "alarm",
+          "label": {
+            "en": "🚨 Alarm burst (10x)",
+            "fi": "🚨 Hälytyspiippaus (10x)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Sound type",
+        "fi": "Äänimerkin tyyppi"
+      }
+    }
+  ]
+}

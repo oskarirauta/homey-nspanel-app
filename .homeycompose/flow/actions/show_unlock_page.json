@@ -1,0 +1,34 @@
+{
+  "title": {
+    "en": "Show PIN unlock page",
+    "fi": "Näytä PIN-koodin syöttö (cardUnlock)"
+  },
+  "titleFormatted": {
+    "en": "Show PIN unlock page [[title]] (destination: [[destination]])",
+    "fi": "Näytä PIN-koodin syöttö [[title]] (kohde: [[destination]])"
+  },
+  "hint": {
+    "en": "Opens cardUnlock keypad on panel requiring PIN code.",
+    "fi": "Avaa numeerisen PIN-koodinäppäimistön paneelille."
+  },
+  "args": [
+    {
+      "name": "title",
+      "type": "text",
+      "placeholder": "esim. Avaa ovi / PIN-koodi",
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "destination",
+      "type": "text",
+      "placeholder": "esim. front_door",
+      "title": {
+        "en": "Target identifier (destination)",
+        "fi": "Kohteen tunniste"
+      }
+    }
+  ]
+}

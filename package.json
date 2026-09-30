@@ -1,11 +1,11 @@
 {
   "name": "rauta.oskari.nspanel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "app.js",
   "scripts": {
     "build": "tsc",
     "run": "homeyConfig compose && athom project --run",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsc && node .homeybuild/test/test_pages.js && node .homeybuild/test/test_bindings.js && node test/test_studio.cjs && node .homeybuild/test/test_met.js && node .homeybuild/test/test_stabilize.js && node .homeybuild/test/test_commands.js && node .homeybuild/test/test_controls.js && node .homeybuild/test/test_popup_lifecycle.js && node .homeybuild/test/test_timer.js && node .homeybuild/test/test_value_sources.js && node .homeybuild/test/test_flow_pages.js"
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.11",
@@ -14,7 +14,9 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "homey-api": "^3.20.0",
     "luxon": "^3.6.1",
-    "uuid": "^11.1.0"
+    "mqtt": "^5.16.0",
+    "uuid": "^11.1.1"
   }
 }

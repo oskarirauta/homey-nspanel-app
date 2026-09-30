@@ -1,0 +1,206 @@
+{
+  "id": "set_grid_slot_action",
+  "title": {
+    "en": "Configure grid button slot",
+    "fi": "Aseta ruudukon painikepaikka"
+  },
+  "titleFormatted": {
+    "en": "Set grid slot [[slot]]: [[title]] ([[action_type]], icon: [[icon]], color: [[color]], value: [[value]], id: [[entity_id]])",
+    "fi": "Aseta ruudukon paikka [[slot]]: [[title]] ([[action_type]], kuvake: [[icon]], väri: [[color]], arvo: [[value]], tunniste: [[entity_id]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "slot",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "1",
+          "label": {
+            "en": "Slot 1 (Top left)",
+            "fi": "Paikka 1 (Ylä vasen)"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Slot 2 (Top middle/right)",
+            "fi": "Paikka 2 (Ylä keski/oikea)"
+          }
+        },
+        {
+          "id": "3",
+          "label": {
+            "en": "Slot 3 (Top right / Mid left)",
+            "fi": "Paikka 3 (Ylä oikea / Keski vasen)"
+          }
+        },
+        {
+          "id": "4",
+          "label": {
+            "en": "Slot 4 (Bottom left / Mid right)",
+            "fi": "Paikka 4 (Ala vasen / Keski oikea)"
+          }
+        },
+        {
+          "id": "5",
+          "label": {
+            "en": "Slot 5 (Bottom middle)",
+            "fi": "Paikka 5 (Ala keski)"
+          }
+        },
+        {
+          "id": "6",
+          "label": {
+            "en": "Slot 6 (Bottom right)",
+            "fi": "Paikka 6 (Ala oikea)"
+          }
+        },
+        {
+          "id": "7",
+          "label": {
+            "en": "Slot 7 (Grid2 only)",
+            "fi": "Paikka 7 (Vain Grid2)"
+          }
+        },
+        {
+          "id": "8",
+          "label": {
+            "en": "Slot 8 (Grid2 only)",
+            "fi": "Paikka 8 (Vain Grid2)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Slot number",
+        "fi": "Paikan numero"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "label": {
+        "en": "Button Label",
+        "fi": "Painikkeen teksti"
+      },
+      "placeholder": {
+        "en": "Ceiling Light",
+        "fi": "Kattovalo"
+      },
+      "title": {
+        "en": "Button Label",
+        "fi": "Painikkeen teksti"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "text",
+      "label": {
+        "en": "Icon",
+        "fi": "Kuvake"
+      },
+      "placeholder": {
+        "en": "lightbulb",
+        "fi": "lightbulb"
+      },
+      "title": {
+        "en": "Icon",
+        "fi": "Kuvake"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Color",
+        "fi": "Väri"
+      },
+      "placeholder": {
+        "en": "white or #FFAA00",
+        "fi": "white tai #FFAA00"
+      },
+      "title": {
+        "en": "Color",
+        "fi": "Väri"
+      }
+    },
+    {
+      "name": "action_type",
+      "type": "dropdown",
+      "required": false,
+      "values": [
+        {
+          "id": "button",
+          "label": {
+            "en": "Button (tap to trigger)",
+            "fi": "Painike (laukaisee flow'n)"
+          }
+        },
+        {
+          "id": "switch",
+          "label": {
+            "en": "Toggle Switch (on/off)",
+            "fi": "Kytkin (päälle/pois)"
+          }
+        },
+        {
+          "id": "navigate",
+          "label": {
+            "en": "Navigation (open another page)",
+            "fi": "Navigointi (avaa toinen sivu)"
+          }
+        },
+        {
+          "id": "delete",
+          "label": {
+            "en": "Empty / Hide",
+            "fi": "Tyhjä / Piilota"
+          }
+        }
+      ],
+      "title": {
+        "en": "Action type",
+        "fi": "Toimintotyyppi"
+      }
+    },
+    {
+      "name": "entity_id",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID / Target page",
+        "fi": "Tunniste / Kohdesivu"
+      },
+      "placeholder": {
+        "en": "living_light",
+        "fi": "living_light"
+      },
+      "title": {
+        "en": "Entity ID / Target page",
+        "fi": "Tunniste / Kohdesivu"
+      }
+    },
+    {
+      "name": "value",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Initial Value / State",
+        "fi": "Alkuarvo / Tila"
+      },
+      "placeholder": {
+        "en": "1, 0, ON, OFF or text",
+        "fi": "1, 0, ON, OFF tai teksti"
+      },
+      "title": {
+        "en": "Initial Value / State",
+        "fi": "Alkuarvo / Tila"
+      }
+    }
+  ]
+}

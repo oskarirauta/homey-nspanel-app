@@ -1,23 +1,33 @@
 {
-    "id": "update_outdoor_temperature_action",
-    "title": {
-        "en": "Set outdoor temperature for weather forecast"
+  "id": "update_outdoor_temperature_action",
+  "title": {
+    "en": "Set outdoor temperature for weather forecast"
+  },
+  "titleFormatted": {
+    "en": "Set outdoor temperature from [[temperature]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
     },
-    "titleFormatted": {
-        "en": "Set outdoor temperature from [[temperature]]"
-    },
-    "args": [
-        {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=nspanel"
-        },
-        {
-            "name": "temperature",
-            "type": "number",
-            "label": { "en": "temperature" },
-            "placeholder": { "en": "temperature" },
-            "title": { "en": "indoor temperature" }
-        }
-    ]
+    {
+      "name": "temperature",
+      "type": "number",
+      "label": {
+        "en": "temperature"
+      },
+      "placeholder": {
+        "en": "temperature"
+      },
+      "title": {
+        "en": "indoor temperature"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+    "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+  }
 }

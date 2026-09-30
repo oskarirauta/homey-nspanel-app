@@ -1,0 +1,184 @@
+{
+  "id": "set_entity_slot_action",
+  "title": {
+    "en": "Configure entity list row",
+    "fi": "Aseta laitelistan rivi"
+  },
+  "titleFormatted": {
+    "en": "Set entity slot [[slot]]: [[title]] ([[entity_type]], icon: [[icon]], color: [[color]], value: [[value]], id: [[entity_id]])",
+    "fi": "Aseta listarivi [[slot]]: [[title]] ([[entity_type]], kuvake: [[icon]], väri: [[color]], arvo: [[value]], tunniste: [[entity_id]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "slot",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "1",
+          "label": {
+            "en": "Row 1 (Top)",
+            "fi": "Rivi 1 (Ylin)"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Row 2",
+            "fi": "Rivi 2"
+          }
+        },
+        {
+          "id": "3",
+          "label": {
+            "en": "Row 3",
+            "fi": "Rivi 3"
+          }
+        },
+        {
+          "id": "4",
+          "label": {
+            "en": "Row 4 (Bottom)",
+            "fi": "Rivi 4 (Alin)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Slot number",
+        "fi": "Paikan numero"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "label": {
+        "en": "Row Label",
+        "fi": "Rivin nimi"
+      },
+      "placeholder": {
+        "en": "Floor Heating",
+        "fi": "Lattialämmitys"
+      },
+      "title": {
+        "en": "Row Label",
+        "fi": "Rivin nimi"
+      }
+    },
+    {
+      "name": "entity_type",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "switch",
+          "label": {
+            "en": "Switch (toggle on/off)",
+            "fi": "Kytkin (päälle/pois)"
+          }
+        },
+        {
+          "id": "button",
+          "label": {
+            "en": "Button (tap to trigger)",
+            "fi": "Painike (laukaisee flow'n)"
+          }
+        },
+        {
+          "id": "text",
+          "label": {
+            "en": "Text / Sensor display",
+            "fi": "Teksti / Anturilukema"
+          }
+        },
+        {
+          "id": "number",
+          "label": {
+            "en": "Number input",
+            "fi": "Lukuasetus"
+          }
+        },
+        {
+          "id": "delete",
+          "label": {
+            "en": "Empty / Hide row",
+            "fi": "Tyhjä / Piilota rivi"
+          }
+        }
+      ],
+      "title": {
+        "en": "Entity type",
+        "fi": "Kohteen tyyppi"
+      }
+    },
+    {
+      "name": "icon",
+      "type": "text",
+      "label": {
+        "en": "Icon",
+        "fi": "Kuvake"
+      },
+      "placeholder": {
+        "en": "radiator",
+        "fi": "radiator"
+      },
+      "title": {
+        "en": "Icon",
+        "fi": "Kuvake"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Color",
+        "fi": "Väri"
+      },
+      "placeholder": {
+        "en": "white or #FFAA00",
+        "fi": "white tai #FFAA00"
+      },
+      "title": {
+        "en": "Color",
+        "fi": "Väri"
+      }
+    },
+    {
+      "name": "value",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Value / State",
+        "fi": "Arvo / Tila"
+      },
+      "placeholder": {
+        "en": "ON, OFF, 1, 0 or 21.5 °C",
+        "fi": "ON, OFF, 1, 0 tai 21.5 °C"
+      },
+      "title": {
+        "en": "Value / State",
+        "fi": "Arvo / Tila"
+      }
+    },
+    {
+      "name": "entity_id",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID",
+        "fi": "Tunniste"
+      },
+      "placeholder": {
+        "en": "floor_heating",
+        "fi": "floor_heating"
+      },
+      "title": {
+        "en": "Entity ID",
+        "fi": "Tunniste"
+      }
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "id": "show_media_page_action",
+  "title": {
+    "en": "Show media player card",
+    "fi": "Näytä mediasoitin"
+  },
+  "titleFormatted": {
+    "en": "Set media [[card_title]]: [[title]] by [[artist]] (vol: [[volume]]%, state: [[state]], shuffle: [[shuffle]], prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Aseta media [[card_title]]: [[title]] - [[artist]] (ääni: [[volume]]%, tila: [[state]], sekoitus: [[shuffle]], edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "artist",
+      "type": "text",
+      "label": {
+        "en": "Artist / Author",
+        "fi": "Artisti / Esittäjä"
+      },
+      "placeholder": {
+        "en": "The Beatles",
+        "fi": "The Beatles"
+      },
+      "title": {
+        "en": "Artist / Author",
+        "fi": "Artisti / Esittäjä"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "label": {
+        "en": "Song / Track Title",
+        "fi": "Kappaleen nimi"
+      },
+      "placeholder": {
+        "en": "Come Together",
+        "fi": "Come Together"
+      },
+      "title": {
+        "en": "Song / Track Title",
+        "fi": "Kappaleen nimi"
+      }
+    },
+    {
+      "name": "volume",
+      "type": "number",
+      "label": {
+        "en": "Volume (0 - 100)",
+        "fi": "Äänenvoimakkuus (0 - 100)"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "title": {
+        "en": "Volume (0 - 100)",
+        "fi": "Äänenvoimakkuus (0 - 100)"
+      }
+    },
+    {
+      "name": "card_title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      },
+      "placeholder": {
+        "en": "Media Player",
+        "fi": "Mediasoitin"
+      },
+      "title": {
+        "en": "Page Title",
+        "fi": "Sivun otsikko"
+      }
+    },
+    {
+      "name": "state",
+      "type": "dropdown",
+      "required": false,
+      "values": [
+        {
+          "id": "playing",
+          "label": {
+            "en": "Playing (shows pause button)",
+            "fi": "Toistaa (näyttää taukopainikkeen)"
+          }
+        },
+        {
+          "id": "paused",
+          "label": {
+            "en": "Paused (shows play button)",
+            "fi": "Tauolla (näyttää toistopainikkeen)"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "fi": "Pois päältä"
+          }
+        }
+      ],
+      "title": {
+        "en": "Playback state",
+        "fi": "Toistotila"
+      }
+    },
+    {
+      "name": "shuffle",
+      "type": "dropdown",
+      "required": false,
+      "values": [
+        {
+          "id": "off",
+          "label": {
+            "en": "Shuffle Off",
+            "fi": "Sekoitus pois"
+          }
+        },
+        {
+          "id": "on",
+          "label": {
+            "en": "Shuffle On",
+            "fi": "Sekoitus päällä"
+          }
+        },
+        {
+          "id": "disabled",
+          "label": {
+            "en": "Hide shuffle icon",
+            "fi": "Piilota sekoituskuvake"
+          }
+        }
+      ],
+      "title": {
+        "en": "Shuffle mode",
+        "fi": "Sekoitustila"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

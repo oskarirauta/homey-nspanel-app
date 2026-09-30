@@ -1,0 +1,150 @@
+{
+  "id": "show_thermostat_page_action",
+  "title": {
+    "en": "Show thermostat card",
+    "fi": "Näytä termostaattisivu"
+  },
+  "titleFormatted": {
+    "en": "Set thermostat [[title]]: target [[target_temp]]° (current [[current_temp]]°, min [[min_temp]]°, max [[max_temp]]°, step [[temp_step]]°, prev: [[prev_target]], next: [[next_target]])",
+    "fi": "Aseta termostaatti [[title]]: pyynti [[target_temp]]° (nykyinen [[current_temp]]°, min [[min_temp]]°, max [[max_temp]]°, askel [[temp_step]]°, edellinen: [[prev_target]], seuraava: [[next_target]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "current_temp",
+      "type": "number",
+      "label": {
+        "en": "Current temperature (°C)",
+        "fi": "Nykyinen lämpötila (°C)"
+      },
+      "min": -20,
+      "max": 50,
+      "step": 0.1,
+      "title": {
+        "en": "Current temperature (°C)",
+        "fi": "Nykyinen lämpötila (°C)"
+      }
+    },
+    {
+      "name": "target_temp",
+      "type": "number",
+      "label": {
+        "en": "Target temperature (°C)",
+        "fi": "Tavoitelämpötila (°C)"
+      },
+      "min": 5,
+      "max": 40,
+      "step": 0.5,
+      "title": {
+        "en": "Target temperature (°C)",
+        "fi": "Tavoitelämpötila (°C)"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Title",
+        "fi": "Otsikko"
+      },
+      "placeholder": {
+        "en": "Thermostat",
+        "fi": "Termostaatti"
+      },
+      "title": {
+        "en": "Title",
+        "fi": "Otsikko"
+      }
+    },
+    {
+      "name": "min_temp",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Min limit (°C)",
+        "fi": "Minimiraja (°C)"
+      },
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "placeholder": 15,
+      "title": {
+        "en": "Min limit (°C)",
+        "fi": "Minimiraja (°C)"
+      }
+    },
+    {
+      "name": "max_temp",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Max limit (°C)",
+        "fi": "Maksimiraja (°C)"
+      },
+      "min": 15,
+      "max": 45,
+      "step": 1,
+      "placeholder": 32,
+      "title": {
+        "en": "Max limit (°C)",
+        "fi": "Maksimiraja (°C)"
+      }
+    },
+    {
+      "name": "temp_step",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Step size (°C)",
+        "fi": "Askelväli (°C)"
+      },
+      "min": 0.1,
+      "max": 2,
+      "step": 0.1,
+      "placeholder": 0.5,
+      "title": {
+        "en": "Step size (°C)",
+        "fi": "Askelväli (°C)"
+      }
+    },
+    {
+      "name": "prev_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Previous page target",
+        "fi": "Edellisen sivun kohde"
+      }
+    },
+    {
+      "name": "next_target",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      },
+      "placeholder": {
+        "en": "screensaver",
+        "fi": "screensaver"
+      },
+      "title": {
+        "en": "Next page target",
+        "fi": "Seuraavan sivun kohde"
+      }
+    }
+  ]
+}

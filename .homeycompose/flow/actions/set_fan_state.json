@@ -1,0 +1,103 @@
+{
+  "id": "set_fan_state_action",
+  "title": {
+    "en": "Set ventilation / fan state",
+    "fi": "Aseta ilmanvaihdon / puhaltimen tila"
+  },
+  "titleFormatted": {
+    "en": "Set fan/ventilation [[entity]] state: on=[[onoff]], speed=[[speed]], mode=[[mode]] (modes: [[modes]])",
+    "fi": "Aseta ilmanvaihdolle [[entity]] tila: päällä=[[onoff]], teho=[[speed]], profiili=[[mode]] (tilat: [[modes]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Entity ID (optional)",
+        "fi": "Laitteen / entiteetin tunniste (valinnainen)"
+      },
+      "placeholder": {
+        "en": "fan",
+        "fi": "fan"
+      },
+      "title": {
+        "en": "Entity ID (optional)",
+        "fi": "Laitteen / entiteetin tunniste (valinnainen)"
+      }
+    },
+    {
+      "name": "onoff",
+      "type": "checkbox",
+      "required": false,
+      "label": {
+        "en": "Power state (on/off)",
+        "fi": "Virtatila (päällä/pois)"
+      },
+      "title": {
+        "en": "Power state (on/off)",
+        "fi": "Virtatila (päällä/pois)"
+      }
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Speed level (e.g. 1-4)",
+        "fi": "Nopeus- / tehotaso (esim. 1-4)"
+      },
+      "placeholder": {
+        "en": "2",
+        "fi": "2"
+      },
+      "title": {
+        "en": "Speed level (e.g. 1-4)",
+        "fi": "Nopeus- / tehotaso (esim. 1-4)"
+      }
+    },
+    {
+      "name": "mode",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Current mode name",
+        "fi": "Nykyisen tilan nimi"
+      },
+      "placeholder": {
+        "en": "Kotona",
+        "fi": "Kotona"
+      },
+      "title": {
+        "en": "Current mode name",
+        "fi": "Nykyisen tilan nimi"
+      }
+    },
+    {
+      "name": "modes",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Modes list (? separated, optional)",
+        "fi": "Tilalista (?-eroteltuna, valinnainen)"
+      },
+      "placeholder": {
+        "en": "Poissa?Kotona?Tehostus?Takkatila",
+        "fi": "Poissa?Kotona?Tehostus?Takkatila"
+      },
+      "title": {
+        "en": "Modes list (? separated, optional)",
+        "fi": "Tilalista (?-eroteltuna, valinnainen)"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+    "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+  }
+}

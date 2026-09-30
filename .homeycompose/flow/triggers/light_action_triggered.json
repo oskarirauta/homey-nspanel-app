@@ -1,0 +1,58 @@
+{
+  "id": "light_action_triggered",
+  "title": {
+    "en": "Light adjusted on panel",
+    "fi": "Valoa säädetty paneelilta"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID", "fi": "Valon tunniste" },
+      "example": "livingroom_light"
+    },
+    {
+      "name": "action_type",
+      "type": "string",
+      "title": { "en": "Action type (onoff, brightness, color_temp, color)", "fi": "Toimintotyyppi (onoff, brightness, color_temp, color)" },
+      "example": "brightness"
+    },
+    {
+      "name": "onoff",
+      "type": "boolean",
+      "title": { "en": "Power state (on/off)", "fi": "Virtatila (päällä/pois)" },
+      "example": true
+    },
+    {
+      "name": "brightness",
+      "type": "number",
+      "title": { "en": "Brightness (0-100 %)", "fi": "Kirkkaus (0-100 %)" },
+      "example": 80
+    },
+    {
+      "name": "color_temp",
+      "type": "number",
+      "title": { "en": "Color temperature (0-100 %)", "fi": "Värilämpötila (0-100 %)" },
+      "example": 50
+    },
+    {
+      "name": "hue",
+      "type": "number",
+      "title": { "en": "Hue (0-1)", "fi": "Värisävy (0-1)" },
+      "example": 0.55
+    },
+    {
+      "name": "saturation",
+      "type": "number",
+      "title": { "en": "Saturation (0-1)", "fi": "Värikylläisyys (0-1)" },
+      "example": 0.9
+    }
+  ]
+}

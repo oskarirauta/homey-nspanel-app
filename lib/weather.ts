@@ -12,9 +12,15 @@ export namespace Weather {
     day: string | undefined;
     type: Type | undefined;
     temperature: number | undefined;
+    tempMin?: number;
+    tempMax?: number;
+    windSpeed?: number; // m/s
+    uvIndex?: number;
   }
 
   export interface Forecast {
+    day4?: Day;
+    day5?: Day;
     day0: Day | undefined; // this day
     day1: Day | undefined; // next day
     day2: Day | undefined; // day after that
@@ -41,15 +47,16 @@ export namespace Weather {
 
     let now = DateTime.now();
     if (timezone !== undefined)
-      now.setZone(timezone);
+      now = now.setZone(timezone);
 
     try {
 
       const data = JSON.parse(json);
       let forecast: Forecast = { day0: undefined, day1: undefined, day2: undefined, day3: undefined };
 
+      if (!Array.isArray(data.weather) || !data.weather.length) return undefined;
       if (data['weather'] !== undefined) {
-        for (let i=0; i < Math.min(data['weather'].length, 4); i++) {
+        for (let i=0; i < Math.min(data['weather'].length, 6); i++) {
 
           const day: Day = {
             day: now.weekdayShort,
@@ -68,6 +75,8 @@ export namespace Weather {
             case 1: forecast.day1 = day; break;
             case 2: forecast.day2 = day; break;
             case 3: forecast.day3 = day; break;
+            case 4: forecast.day4 = day; break;
+            case 5: forecast.day5 = day; break;
           }
 
           now = now.plus({days: 1});
@@ -85,7 +94,7 @@ export namespace Weather {
 
     let now = DateTime.now();
     if (timezone !== undefined)
-      now.setZone(timezone);
+      now = now.setZone(timezone);
 
     try {
 
@@ -114,15 +123,16 @@ export namespace Weather {
         forecast.day0 = day;
       }
 
-      now = now.plus({days: 1});
-
-      for (let i=0; i < Math.min(data['daily'].length, 3); i++) {
+      if (!Array.isArray(data.daily)) return undefined;
+      const future = data.daily.filter((d: any) => Number.isFinite(d.dt) && DateTime.fromSeconds(d.dt).setZone(timezone || now.zoneName).startOf('day') > now.startOf('day'));
+      data.daily = future;
+      for (let i=0; i < Math.min(data['daily'].length, 5); i++) {
 
         if (data['daily'].length < i || data['daily'][i] === undefined)
           break;
 
         const day: Day = {
-          day: now.weekdayShort,
+          day: DateTime.fromSeconds(data.daily[i].dt).setZone(timezone || now.zoneName).weekdayShort,
           type: data['daily'][i]['weather'] !== undefined && data['daily'][i]['weather'].length > 0 && data['daily'][i]['weather'][0]['icon'] !== undefined ? string_toType(data['daily'][i]['weather'][0]['icon']) : undefined,
           temperature: parseFloatValue(data['daily'][i]['temp']['day'])
         }
@@ -134,6 +144,8 @@ export namespace Weather {
           case 0: forecast.day1 = day; break;
           case 1: forecast.day2 = day; break;
           case 2: forecast.day3 = day; break;
+          case 3: forecast.day4 = day; break;
+          case 4: forecast.day5 = day; break;
         }
 
         now = now.plus({days: 1});
@@ -153,7 +165,7 @@ export namespace Weather {
 
     switch (weather) {
       case Type.windy: return 'windy';
-      case Type.partly_cloudy: return 'cloudy';
+      case Type.partly_cloudy: return 'partly-cloudy';
       case Type.clear_night: return 'clear-night';
       case Type.windy_variant: return 'windy-variant';
       case Type.cloudy: return 'cloudy';
@@ -169,6 +181,14 @@ export namespace Weather {
     }
     return undefined;
   }
+
+  // Condition names are not always MDI icon names (e.g. clear-night).
+  export const iconName = (weather: Type | undefined): string => {
+    if (weather === Type.clear_night) return 'weather-night';
+    if (weather === Type.exceptional) return 'alert-circle-outline';
+    const name = 'weather-' + type_toString(weather);
+    return Icon.exists(name) ? name : 'help-circle-outline';
+  };
 
   export const string_toType = (weather: string | undefined): Type | undefined => {
 
@@ -227,24 +247,34 @@ export namespace Weather {
 
   function weatherEntityToday(weather: Day | undefined, unit: string | undefined): string {
     const type = weather === undefined ? undefined : type_toString(weather!.type);
-    return (type === undefined ? '' : Icon.get('weather-' + type!, 'close-box-outline')!) + '~' +
-      Color.get(type === undefined ? 'not_found': ('weather_' + type!))! + '~~' +   
-      (weather !== undefined && weather!.temperature !== undefined ? (weather!.temperature!.toFixed(1) + (unit === undefined ? '°C' : unit!)) : '') + '~~~';
+    const tempStr = (weather !== undefined && weather!.temperature !== undefined)
+      ? (Number(weather!.temperature).toFixed(1) + (unit === undefined ? '°C' : unit!))
+      : '';
+    return (type === undefined ? '' : Icon.get(iconName(weather!.type))!) + '~' +
+      Color.get(type === undefined ? 'not_found': ('weather_' + type!), 'not_found')! + '~~' +   
+      tempStr + '~~~';
   }
 
   function weatherEntity(weather: Day | undefined, unit: string | undefined): string {
     const type = weather === undefined ? undefined : type_toString(weather!.type);
-    return (type === undefined ? '' : Icon.get('weather-' + type!, 'close-box-outline')!) +
-      '~' + Color.get(type === undefined ? 'not_found': ('weather_' + type!))! + '~' +
+    const tempStr = (weather !== undefined && weather!.temperature !== undefined)
+      ? (Number(weather!.temperature).toFixed(1) + (unit === undefined ? '°C' : unit!))
+      : '';
+    return (type === undefined ? '' : Icon.get(iconName(weather!.type))!) +
+      '~' + Color.get(type === undefined ? 'not_found': ('weather_' + type!), 'not_found')! + '~' +
       (weather !== undefined && weather!.day !== undefined ? weather!.day! : '' ) + '~' +
-      (weather !== undefined && weather!.temperature !== undefined ? (weather!.temperature!.toFixed(1) + (unit === undefined ? '°C' : unit!)) : '') + '~~~';
+      tempStr + '~~~';
   }
 
   export const update = (weather: Forecast | undefined, indoorTemp: number | undefined, unit: string | undefined, separateToday: boolean = false): string | undefined => {
+    let indoorStr = '';
+    if (indoorTemp !== undefined && indoorTemp !== null) {
+      const num = typeof indoorTemp === 'number' ? indoorTemp : parseFloat(String(indoorTemp));
+      indoorStr = (!isNaN(num) ? num.toFixed(1) : String(indoorTemp)) + (unit !== undefined ? unit! : '°C');
+    }
 
     let val = 'weatherUpdate~~~' + Icon.get('home') + '~' +
-      Color.get('weather_home') + '~~' + (indoorTemp !== undefined ? indoorTemp! : '') +
-      (indoorTemp !== undefined ? (unit !== undefined ? unit! : '°C') : '') + '~~~';
+      Color.get('weather_home') + '~~' + indoorStr + '~~~';
 
     if (separateToday) {
       val += weatherEntity(weather === undefined ? undefined : weather.day1, unit);

@@ -1,0 +1,103 @@
+{
+  "id": "push_chart_value_action",
+  "title": {
+    "en": "Push value to chart (FIFO shift)",
+    "fi": "Lisää arvo kaavioon (siirrä ja poista vanhin)"
+  },
+  "titleFormatted": {
+    "en": "Push value [[value]] to chart on page [[page]] (label: [[label]], x: [[x]], scale: [[scale]])",
+    "fi": "Lisää arvo [[value]] sivun [[page]] kaavioon (nimike: [[label]], x: [[x]], kerroin: [[scale]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "page",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Page ID (default: active / chart)",
+        "fi": "Sivun ID (oletus: active / chart)"
+      },
+      "placeholder": {
+        "en": "active",
+        "fi": "active"
+      },
+      "title": {
+        "en": "Page ID (default: active / chart)",
+        "fi": "Sivun ID (oletus: active / chart)"
+      }
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "required": true,
+      "label": {
+        "en": "New Value",
+        "fi": "Uusi arvo"
+      },
+      "placeholder": {
+        "en": "10",
+        "fi": "10"
+      },
+      "title": {
+        "en": "New Value",
+        "fi": "Uusi arvo"
+      }
+    },
+    {
+      "name": "label",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Label / Timestamp (optional)",
+        "fi": "Nimike / aikaleima (valinnainen)"
+      },
+      "placeholder": {
+        "en": "12:00",
+        "fi": "12:00"
+      },
+      "title": {
+        "en": "Label / Timestamp (optional)",
+        "fi": "Nimike / aikaleima (valinnainen)"
+      }
+    },
+    {
+      "name": "x",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "X Coordinate (optional, default: last point's X)",
+        "fi": "X-piste (valinnainen, oletus: edellinen suurin X)"
+      },
+      "placeholder": {
+        "en": "100",
+        "fi": "100"
+      },
+      "title": {
+        "en": "X Coordinate (optional, default: last point's X)",
+        "fi": "X-piste (valinnainen, oletus: edellinen suurin X)"
+      }
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "required": false,
+      "label": {
+        "en": "Multiplier / Scale (optional, e.g. 10 for °C or c/kWh)",
+        "fi": "Kerroin / skaalaus (valinnainen, esim. 10 lämpötilalle/hinnalle)"
+      },
+      "placeholder": {
+        "en": "1",
+        "fi": "1"
+      },
+      "title": {
+        "en": "Multiplier / Scale (optional, e.g. 10 for °C or c/kWh)",
+        "fi": "Kerroin / skaalaus (valinnainen, esim. 10 lämpötilalle/hinnalle)"
+      }
+    }
+  ]
+}

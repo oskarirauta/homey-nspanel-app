@@ -1,0 +1,107 @@
+{
+  "id": "physical_button_pressed",
+  "title": {
+    "en": "Physical button was pressed",
+    "fi": "Fyysistä painiketta painettiin"
+  },
+  "titleFormatted": {
+    "en": "Physical [[button]] was pressed ([[action]])",
+    "fi": "Fyysistä painiketta [[button]] painettiin ([[action]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "button",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "any",
+          "label": {
+            "en": "Any button",
+            "fi": "Mikä tahansa painike"
+          }
+        },
+        {
+          "id": "1",
+          "label": {
+            "en": "Button 1 (Left)",
+            "fi": "Painike 1 (Vasen)"
+          }
+        },
+        {
+          "id": "2",
+          "label": {
+            "en": "Button 2 (Right)",
+            "fi": "Painike 2 (Oikea)"
+          }
+        }
+      ],
+      "title": {
+        "en": "Physical button",
+        "fi": "Fyysinen painike"
+      }
+    },
+    {
+      "name": "action",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "any",
+          "label": {
+            "en": "Any action",
+            "fi": "Mikä tahansa toiminto"
+          }
+        },
+        {
+          "id": "single",
+          "label": {
+            "en": "Single press",
+            "fi": "Kertapainallus"
+          }
+        },
+        {
+          "id": "double",
+          "label": {
+            "en": "Double press",
+            "fi": "Kaksoispainallus"
+          }
+        },
+        {
+          "id": "hold",
+          "label": {
+            "en": "Long press (Hold)",
+            "fi": "Pitkä painallus"
+          }
+        }
+      ],
+      "title": {
+        "en": "Action",
+        "fi": "Toiminto"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "name": "button",
+      "type": "number",
+      "title": {
+        "en": "Button number",
+        "fi": "Painikkeen numero"
+      },
+      "example": 1
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "title": {
+        "en": "Action",
+        "fi": "Toiminto"
+      },
+      "example": "SINGLE"
+    }
+  ]
+}

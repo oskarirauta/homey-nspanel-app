@@ -1,0 +1,52 @@
+{
+  "id": "fan_action_triggered",
+  "title": {
+    "en": "Ventilation or fan adjusted on panel",
+    "fi": "Ilmanvaihtoa tai puhallinta ohjattu paneelilta"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID", "fi": "Laitteen / entiteetin tunniste" },
+      "example": "ventilation"
+    },
+    {
+      "name": "action_type",
+      "type": "string",
+      "title": { "en": "Action type (speed, mode, onoff)", "fi": "Toimintotyyppi (speed, mode, onoff)" },
+      "example": "speed"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "title": { "en": "Speed level", "fi": "Nopeus- / tehotaso" },
+      "example": 2
+    },
+    {
+      "name": "mode",
+      "type": "string",
+      "title": { "en": "Selected mode", "fi": "Valittu profiili / tila" },
+      "example": "Tehostus"
+    },
+    {
+      "name": "mode_index",
+      "type": "number",
+      "title": { "en": "Mode index (0-based)", "fi": "Tilan järjestysnumero (alkaa 0:sta)" },
+      "example": 2
+    },
+    {
+      "name": "onoff",
+      "type": "boolean",
+      "title": { "en": "Power state (on/off)", "fi": "Virtatila (päällä/pois)" },
+      "example": true
+    }
+  ]
+}

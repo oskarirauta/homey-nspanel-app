@@ -1,0 +1,22 @@
+{
+  "id": "alarm_pin_failed",
+  "title": {
+    "en": "Alarm PIN entry failed",
+    "fi": "Hälyttimen PIN-koodi syötetty väärin"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entered_pin",
+      "type": "string",
+      "title": { "en": "Entered PIN code", "fi": "Syötetty PIN-koodi" },
+      "example": "0000"
+    }
+  ]
+}

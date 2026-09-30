@@ -1,0 +1,115 @@
+{
+  "id": "set_timer_action",
+  "title": {
+    "en": "Control timer (start, pause, cancel, set)",
+    "fi": "Ohjaa ajastinta (käynnistä, tauko, nollaa, aseta)"
+  },
+  "titleFormatted": {
+    "en": "Set timer [[entity]] to [[action]] (minutes: [[minutes]], seconds: [[seconds]])",
+    "fi": "Aseta ajastin [[entity]] tilaan [[action]] (minuutit: [[minutes]], sekunnit: [[seconds]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Timer ID (optional)",
+        "fi": "Ajastimen tunniste (valinnainen)"
+      },
+      "placeholder": {
+        "en": "timer",
+        "fi": "timer"
+      },
+      "title": {
+        "en": "Timer ID (optional)",
+        "fi": "Ajastimen tunniste (valinnainen)"
+      }
+    },
+    {
+      "name": "action",
+      "type": "dropdown",
+      "label": {
+        "en": "Action",
+        "fi": "Toiminto"
+      },
+      "values": [
+        {
+          "id": "start",
+          "label": {
+            "en": "▶️ Start",
+            "fi": "▶️ Käynnistä"
+          }
+        },
+        {
+          "id": "pause",
+          "label": {
+            "en": "⏸️ Pause",
+            "fi": "⏸️ Tauko"
+          }
+        },
+        {
+          "id": "cancel",
+          "label": {
+            "en": "⏹️ Cancel / Reset",
+            "fi": "⏹️ Nollaa / Peruuta"
+          }
+        },
+        {
+          "id": "set",
+          "label": {
+            "en": "⏱️ Set time without starting",
+            "fi": "⏱️ Aseta aika käynnistämättä"
+          }
+        }
+      ],
+      "title": {
+        "en": "Action",
+        "fi": "Toiminto"
+      }
+    },
+    {
+      "name": "minutes",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 59,
+      "label": {
+        "en": "Minutes (optional, 0-59)",
+        "fi": "Minuutit (valinnainen, 0-59)"
+      },
+      "placeholder": {
+        "en": "5",
+        "fi": "5"
+      },
+      "title": {
+        "en": "Minutes (optional, 0-59)",
+        "fi": "Minuutit (valinnainen, 0-59)"
+      }
+    },
+    {
+      "name": "seconds",
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 59,
+      "label": {
+        "en": "Seconds (optional, 0-59)",
+        "fi": "Sekunnit (valinnainen, 0-59)"
+      },
+      "placeholder": {
+        "en": "0",
+        "fi": "0"
+      },
+      "title": {
+        "en": "Seconds (optional, 0-59)",
+        "fi": "Sekunnit (valinnainen, 0-59)"
+      }
+    }
+  ]
+}

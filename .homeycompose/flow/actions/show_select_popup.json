@@ -1,0 +1,103 @@
+{
+  "id": "show_select_popup_action",
+  "title": {
+    "en": "Show select popup (popupInSel)",
+    "fi": "Avaa valintalista (popupInSel)"
+  },
+  "titleFormatted": {
+    "en": "Open select popup [[entity]] (title: [[title]], current: [[current]], options: [[options]], color: [[color]])",
+    "fi": "Avaa kohteen [[entity]] valintalista (otsikko: [[title]], tila: [[current]], vaihtoehdot: [[options]], väri: [[color]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Entity ID",
+        "fi": "Kohteen ID"
+      },
+      "placeholder": {
+        "en": "home_state",
+        "fi": "home_state"
+      },
+      "title": {
+        "en": "Entity ID",
+        "fi": "Kohteen ID"
+      }
+    },
+    {
+      "name": "title",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Title (optional)",
+        "fi": "Otsikko (valinnainen)"
+      },
+      "placeholder": {
+        "en": "Kodin tila",
+        "fi": "Kodin tila"
+      },
+      "title": {
+        "en": "Title (optional)",
+        "fi": "Otsikko (valinnainen)"
+      }
+    },
+    {
+      "name": "current",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Current option",
+        "fi": "Nykyinen valinta"
+      },
+      "placeholder": {
+        "en": "Kotona",
+        "fi": "Kotona"
+      },
+      "title": {
+        "en": "Current option",
+        "fi": "Nykyinen valinta"
+      }
+    },
+    {
+      "name": "options",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Options list (? or comma separated)",
+        "fi": "Vaihtoehdot (? tai pilkulla eroteltuna)"
+      },
+      "placeholder": {
+        "en": "Kotona?Poissa?Nukkumassa?Loma",
+        "fi": "Kotona?Poissa?Nukkumassa?Loma"
+      },
+      "title": {
+        "en": "Options list (? or comma separated)",
+        "fi": "Vaihtoehdot (? tai pilkulla eroteltuna)"
+      }
+    },
+    {
+      "name": "color",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      },
+      "placeholder": {
+        "en": "white",
+        "fi": "white"
+      },
+      "title": {
+        "en": "Icon color (optional)",
+        "fi": "Kuvakkeen väri (valinnainen)"
+      }
+    }
+  ]
+}

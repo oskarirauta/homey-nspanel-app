@@ -1,0 +1,73 @@
+{
+  "id": "set_select_state_action",
+  "title": {
+    "en": "Set select state",
+    "fi": "Aseta valintalistan tila"
+  },
+  "titleFormatted": {
+    "en": "Set state of [[entity]] to [[current]] (options: [[options]])",
+    "fi": "Aseta kohteen [[entity]] tilaksi [[current]] (vaihtoehdot: [[options]])"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "entity",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Entity ID",
+        "fi": "Kohteen ID"
+      },
+      "placeholder": {
+        "en": "home_state",
+        "fi": "home_state"
+      },
+      "title": {
+        "en": "Entity ID",
+        "fi": "Kohteen ID"
+      }
+    },
+    {
+      "name": "current",
+      "type": "text",
+      "required": true,
+      "label": {
+        "en": "Current option",
+        "fi": "Valittu tila"
+      },
+      "placeholder": {
+        "en": "Kotona",
+        "fi": "Kotona"
+      },
+      "title": {
+        "en": "Current option",
+        "fi": "Valittu tila"
+      }
+    },
+    {
+      "name": "options",
+      "type": "text",
+      "required": false,
+      "label": {
+        "en": "New options list (optional, ? or comma separated)",
+        "fi": "Uusi vaihtoehtolista (valinnainen, ? tai pilkku)"
+      },
+      "placeholder": {
+        "en": "Kotona?Poissa?Nukkumassa?Loma",
+        "fi": "Kotona?Poissa?Nukkumassa?Loma"
+      },
+      "title": {
+        "en": "New options list (optional, ? or comma separated)",
+        "fi": "Uusi vaihtoehtolista (valinnainen, ? tai pilkku)"
+      }
+    }
+  ],
+  "hint": {
+    "en": "Updates the panel display. Select Flow as the source in Studio to supply values yourself. A selected Homey, sensor or forecast source remains authoritative; this card does not change that source.",
+    "fi": "Päivittää paneelin näyttötietoja. Valitse Studiossa lähteeksi Flow, kun syötät arvot itse. Valittu Homey-, anturi- tai ennustelähde pysyy ensisijaisena; tämä kortti ei vaihda lähdettä."
+  }
+}

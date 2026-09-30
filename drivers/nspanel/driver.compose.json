@@ -1,10 +1,22 @@
 {
   "id": "nspanel",
   "name": {
-    "en": "NSPanel"
+    "en": "NSPanel",
+    "fi": "NSPanel"
   },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "lan"
+  ],
   "$extends": [
     "defaults"
+  ],
+  "pair": [
+    {
+      "id": "connect"
+    }
   ],
   "class": "other",
   "capabilities": [

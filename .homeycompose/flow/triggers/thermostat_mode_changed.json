@@ -1,0 +1,46 @@
+{
+  "id": "thermostat_mode_changed",
+  "title": {
+    "en": "Thermostat mode or preset changed on panel",
+    "fi": "Termostaatin tilaa tai esiasetusta muutettu näytöltä"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "entity",
+      "type": "string",
+      "title": { "en": "Entity ID", "fi": "Entiteetin tunniste" },
+      "example": "thermo"
+    },
+    {
+      "name": "mode_type",
+      "type": "string",
+      "title": { "en": "Mode type (operation_mode, preset_mode, fan_mode)", "fi": "Tilatyyppi (operation_mode, preset_mode, fan_mode)" },
+      "example": "operation_mode"
+    },
+    {
+      "name": "mode",
+      "type": "string",
+      "title": { "en": "Selected mode", "fi": "Valittu tila" },
+      "example": "Lämmitys"
+    },
+    {
+      "name": "mode_index",
+      "type": "number",
+      "title": { "en": "Mode index (0-based)", "fi": "Tilan järjestysnumero (alkaa 0:sta)" },
+      "example": 1
+    },
+    {
+      "name": "row",
+      "type": "number",
+      "title": { "en": "Row (1, 2 or 3)", "fi": "Rivi (1, 2 tai 3)" },
+      "example": 1
+    }
+  ]
+}

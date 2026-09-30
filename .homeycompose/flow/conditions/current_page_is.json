@@ -1,22 +1,98 @@
 {
-    "id": "current_page_is",
-    "title": { "en": "Current page !{{is|isn't}}" },
-    "titleFormatted": { "en": "Current page !{{is|isn't}} [[page]]" },
-    "args": [{
-            "name": "page",
-            "type": "dropdown",
-            "values": [
-                { "id": "screensaver", "label": { "en": "screensaver" }},
-                { "id": "qrcode", "label": { "en": "qrcode" }},
-                { "id": "media", "label": { "en": "media" }},
-                { "id": "power", "label": { "en": "power" }},
-                { "id": "thermostat", "label": { "en": "thermostat" }}
-            ]
+  "id": "current_page_is",
+  "title": {
+    "en": "Current page !{{is|isn't}}",
+    "fi": "Nykyinen sivu !{{on|ei ole}}"
+  },
+  "titleFormatted": {
+    "en": "Current page !{{is|isn't}} [[page]]",
+    "fi": "Nykyinen sivu !{{on|ei ole}} [[page]]"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=nspanel"
+    },
+    {
+      "name": "page",
+      "type": "dropdown",
+      "values": [
+        {
+          "id": "screensaver",
+          "label": {
+            "en": "Screensaver",
+            "fi": "Näytönsäästäjä"
+          }
         },
         {
-            "name": "device",
-            "type": "device",
-            "filter": "driver_id=nspanel"
+          "id": "grid",
+          "label": {
+            "en": "Grid (6 items)",
+            "fi": "Ruudukko (6)"
+          }
+        },
+        {
+          "id": "grid2",
+          "label": {
+            "en": "Grid 2 (8 items)",
+            "fi": "Ruudukko 2 (8)"
+          }
+        },
+        {
+          "id": "entities",
+          "label": {
+            "en": "Entities list (4 items)",
+            "fi": "Laitelista (4)"
+          }
+        },
+        {
+          "id": "thermostat",
+          "label": {
+            "en": "Thermostat",
+            "fi": "Termostaatti"
+          }
+        },
+        {
+          "id": "media",
+          "label": {
+            "en": "Media player",
+            "fi": "Mediasoitin"
+          }
+        },
+        {
+          "id": "qrcode",
+          "label": {
+            "en": "QR Code",
+            "fi": "QR-koodi"
+          }
+        },
+        {
+          "id": "power",
+          "label": {
+            "en": "Power flow",
+            "fi": "Tehonäkymä"
+          }
+        },
+        {
+          "id": "alarm",
+          "label": {
+            "en": "Alarm keypad",
+            "fi": "Hälytyskeskus"
+          }
+        },
+        {
+          "id": "notification",
+          "label": {
+            "en": "Notification popup",
+            "fi": "Ponnahdusilmoitus"
+          }
         }
-    ]
+      ],
+      "title": {
+        "en": "Page",
+        "fi": "Sivu"
+      }
+    }
+  ]
 }
